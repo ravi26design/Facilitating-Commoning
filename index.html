@@ -2417,19 +2417,7 @@ screens.resource = (params) => {
 
 
     <section class="section">
-      <div class="panel" style="border-width:1.5px">
-        <div class="eyebrow">Guided Mentoring Prompt</div>
-        <p class="muted" style="margin:0">“After using this resource, reflect with the community: what changed in how you make collective decisions? Note one question to raise with your mentor.”</p>
-        <div class="mt12"><a class="btn sm" onclick="go('#/help')">Get Support →</a></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="callout">
-        <div class="txt"><strong>Recommended Next Resource</strong><span>Continue the guided journey with the next resource for this stage.</span></div>
-        <a class="btn primary" onclick="go('#/resource/cfr-claim')">Continue →</a>
-      </div>
-      <div class="wf-note mt24">Related Resources</div>
+      <div class="wf-note">Related Resources</div>
       <div class="grid g3 mt8">
         ${relatedFallback.map(x=>`<div class="card click" onclick="go('#/resource/${x.id}')">
           <h3 style="font-size:14px">${x.title}</h3>

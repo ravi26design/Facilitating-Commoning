@@ -1094,25 +1094,6 @@ screens.home = () => shell("#/home", null, `
 
   <section class="section">
     <div class="between">
-      <div><h2 class="mb0">Explore by Resource System or Theme</h2></div>
-      <span class="wf-note">Marquee</span>
-    </div>
-    <p class="sub">Choose the natural-resource system you are working with to understand its Commoning process and access the relevant learning pathway.</p>
-    <div class="grid g3">
-      ${["pastureland","forests","water"].map(id=>`<div class="card click" onclick="go('#/system/${id}')">
-        <h3>${SYSTEMS[id].name}</h3>
-        <p>${SYSTEMS[id].desc}</p>
-        <div class="cta"><a class="btn sm">Explore More →</a></div>
-      </div>`).join("")}
-    </div>
-    <div class="wrapline">Additional Themes</div>
-    <div class="grid g3">
-      ${THEME_LIST.map(themeCard).join("")}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="between">
       <div><div class="eyebrow">Resource Library</div><h2 class="mb0">Featured learning resources</h2></div>
       <a class="btn sm" onclick="go('#/library')">Browse all resources →</a>
     </div>

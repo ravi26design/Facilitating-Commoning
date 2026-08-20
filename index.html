@@ -919,7 +919,10 @@ function libThumb(type,title){
     return `<div class="dms-thumb"><div class="sk sk-head"></div><div class="sk"></div><div class="sk"></div><div class="sk sk-80"></div><div class="sk"></div><div class="sk sk-60"></div></div>`;
   return `<div class="dms-thumb"><div class="sk sk-40"></div><div class="sk"></div><div class="sk"></div><div class="sk sk-80"></div><div class="dms-box"></div></div>`;
 }
+const CARD_THEMES = ["Forests","Pastureland","Water"];
+function cardTheme(r, idx){ return (r.system && r.system!=="All Systems") ? r.system : CARD_THEMES[idx % CARD_THEMES.length]; }
 function libraryFileCard(r, idx){
+  const theme = cardTheme(r, idx);
   const who = LIB_UPLOADERS[idx % LIB_UPLOADERS.length];
   const day = 24 - (idx % 20); const date = "2026-05-" + (day<10?("0"+day):day);
   const editing = (idx%9===3) ? `<div class="dms-status"><span class="dot"></span>You are editing</div>`
@@ -931,7 +934,7 @@ function libraryFileCard(r, idx){
       <a class="dms-kebab" onclick="event.stopPropagation();toast('File actions (placeholder)')">⋮</a>
     </div>
     ${libThumb(r.type, r.title)}
-    ${(r.system && r.system!=="All Systems") ? `<div class="dms-theme"><a class="dms-theme-tag" title="Filter Resource Library by ${r.system}" onclick="event.stopPropagation();go('#/library?sys=${encodeURIComponent(r.system)}')">🏷 ${r.system}</a></div>` : ""}
+    <div class="dms-theme"><a class="dms-theme-tag" title="Filter Resource Library by ${theme}" onclick="event.stopPropagation();go('#/library?sys=${encodeURIComponent(theme)}')">🏷 ${theme}</a></div>
     <div class="dms-foot">
       <span class="dms-avatar">${libInitials(who)}</span>
       <span class="dms-foot-txt">${who==="You"?"PS You":who} · ${date}</span>

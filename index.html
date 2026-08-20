@@ -361,6 +361,7 @@ footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;col
 .seg-btn.on{background:var(--active);color:#fff}
 .course-card .cc-body{padding:10px 12px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
 .course-card .cc-body h4{font-size:12.5px;margin:0;line-height:1.35}
+.course-card .cc-desc{margin:2px 0 0;font-size:11px;color:var(--ink-3);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .course-card .cc-lang{font-size:11px;color:var(--ink-3)}
 /* V3 — page banner (resource-system / theme header) */
 .banner{border:1px solid var(--line);border-radius:var(--radius);background:
@@ -538,6 +539,14 @@ const RES = [
   {id:"context-mapping", title:"Context Mapping Worksheet", purpose:"Worksheet to map the resource, community and existing institutions.", system:"All Systems", stage:"Understand Context", stake:"Field Practitioner", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"institution-basics", title:"Building Community Institutions", purpose:"Modular course on forming a legitimate, inclusive community institution.", system:"All Systems", stage:"Build Institutions", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water", stage:"Plan", stake:"Facilitator", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-intro-video", title:"Introduction to Water Commons", purpose:"Short video introducing community-managed water commons.", system:"Water", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-access-atom", title:"Equitable Access — Key Ideas", purpose:"Atomised topic on equitable access to shared water sources.", system:"Water", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-stewardship-audio", title:"Water Stewardship — Audio Guide", purpose:"Audio guide on day-to-day stewardship of water systems.", system:"Water", stage:"Restore & Manage", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-institutions", title:"Water User Institutions", purpose:"Course on forming and running water user institutions.", system:"Water", stage:"Build Institutions", stake:"Facilitator", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-planning-module", title:"Water Management Planning", purpose:"Module on preparing a collective water management plan.", system:"Water", stage:"Plan", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-handbook", title:"Water Stewardship Handbook", purpose:"Reference handbook for community water stewardship.", system:"Water", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Handbook", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-monitoring-format", title:"Water Monitoring Format", purpose:"Editable format to track water access and system health.", system:"Water", stage:"Monitor & Adapt", stake:"Field Practitioner", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-facil-guide", title:"Water Facilitators' Guide", purpose:"Facilitators' guide for running water commoning sessions.", system:"Water", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pastureland", stage:"Restore & Manage", stake:"Field Practitioner", design:"Both", type:"SoP", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pastureland", stage:"All Stages", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
@@ -849,6 +858,7 @@ function courseCard(r, i){
     <div class="cc-body">
       <span class="badge" style="align-self:center">${r.type}</span>
       <h4>${r.title}</h4>
+      <p class="cc-desc">${r.purpose}</p>
       <div class="cc-lang">🌐 ${r.lang}</div>
     </div>
   </div>`;
@@ -1379,13 +1389,12 @@ screens.system = (params) => {
     </section>
 
     <section class="section">
-      <div class="between">
-        <h2 class="mb0">Commoning Pathway / Process</h2>
-        <span class="wf-note">Key steps of the process / stages of Commoning</span>
+      <h2>Commoning Pathway / Process</h2>
+      <div class="panel">
+        <p class="sub" style="margin-top:0">Understand context → Build institutions → Secure tenure → Plan → Restore/manage → Monitor &amp; adapt.</p>
+        ${pathway(null,{system:params.id,static:true})}
+        <div class="mt12"><a class="btn sm" onclick="toast('Link to process Documents — ${STATES.join(', ')} (placeholder)')">Link to process Documents →</a></div>
       </div>
-      <p class="sub">Understand context → Build institutions → Secure tenure → Plan → Restore/manage → Monitor &amp; adapt.</p>
-      ${pathway(null,{system:params.id,static:true})}
-      <div class="mt12"><a class="btn sm" onclick="toast('Link to process Documents — ${STATES.join(', ')} (placeholder)')">Link to process Documents →</a></div>
     </section>
 
     <section class="section">

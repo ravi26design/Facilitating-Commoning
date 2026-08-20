@@ -174,6 +174,8 @@ main{min-height:60vh;padding-bottom:40px}
 .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--panel) 0%,rgba(255,255,255,.92) 46%,rgba(255,255,255,.5) 70%,rgba(255,255,255,0) 100%)}
 .hero .hero-text{position:relative;z-index:1;max-width:820px}
 .intro-block h3{margin:14px 0 0;font-size:17px}
+.sub-del{flex:0 0 auto;margin-left:6px;color:var(--ink-3);font-size:12px;padding:1px 6px;border-radius:5px;cursor:pointer}
+.sub-del:hover{background:var(--ink);color:#fff}
 .intro-img{min-height:150px;border-radius:8px}
 .hero .hero-ph-label{position:absolute;top:16px;right:20px;z-index:1;color:var(--ink-3);font-size:12px;letter-spacing:.02em}
 @media(max-width:760px){ .hero{min-height:calc(100vh - 96px);padding:28px 22px} .hero::before{background:var(--panel)} }
@@ -707,6 +709,19 @@ function _nextCode(groups, groupIdx){
   let max = base;
   g.items.forEach(it=>{ const n=parseInt(it.code,10); if(!isNaN(n)&&n>max) max=n; });
   return String(max+1);
+}
+/* ---- Admin edit mode for the topic details page ---- */
+let editMode=false;
+function toggleEdit(){ editMode=!editMode; render(); }
+function adminRemoveSubtopic(topicId, code){
+  if(!isAdmin()) return;
+  const groups = subtopicsFor(topicById(topicId));
+  for(let gi=0; gi<groups.length; gi++){
+    const i=groups[gi].items.findIndex(it=>it.code===code);
+    if(i>=0){ groups[gi].items.splice(i,1); break; }
+  }
+  toast("Subtopic removed");
+  render();
 }
 /* ---- Admin mutations for the resource-system topic flow ---- */
 function openAddTopic(sysId, group){
@@ -1720,6 +1735,7 @@ screens.modular = (params) => {
 
   /* -------- TOPIC LIST (no topic chosen) -------- */
   if(!topic){
+    editMode=false; // leaving a topic exits edit mode
     const mapped = s ? topicsForGroup(s.name, group) : [];
     const counts = {}; mapped.forEach(t=>counts[t.id]=t.count);
     const topics = TOPICS.map(t=>Object.assign({}, t, {count: counts[t.id]!=null ? counts[t.id] : t.count}));
@@ -1754,19 +1770,25 @@ screens.modular = (params) => {
   const groups = subtopicsFor(topic);
   const subs = allSubtopics(topic);
   const activeSub = subs.find(x=>x.code===params.sub) || subs[0];
+  const canEdit = isAdmin() && editMode;
   return shell("#/resource-systems", crumbItems, `
     ${banner}
     <section class="section">
-      <h2 style="font-size:18px">${topic.name}</h2>
+      <div class="between">
+        <h2 class="mb0" style="font-size:18px">${topic.name}</h2>
+        ${isAdmin()?`<a class="btn sm ${editMode?'primary':''}" onclick="toggleEdit()">${editMode?'✓ Done':'✎ Edit'}</a>`:""}
+      </div>
+      ${canEdit?`<div class="wf-note mt8" style="color:var(--ink-2)">Edit mode — add or remove subtopics, and upload or remove files.</div>`:""}
       <div class="layout-side mt12">
         <aside class="filters">
           <div class="fgroup" style="border-bottom:none;padding-bottom:0">
             <h4>Subtopics</h4>
             ${subs.length?groups.map(g=>`<div class="cur-mod-head" style="border-radius:4px;margin:6px 0 2px;border-top:none">${g.mod}</div>
-              ${g.items.map(it=>`<div class="cur-topic ${activeSub&&it.code===activeSub.code?'active':''}" style="border-top:none;padding:7px 8px" onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
-                <span class="code">${it.code}</span><span>${it.name}</span>
-              </div>`).join("")}`).join(""):`<p class="wf-note" style="margin:6px 0">No subtopics yet.${isAdmin()?" Add one below.":""}</p>`}
-            ${isAdmin()?`<div class="mt8"><a class="btn sm" style="width:100%" onclick="toggleReveal('add-sub-form')">+ Add Subtopic</a></div>
+              ${g.items.map(it=>`<div class="cur-topic ${activeSub&&it.code===activeSub.code?'active':''}" style="border-top:none;padding:7px 8px;display:flex;align-items:center" onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
+                <span class="code">${it.code}</span><span style="flex:1">${it.name}</span>
+                ${canEdit?`<a class="sub-del" title="Remove subtopic" onclick="event.stopPropagation();adminRemoveSubtopic('${topic.id}','${it.code}')">✕</a>`:""}
+              </div>`).join("")}`).join(""):`<p class="wf-note" style="margin:6px 0">No subtopics yet.${canEdit?" Add one below.":""}</p>`}
+            ${canEdit?`<div class="mt8"><a class="btn sm" style="width:100%" onclick="toggleReveal('add-sub-form')">+ Add Subtopic</a></div>
               <div id="add-sub-form" class="hidden mt8">
                 <input id="ns-name" class="btn sm" style="width:100%;text-align:left;cursor:text" placeholder="Subtopic name">
                 <div class="row mt8"><a class="btn sm primary" onclick="adminAddSubtopic('${topic.id}')">Add</a><a class="btn sm" onclick="toggleReveal('add-sub-form')">Cancel</a></div>
@@ -1776,17 +1798,17 @@ screens.modular = (params) => {
         <div>
           ${!activeSub?`<div class="panel muted">
             <strong>No subtopics yet.</strong>
-            <p style="margin:6px 0 0">${isAdmin()?"Use “+ Add Subtopic” on the left to create the first subtopic, then upload resource files to it.":"This topic has no subtopics yet."}</p>
+            <p style="margin:6px 0 0">${canEdit?"Use “+ Add Subtopic” on the left to create the first subtopic, then upload resource files to it.":(isAdmin()?"Click “Edit” to add subtopics and upload files.":"This topic has no subtopics yet.")}</p>
           </div>`:`
           <div class="between">
             <h2 class="mb0" style="font-size:18px">${activeSub.code} · ${activeSub.name}</h2>
             <div class="row" style="align-items:center;gap:10px">
               <span class="wf-note">${activeSub.files.length} file${activeSub.files.length!==1?'s':''}</span>
-              ${isAdmin()?`<a class="btn sm primary" onclick="toggleReveal('upload-file-form')">+ Upload File</a>`:""}
+              ${canEdit?`<a class="btn sm primary" onclick="toggleReveal('upload-file-form')">+ Upload File</a>`:""}
             </div>
           </div>
           <p class="sub">Files for this subtopic — open or download.</p>
-          ${isAdmin()?`<div id="upload-file-form" class="panel hidden" style="margin-bottom:14px;max-width:520px">
+          ${canEdit?`<div id="upload-file-form" class="panel hidden" style="margin-bottom:14px;max-width:520px">
             <h4 style="margin:0 0 10px;font-size:14px">Upload a file to ${activeSub.code} · ${activeSub.name}</h4>
             <div class="grid g2">
               <div><label class="wf-note">File name <span class="req">*</span></label>
@@ -1798,7 +1820,7 @@ screens.modular = (params) => {
             <div class="row mt8"><a class="btn sm primary" onclick="adminUploadFile('${topic.id}','${activeSub.code}')">Upload</a><a class="btn sm" onclick="toggleReveal('upload-file-form')">Cancel</a></div>
           </div>`:""}
           <div class="grid g3">
-            ${activeSub.files.length?activeSub.files.map((f,i)=>`<div style="position:relative">${fileCard(f,null,null,i,{sys:params.id,group:group||"",topic:topic.id,sub:activeSub.code})}${isAdmin()?`<a class="btn sm" style="position:absolute;top:8px;right:8px;padding:4px 8px" title="Remove file" onclick="adminRemoveFile('${topic.id}','${activeSub.code}',${i})">✕</a>`:""}</div>`).join(""):`<div class="panel muted">No files yet.${isAdmin()?" Use “Upload File” to add one.":""}</div>`}
+            ${activeSub.files.length?activeSub.files.map((f,i)=>`<div style="position:relative">${fileCard(f,null,null,i,{sys:params.id,group:group||"",topic:topic.id,sub:activeSub.code})}${canEdit?`<a class="btn sm" style="position:absolute;top:8px;right:8px;padding:4px 8px" title="Remove file" onclick="adminRemoveFile('${topic.id}','${activeSub.code}',${i})">✕</a>`:""}</div>`).join(""):`<div class="panel muted">No files yet.${canEdit?" Use “Upload File” to add one.":""}</div>`}
           </div>`}
         </div>
       </div>

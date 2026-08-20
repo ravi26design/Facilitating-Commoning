@@ -503,6 +503,8 @@ const THEMES = {
 };
 const THEME_LIST = Object.keys(THEMES).map(k=>THEMES[k]);
 function themeById(id){return THEMES[id]}
+// Systems and themes share the same page flow (Info → Learning Design → Topics → files)
+function entityById(id){return SYSTEMS[id] || THEMES[id];}
 
 // Learning-design groupings for the resource-system page (deck slide 11)
 const LD = [
@@ -957,7 +959,7 @@ function adminFileCard(f){
 }
 
 function themeCard(t){
-  return `<div class="card click small syscard" onclick="go('#/theme/${t.id}')">
+  return `<div class="card click small syscard" onclick="go('#/system/${t.id}')">
     <div class="ph-img" style="min-height:56px">${t.name}</div>
     <h3 style="font-size:14px">${t.name}</h3><p>${t.desc}</p>
     <div class="cta"><a class="btn sm">Begin your Learning Journey / Access Resource →</a></div>
@@ -1423,7 +1425,7 @@ screens["resource-systems"] = () => shell("#/resource-systems",
 
 /* ---- RESOURCE-SYSTEM INFORMATION PAGE (deck slide 11) — intro, pathway, learning-design options ---- */
 screens.system = (params) => {
-  const s = SYSTEMS[params.id];
+  const s = entityById(params.id);
   if(!s) return screens["resource-systems"]();
   const OPTIONS = [
     {g:"atomized", name:"Atomized Course Curriculum (LDHF) & Learning Materials", desc:"Low-dose high-frequency atomised content and learning materials."},
@@ -1560,7 +1562,7 @@ screens.curriculum = (params) => {
 
 /* ---- LEARNING-DESIGN AREA — Topic list, then resources for the chosen topic (deck slide 14) ---- */
 screens.modular = (params) => {
-  const s = SYSTEMS[params.id];
+  const s = entityById(params.id);
   const label = s ? s.name : "Resource System";
   const group = params.g; // supporting / modular / atomized
   const gq = group?("g="+group+"&"):"";
@@ -1987,7 +1989,7 @@ function screensDocMeta(f, s, idx){
   };
 }
 screens.doc = (params) => {
-  const s = SYSTEMS[params.id];
+  const s = entityById(params.id);
   const topic = topicById(params.topic);
   if(!topic) return screens["resource-systems"]();
   const group = params.g||"";

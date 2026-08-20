@@ -741,11 +741,6 @@ function openUploadDoc(){
       </div>
       <div><label class="wf-note">Category</label>
         <select id="dc-cat" class="btn" style="width:100%">${opt(["Report","Reference","Guide","Template","Training","Dataset"],"Select category")}</select></div>
-      <div><label class="wf-note">Visibility</label>
-        <div class="seg" id="dc-vis" data-v="Public" style="width:100%;display:flex;border-radius:8px">
-          <a class="seg-btn on" style="flex:1;padding:11px;font-size:13px;text-align:center" onclick="setDocVis('Public')">🌐 Public</a>
-          <a class="seg-btn" style="flex:1;padding:11px;font-size:13px;text-align:center" onclick="setDocVis('Private')">🔒 Private</a>
-        </div></div>
       <div><label class="wf-note">Tags</label>
         <input id="dc-tag" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Type a tag and press Enter" onkeydown="if(event.key==='Enter'){event.preventDefault();addDocTag(this.value);this.value='';}">
         <div id="dc-tags" class="chips" style="margin-top:8px">${renderDocTags()}</div></div>

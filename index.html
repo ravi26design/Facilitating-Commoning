@@ -1561,14 +1561,22 @@ screens.modular = (params) => {
       <section class="section">
         <div class="between"><h2 class="mb0">Topics under ${label}${group?" · "+group:""}</h2><span class="wf-note">Choose a topic</span></div>
         <p class="sub">Select a topic to see its courses, modules and resources.</p>
-        <div class="grid g3">
-          ${topics.length?topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
-            <div class="ph-img" style="min-height:104px">Topic image — placeholder</div>
-            <h3>${t.name}</h3>
-            <p>${t.desc}</p>
-            <div class="wf-note">${t.count} resource${t.count!==1?'s':''}</div>
-            <div class="cta"><a class="btn sm primary">View resources →</a></div>
-          </div>`).join(""):`<div class="panel muted">No topics yet for this selection.</div>`}
+        <div class="layout-side mt12">
+          <aside class="filters">
+            <h4 style="margin:0 0 10px;font-size:13px">Filter</h4>
+            <div class="fgroup"><h4>Select State</h4>${["All States"].concat(STATES).map(x=>`<label class="fopt"><input type="radio" name="st"> ${x}</label>`).join("")}</div>
+            <div class="fgroup"><h4>Select Language</h4>${["All Languages","English","Hindi"].map(x=>`<label class="fopt"><input type="radio" name="lang"> ${x}</label>`).join("")}</div>
+            <div class="filter-actions"><a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply</a><a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a></div>
+          </aside>
+          <div class="grid g2">
+            ${topics.length?topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
+              <div class="ph-img" style="min-height:104px">Topic image — placeholder</div>
+              <h3>${t.name}</h3>
+              <p>${t.desc}</p>
+              <div class="wf-note">${t.count} resource${t.count!==1?'s':''}</div>
+              <div class="cta"><a class="btn sm primary">View resources →</a></div>
+            </div>`).join(""):`<div class="panel muted">No topics yet for this selection.</div>`}
+          </div>
         </div>
       </section>
     `);

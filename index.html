@@ -2016,13 +2016,7 @@ screens.doc = (params) => {
   const metaRow = (label,val)=>`<div class="doc-meta-row"><h5>${label}</h5><div class="doc-meta-val">${val}</div></div>`;
   return shell("#/resource-systems", crumbItems, `
     <section class="section">
-      <div class="between">
-        <div class="row" style="align-items:center;gap:14px">
-          <a class="btn sm" onclick="go('${backToFiles}')">← Files</a>
-          <span class="wf-note">${topic.name} · ${sub.code} ${sub.name}</span>
-        </div>
-      </div>
-      <h2 style="margin:12px 0 0;font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
+      <h2 style="margin:0;font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
     </section>
 
     <section class="section">

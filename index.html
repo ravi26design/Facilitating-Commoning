@@ -1600,10 +1600,6 @@ screens.modular = (params) => {
       <h2 class="mt12" style="font-size:18px">${topic.name}</h2>
       <div class="layout-side mt12">
         <aside class="filters">
-          <h4 style="margin:0 0 10px;font-size:13px">Filter</h4>
-          <div class="fgroup"><h4>Select State</h4>${["All States"].concat(STATES).map(x=>`<label class="fopt"><input type="radio" name="st"> ${x}</label>`).join("")}</div>
-          <div class="fgroup"><h4>Select Language</h4>${["All Languages","English","Hindi"].map(x=>`<label class="fopt"><input type="radio" name="lang"> ${x}</label>`).join("")}</div>
-          <div class="filter-actions"><a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply</a><a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a></div>
           <div class="fgroup" style="border-bottom:none;padding-bottom:0">
             <h4>Subtopics</h4>
             ${groups.map(g=>`<div class="cur-mod-head" style="border-radius:4px;margin:6px 0 2px;border-top:none">${g.mod}</div>

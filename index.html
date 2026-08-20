@@ -182,6 +182,7 @@ main{min-height:60vh;padding-bottom:40px}
   background:var(--panel);padding:11px 12px;cursor:pointer;position:relative;transition:background .12s;
 }
 .pw-step:hover{background:var(--fill)}
+.pw-step.static{cursor:default;pointer-events:none}
 .pw-step .num{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
 .pw-step .nm{font-size:13px;font-weight:600;margin-top:2px}
 .pw-step.active{background:var(--active);border-color:var(--active)}
@@ -781,11 +782,11 @@ function footer(){
 /* Commoning pathway (reusable). activeId optional; system optional for links */
 function pathway(activeId, opts={}){
   const compact=opts.compact?"compact":"";
-  const sys=opts.system?`/${opts.system}`:"";
   const steps=STAGES.map((s,i)=>{
     const active=s.id===activeId?"active":"";
     const arrow=i<STAGES.length-1?`<div class="pw-arrow">→</div>`:"";
-    return `<div class="pw-step ${active}" onclick="go('#/stage/${s.id}${sys?('?sys='+opts.system):''}')">
+    const click=opts.static?"":`onclick="go('#/stage/${s.id}${opts.system?('?sys='+opts.system):''}')"`;
+    return `<div class="pw-step ${active} ${opts.static?'static':''}" ${click}>
         <div class="num">${s.num}</div><div class="nm">${s.name}</div>
       </div>${arrow}`;
   }).join("");
@@ -1367,7 +1368,6 @@ screens.system = (params) => {
   return shell("#/resource-systems",
     [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"},{label:s.name}], `
     <section class="section">
-      <div class="eyebrow">Resource-system Information Page · same page logic for Pastureland, Forests &amp; Water</div>
       <div class="banner">
         <div><div class="wf-note">Commoning of</div><h2>${s.name}</h2></div>
         <div class="sys-badge">${s.name}</div>
@@ -1376,7 +1376,7 @@ screens.system = (params) => {
 
     <section class="section">
       <div class="panel">
-        <h3 style="margin-top:0">${s.name} — Resource-system introduction</h3>
+        <h3 style="margin-top:0">${s.name} - Resource-system introduction</h3>
         <div class="grid g3 mt8">
           <div><div class="wf-note">Introduction</div><p class="muted" style="margin:4px 0 0">${s.desc}</p></div>
           <div><div class="wf-note">Intended users</div><p class="muted" style="margin:4px 0 0">${s.users}</p></div>
@@ -1391,7 +1391,7 @@ screens.system = (params) => {
         <span class="wf-note">Key steps of the process / stages of Commoning</span>
       </div>
       <p class="sub">Understand context → Build institutions → Secure tenure → Plan → Restore/manage → Monitor &amp; adapt.</p>
-      ${pathway("understand",{system:params.id})}
+      ${pathway("understand",{system:params.id,static:true})}
       <div class="mt12"><a class="btn sm" onclick="toast('Link to process Documents — ${STATES.join(', ')} (placeholder)')">Link to process Documents →</a></div>
     </section>
 

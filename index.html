@@ -695,7 +695,8 @@ function _genSubtopics(topic){
 }
 function subtopicsFor(topic){
   const id = topic ? topic.id : "_";
-  if(!SUBSTORE[id]) SUBSTORE[id] = _genSubtopics(topic);
+  // Admin-created topics start empty; the admin builds subtopics/files themselves.
+  if(!SUBSTORE[id]) SUBSTORE[id] = (topic && topic.custom) ? [] : _genSubtopics(topic);
   return SUBSTORE[id];
 }
 function allSubtopics(topic){ return subtopicsFor(topic).reduce(function(a,g){return a.concat(g.items);},[]); }
@@ -734,16 +735,19 @@ function adminAddTopic(sysId, group){
   if(!name.trim()){ toast("Enter a topic name"); return; }
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('topic-'+(TOPICS.length+1));
   if(TOPICS.some(t=>t.id===id)){ toast("A topic with a similar name already exists"); return; }
-  TOPICS.push({id:id, name:name.trim(), desc:desc.trim()||"New topic (added by admin).", count:0});
+  TOPICS.push({id:id, name:name.trim(), desc:desc.trim()||"New topic (added by admin).", count:0, custom:true});
+  SUBSTORE[id]=[]; // start empty — admin adds subtopics and uploads files
   closeAddTopic();
-  toast("Topic added: "+name.trim());
-  go('#/modular/'+sysId+(group?('?g='+group):''));
+  toast("Topic added: "+name.trim()+" — now add subtopics and files");
+  // open the new topic straight away so the admin can build it
+  go('#/modular/'+sysId+'?'+(group?('g='+group+'&'):'')+'topic='+id);
 }
 function adminAddSubtopic(topicId){
   if(!isAdmin()) return;
   const name=(document.getElementById('ns-name')||{}).value||"";
   if(!name.trim()){ toast("Enter a subtopic name"); return; }
   const topic = topicById(topicId); const groups = subtopicsFor(topic);
+  if(!groups.length){ groups.push({mod:(topic?topic.name:"Topic")+" — Subtopics", items:[]}); }
   const gi = groups.length-1; // add to the last module group
   const code = _nextCode(groups, gi);
   groups[gi].items.push({code:code, name:name.trim(), files:[]});
@@ -1758,10 +1762,10 @@ screens.modular = (params) => {
         <aside class="filters">
           <div class="fgroup" style="border-bottom:none;padding-bottom:0">
             <h4>Subtopics</h4>
-            ${groups.map(g=>`<div class="cur-mod-head" style="border-radius:4px;margin:6px 0 2px;border-top:none">${g.mod}</div>
-              ${g.items.map(it=>`<div class="cur-topic ${it.code===activeSub.code?'active':''}" style="border-top:none;padding:7px 8px" onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
+            ${subs.length?groups.map(g=>`<div class="cur-mod-head" style="border-radius:4px;margin:6px 0 2px;border-top:none">${g.mod}</div>
+              ${g.items.map(it=>`<div class="cur-topic ${activeSub&&it.code===activeSub.code?'active':''}" style="border-top:none;padding:7px 8px" onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
                 <span class="code">${it.code}</span><span>${it.name}</span>
-              </div>`).join("")}`).join("")}
+              </div>`).join("")}`).join(""):`<p class="wf-note" style="margin:6px 0">No subtopics yet.${isAdmin()?" Add one below.":""}</p>`}
             ${isAdmin()?`<div class="mt8"><a class="btn sm" style="width:100%" onclick="toggleReveal('add-sub-form')">+ Add Subtopic</a></div>
               <div id="add-sub-form" class="hidden mt8">
                 <input id="ns-name" class="btn sm" style="width:100%;text-align:left;cursor:text" placeholder="Subtopic name">
@@ -1770,6 +1774,10 @@ screens.modular = (params) => {
           </div>
         </aside>
         <div>
+          ${!activeSub?`<div class="panel muted">
+            <strong>No subtopics yet.</strong>
+            <p style="margin:6px 0 0">${isAdmin()?"Use “+ Add Subtopic” on the left to create the first subtopic, then upload resource files to it.":"This topic has no subtopics yet."}</p>
+          </div>`:`
           <div class="between">
             <h2 class="mb0" style="font-size:18px">${activeSub.code} · ${activeSub.name}</h2>
             <div class="row" style="align-items:center;gap:10px">
@@ -1791,7 +1799,7 @@ screens.modular = (params) => {
           </div>`:""}
           <div class="grid g3">
             ${activeSub.files.length?activeSub.files.map((f,i)=>`<div style="position:relative">${fileCard(f,null,null,i,{sys:params.id,group:group||"",topic:topic.id,sub:activeSub.code})}${isAdmin()?`<a class="btn sm" style="position:absolute;top:8px;right:8px;padding:4px 8px" title="Remove file" onclick="adminRemoveFile('${topic.id}','${activeSub.code}',${i})">✕</a>`:""}</div>`).join(""):`<div class="panel muted">No files yet.${isAdmin()?" Use “Upload File” to add one.":""}</div>`}
-          </div>
+          </div>`}
         </div>
       </div>
     </section>

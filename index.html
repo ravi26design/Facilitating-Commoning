@@ -250,6 +250,12 @@ main{min-height:60vh;padding-bottom:40px}
 /* Model diagram */
 .model{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}
 .model .m-node{border:1.5px solid var(--ink);border-radius:var(--radius);background:var(--panel);padding:18px 14px;text-align:center;font-weight:600}
+/* pillars formula strip (Commoning approach) */
+.pillars{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:12px}
+.pillars .pil{flex:1 1 180px;border:1.5px solid var(--line-2);border-radius:var(--radius);background:var(--panel);padding:16px 14px;text-align:center;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1.35}
+.pillars .pil.out{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:700}
+.pillars .pil-op{align-self:center;font-size:20px;font-weight:700;color:var(--ink-3)}
+@media(max-width:760px){ .pillars{flex-direction:column} .pillars .pil-op{align-self:center} }
 .model-thread{margin-top:14px;border:1px dashed var(--ink);border-radius:var(--radius);padding:12px;text-align:center;background:var(--panel-2);font-weight:700;letter-spacing:.05em}
 
 /* Stage reveal (home journey) */
@@ -1512,11 +1518,34 @@ screens.commoning = () => shell("#/commoning",
     <div class="panel">
       <div class="eyebrow">Key Pillars of Commoning</div>
       <h2 style="margin:0 0 12px;font-size:18px">Approach to Commoning of Commons</h2>
-      <div class="model">
-        <div class="m-node">Institution Building &amp; Governance</div>
-        <div class="m-node">Tenurial Security</div>
-        <div class="m-node">Restoration &amp; Sustainable Management</div>
+      <div class="pillars">
+        <div class="pil">Institution Building &amp; Governance</div><span class="pil-op">+</span>
+        <div class="pil">Tenurial Security</div><span class="pil-op">+</span>
+        <div class="pil">Restoration &amp; Sustainable Management</div><span class="pil-op">=</span>
+        <div class="pil out">Ecological Health &amp; Resilient Livelihoods</div>
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="panel">
+      <div class="eyebrow">Commoning Journey</div>
+      <h2 style="margin:0 0 4px;font-size:18px">Approach of Commoning of Commons</h2>
+      <p class="sub" style="margin-top:0">The pathway for Commoning of all resource types is broadly the same. Variation in processes is based on the type of resource and the legal provisions and instruments in place for that resource type.</p>
+      <div class="ph-img" style="min-height:220px">Approach of Commoning of Commons — visual pathway (placeholder)</div>
+      <div class="pillars mt16">
+        <div class="pil"><strong>Secure community land rights</strong></div><span class="pil-op">+</span>
+        <div class="pil"><strong>Collective action</strong> for responsive and inclusive resource management &amp; governance</div><span class="pil-op">+</span>
+        <div class="pil"><strong>Access to resources &amp; finance</strong> for restoration action</div><span class="pil-op">=</span>
+        <div class="pil out">Ecological health &amp; Resilient livelihoods</div>
+      </div>
+      <div class="flow mt16">
+        <div class="node">Build collective institutions</div><div class="arw">→</div>
+        <div class="node">Secure tenure</div><div class="arw">→</div>
+        <div class="node">Plan to restore &amp; manage</div><div class="arw">→</div>
+        <div class="node strong">Ecological health, well-being &amp; resilient livelihoods</div>
+      </div>
+      <div class="cta mt16"><a class="btn primary" onclick="go('#/resource-systems')">Explore the Commoning Process →</a></div>
     </div>
   </section>
 
@@ -1534,6 +1563,20 @@ screens.commoning = () => shell("#/commoning",
         <div class="node strong">Adapt</div>
       </div>
       <div class="wf-note mt12">This links the need and importance of capacity building — to build agency, knowledge and capacity.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="between"><h2 class="mb0" style="font-size:18px">Commoning in Action</h2><span class="wf-note">Field stories</span></div>
+    <p class="sub">Short field stories showing what Commoning looks like on the ground — making the concept tangible.</p>
+    <div class="grid g3">
+      ${STORIES.map(s=>`<div class="card click" onclick="go('#/story/${s.id}')">
+        <div class="ph-img" style="min-height:120px">Field photograph — placeholder</div>
+        <div class="meta-tags mt8"><span class="tag">${s.system}</span><span class="tag">${s.stage}</span></div>
+        <h3 style="font-size:15px;margin:8px 0 0">${s.title}</h3>
+        <p>${s.excerpt}</p>
+        <div class="cta"><a class="btn sm primary">Read the Story →</a></div>
+      </div>`).join("")}
     </div>
   </section>
 

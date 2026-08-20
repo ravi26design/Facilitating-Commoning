@@ -2075,7 +2075,10 @@ screens.doc = (params) => {
   const metaRow = (label,val)=>`<div class="doc-meta-row"><h5>${label}</h5><div class="doc-meta-val">${val}</div></div>`;
   return shell("#/resource-systems", crumbItems, `
     <section class="section">
-      <h2 style="margin:0;font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
+      <div class="between">
+        <h2 class="mb0" style="font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
+        <div class="row"><a class="btn primary" onclick="download('${f.name}')">Download</a></div>
+      </div>
     </section>
 
     <section class="section">

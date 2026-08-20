@@ -490,6 +490,9 @@ body.static-mode .overlay{ display:none !important; }
 <div id="pwd-overlay" class="overlay">
   <div class="searchpanel" id="pwd-panel" style="width:min(460px,94vw)"></div>
 </div>
+<div id="theme-overlay" class="overlay">
+  <div class="searchpanel" id="theme-panel" style="width:min(600px,94vw);max-height:86vh;overflow:auto"></div>
+</div>
 
 <script>
 /* ============================================================
@@ -724,6 +727,51 @@ function _nextCode(groups, groupIdx){
   let max = base;
   g.items.forEach(it=>{ const n=parseInt(it.code,10); if(!isNaN(n)&&n>max) max=n; });
   return String(max+1);
+}
+/* ---- Admin: Add a Theme to Resource Systems & Themes ---- */
+function openAddTheme(){
+  if(!isAdmin()) return;
+  document.getElementById('theme-panel').innerHTML=`
+    <div class="between" style="align-items:flex-start">
+      <div><h3 style="margin:0">Add a Theme</h3><p class="wf-note" style="margin:4px 0 0">Create a new theme under Resource Systems &amp; Themes</p></div>
+      <a class="btn sm" onclick="closeAddTheme()">✕</a>
+    </div>
+    <div class="stack" style="margin-top:16px">
+      <div><label class="wf-note">Theme name <span class="req">*</span></label>
+        <input id="th-name" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="e.g. Water Stewardship"></div>
+      <div><label class="wf-note">Purpose &amp; relevance to Commons</label>
+        <textarea id="th-desc" class="btn" style="width:100%;min-height:70px;text-align:left;cursor:text;resize:vertical" placeholder="One line describing this theme"></textarea></div>
+      <div class="grid g2">
+        <div><label class="wf-note">Intended users</label>
+          <input id="th-users" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Who is this for?"></div>
+        <div><label class="wf-note">Expected outcome</label>
+          <input id="th-outcome" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="What does it achieve?"></div>
+      </div>
+      <div><label class="wf-note">Theme image</label>
+        <div class="dropzone" onclick="toast('Upload theme image (placeholder)')" style="cursor:pointer">Drag &amp; drop an image, or click to upload</div></div>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin-top:18px"><a class="btn" onclick="closeAddTheme()">Cancel</a><a class="btn primary" onclick="adminAddTheme()">Save</a></div>`;
+  document.getElementById('theme-overlay').classList.add('open');
+  setTimeout(()=>{const i=document.getElementById('th-name');if(i)i.focus();},30);
+}
+function closeAddTheme(){ const o=document.getElementById('theme-overlay'); if(o) o.classList.remove('open'); }
+function adminAddTheme(){
+  if(!isAdmin()) return;
+  const name=(document.getElementById('th-name')||{}).value||"";
+  const desc=(document.getElementById('th-desc')||{}).value||"";
+  const users=(document.getElementById('th-users')||{}).value||"";
+  const outcome=(document.getElementById('th-outcome')||{}).value||"";
+  if(!name.trim()){ toast("Enter a theme name"); return; }
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('theme-'+(THEME_LIST.length+1));
+  if(THEMES[id] || SYSTEMS[id]){ toast("A theme with a similar name already exists"); return; }
+  THEMES[id] = { id:id, name:name.trim(),
+    desc:desc.trim()||"New theme (added by admin).",
+    users:users.trim()||"Facilitators, partners and community institutions.",
+    outcome:outcome.trim()||"Advances commoning across the resource systems." };
+  THEME_LIST.push(THEMES[id]);
+  closeAddTheme();
+  toast("Theme added: "+name.trim());
+  go('#/resource-systems');
 }
 /* ---- Change password (wireframe placeholder) ---- */
 function openChangePassword(){
@@ -1695,7 +1743,7 @@ screens["resource-systems"] = () => shell("#/resource-systems",
       ${systemCard("forests",SYSTEMS.forests)}
       ${systemCard("water",SYSTEMS.water)}
     </div>
-    <div class="wrapline">Themes</div>
+    <div class="between mt24" style="margin-bottom:8px"><h3 class="mb0" style="font-size:16px">Themes</h3>${isAdmin()?`<a class="btn sm primary" onclick="openAddTheme()">+ Add Theme</a>`:""}</div>
     <div class="grid g3">
       ${THEME_LIST.map(themeCard).join("")}
     </div>
@@ -3124,6 +3172,7 @@ document.getElementById("tour-overlay").addEventListener("click",e=>{if(e.target
 document.getElementById("topic-overlay").addEventListener("click",e=>{if(e.target.id==="topic-overlay")closeAddTopic();});
 document.getElementById("doc-overlay").addEventListener("click",e=>{if(e.target.id==="doc-overlay")closeUploadDoc();});
 document.getElementById("pwd-overlay").addEventListener("click",e=>{if(e.target.id==="pwd-overlay")closeChangePassword();});
+document.getElementById("theme-overlay").addEventListener("click",e=>{if(e.target.id==="theme-overlay")closeAddTheme();});
 document.addEventListener("click",e=>{const p=document.getElementById("profile");const m=document.getElementById("profile-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
 
 /* boot */

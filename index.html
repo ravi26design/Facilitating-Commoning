@@ -331,6 +331,24 @@ footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;col
 .file-prev{min-height:100px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:11px;border-bottom:1px solid var(--line);
   background:repeating-linear-gradient(45deg,transparent,transparent 9px,#e6e6e6 9px,#e6e6e6 10px),var(--fill)}
 .file-body{padding:10px 12px}
+/* document detail page */
+.doc-layout{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+.doc-preview{padding:16px}
+.doc-prev-stage{min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border-radius:var(--radius);
+  color:var(--ink-3);background:repeating-linear-gradient(45deg,transparent,transparent 11px,#ececec 11px,#ececec 12px),var(--fill)}
+.doc-prev-glyph{font-size:52px;line-height:1;filter:grayscale(1);opacity:.55}
+.doc-prev-name{font-size:13px;color:var(--ink-2)}
+.doc-meta{padding:18px 20px;position:sticky;top:76px}
+.doc-meta-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.doc-meta-row h5{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:700}
+.doc-meta-val{font-size:14px;color:var(--ink)}
+.doc-pill{display:inline-block;border:1px solid var(--line-2);border-radius:999px;padding:3px 12px;font-size:12px;background:var(--panel)}
+.doc-ver{background:var(--fill-2);border:1px solid var(--line);border-radius:5px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:12px}
+.doc-uploader{display:flex;align-items:center;gap:10px}
+.doc-avatar{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.doc-tags{display:flex;flex-wrap:wrap;gap:8px}
+.doc-tag{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;font-size:12px;color:var(--ink-2);background:var(--panel)}
+@media(max-width:900px){.doc-layout{grid-template-columns:1fr}.doc-meta{position:static}}
 /* create-course form */
 .btn-disabled{opacity:.4;pointer-events:none}
 .req{color:var(--ink);font-weight:700}
@@ -905,8 +923,10 @@ function filePreviewGlyph(type){
   const t=(type||"").toLowerCase();
   return t==="video" ? `<div class="play">▶</div>` : t==="pdf" ? `<div class="doc-ic">PDF</div>` : t==="image" ? `Image` : `File`;
 }
-function fileCard(f, courseId, topicId, idx){
-  const view = (courseId!=null) ? `go('#/file/${courseId}/${topicId}/${idx}')` : `toast('Open ${f.type}: ${f.name} (placeholder)')`;
+function fileCard(f, courseId, topicId, idx, docCtx){
+  const view = docCtx ? `go('#/doc/${docCtx.sys}?g=${docCtx.group}&topic=${docCtx.topic}&sub=${docCtx.sub}&i=${idx}')`
+    : (courseId!=null) ? `go('#/file/${courseId}/${topicId}/${idx}')`
+    : `toast('Open ${f.type}: ${f.name} (placeholder)')`;
   return `<div class="file-card">
     <div class="file-prev" style="cursor:pointer" onclick="${view}">${filePreviewGlyph(f.type)}</div>
     <div class="file-body">
@@ -1614,7 +1634,7 @@ screens.modular = (params) => {
           </div>
           <p class="sub">Files for this subtopic — open or download.</p>
           <div class="grid g3">
-            ${activeSub.files.map(f=>fileCard(f)).join("")}
+            ${activeSub.files.map((f,i)=>fileCard(f,null,null,i,{sys:params.id,group:group||"",topic:topic.id,sub:activeSub.code})).join("")}
           </div>
         </div>
       </div>
@@ -1937,6 +1957,110 @@ screens.file = (params) => {
       <div class="between"><h2 class="mb0" style="font-size:18px">More files in “${topic.name}”</h2><a class="btn sm" onclick="go('#/course/${c.id}?t=${topic.id}')">Back to topic →</a></div>
       <div class="grid g3 mt16">
         ${topic.files.map((ff,i)=>i===idx?"":fileCard(ff,c.id,topic.id,i)).join("")||`<div class="panel muted">No other files.</div>`}
+      </div>
+    </section>
+  `);
+};
+
+/* ---- DOCUMENT DETAIL (resource-system subtopic file) — full preview + metadata ---- */
+const DOC_CONTRIBUTORS = ["Krishnan Iyer","Meera Nair","Anil Kumar","Sunita Rao","Ravi Menon"];
+function docFileSize(type){ const t=(type||"").toLowerCase(); return t==="video"?"48.2 MB":t==="pdf"?"3.7 MB":t==="image"?"1.2 MB":t==="audio"?"12.6 MB":"—"; }
+function docCategory(name){ const n=(name||"").toLowerCase();
+  if(/note|background|overview|explainer/.test(n)) return "Reference";
+  if(/guide|handbook|sop|format|manual/.test(n)) return "How-to";
+  if(/map|concept|diagram/.test(n)) return "Reference Map";
+  if(/video|intro/.test(n)) return "Learning Video";
+  return "Resource"; }
+function screensDocMeta(f, s, idx){
+  const who = DOC_CONTRIBUTORS[idx % DOC_CONTRIBUTORS.length];
+  const initials = who.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  return {
+    theme: s?s.name:"Resource System",
+    filetype: f.type,
+    category: docCategory(f.name),
+    visibility: "Public",
+    size: docFileSize(f.type),
+    version: "v1.0",
+    who: who, initials: initials, date: "2026-05-18",
+    tags: [s?s.name:"Commons", (f.type||"File"), "Public"]
+  };
+}
+screens.doc = (params) => {
+  const s = SYSTEMS[params.id];
+  const topic = topicById(params.topic);
+  if(!topic) return screens["resource-systems"]();
+  const group = params.g||"";
+  const gq = group?("g="+group+"&"):"";
+  const subs = allSubtopics(topic);
+  const sub = subs.find(x=>x.code===params.sub) || subs[0];
+  if(!sub) return screens["resource-systems"]();
+  const idx = Math.max(0, Math.min(sub.files.length-1, parseInt(params.i,10)||0));
+  const f = sub.files[idx];
+  const t = (f.type||"").toLowerCase();
+  const meta = screensDocMeta(f, s, idx);
+  const backToFiles = `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${sub.code}`;
+  const crumbItems = [
+    {label:"Home",href:"#/home"},
+    {label:"Resource Systems",href:"#/resource-systems"},
+    s?{label:s.name,href:"#/system/"+params.id}:{label:"Resource System"},
+    {label:topic.name,href:`#/modular/${params.id}?${gq}topic=${topic.id}`},
+    {label:f.name}
+  ];
+  const bigPrev = t==="video"
+      ? `<div class="play" style="width:66px;height:66px;font-size:24px">▶</div><div class="doc-prev-name">${f.name}</div>`
+    : t==="image"
+      ? `<div class="doc-prev-glyph">🖼</div><div class="doc-prev-name">${f.name}</div>`
+    : `<div class="doc-prev-glyph">📄</div><div class="doc-prev-name">${f.name}</div>`;
+  const prevLabel = t==="video"?"Video Preview":t==="image"?"Image Preview":"PDF Preview";
+  const metaRow = (label,val)=>`<div class="doc-meta-row"><h5>${label}</h5><div class="doc-meta-val">${val}</div></div>`;
+  return shell("#/resource-systems", crumbItems, `
+    <section class="section">
+      <div class="between">
+        <div class="row" style="align-items:center;gap:14px">
+          <a class="btn sm" onclick="go('${backToFiles}')">← Files</a>
+          <span class="wf-note">${topic.name} · ${sub.code} ${sub.name}</span>
+        </div>
+        <div class="row">
+          <a class="btn icon-btn" title="Share" onclick="toast('Share link copied (placeholder)')">⤴</a>
+          <a class="btn icon-btn" title="Download" onclick="download('${f.name}')">⭳</a>
+        </div>
+      </div>
+      <h2 style="margin:12px 0 0;font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
+    </section>
+
+    <section class="section">
+      <div class="doc-layout">
+        <div class="panel doc-preview">
+          <div class="between" style="margin-bottom:10px">
+            <h4 style="margin:0;font-size:13px">${prevLabel}</h4>
+            <a class="btn sm" title="Full screen" onclick="toast('Open full-screen viewer (placeholder)')">⤢</a>
+          </div>
+          <div class="doc-prev-stage">${bigPrev}</div>
+        </div>
+
+        <aside class="panel doc-meta">
+          <div class="between" style="margin-bottom:6px"><h4 style="margin:0;font-size:15px">Document Details</h4></div>
+          ${metaRow("Theme", meta.theme)}
+          ${metaRow("File Type", `<span class="doc-pill">${meta.filetype}</span>`)}
+          ${metaRow("Category", meta.category)}
+          ${metaRow("Visibility", meta.visibility)}
+          ${metaRow("File Size", meta.size)}
+          ${metaRow("Version", `<code class="doc-ver">${meta.version}</code>`)}
+          <div class="doc-meta-row"><h5>Uploaded By</h5>
+            <div class="doc-uploader"><span class="doc-avatar">${meta.initials}</span><div><div style="font-weight:600;font-size:13px">${meta.who}</div><div class="wf-note">${meta.date}</div></div></div>
+          </div>
+          <div class="doc-meta-row" style="border-bottom:none">
+            <h5>Tags</h5>
+            <div class="doc-tags">${meta.tags.map(x=>`<span class="doc-tag">🏷 ${x}</span>`).join("")}</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="between"><h2 class="mb0" style="font-size:16px">More files in “${sub.name}”</h2></div>
+      <div class="grid g3 mt16">
+        ${sub.files.map((ff,i)=>i===idx?"":fileCard(ff,null,null,i,{sys:params.id,group:group,topic:topic.id,sub:sub.code})).join("")||`<div class="panel muted">No other files.</div>`}
       </div>
     </section>
   `);
@@ -2645,6 +2769,7 @@ function render(){
   else if(name==="course"){params.id=parts[1];html=screens.course(params);}
   else if(name==="la"){params.id=parts[1];html=screens.la(params);}
   else if(name==="file"){params.id=parts[1];params.t=parts[2];params.f=parts[3];html=screens.file(params);}
+  else if(name==="doc"){params.id=parts[1];html=screens.doc(params);}
   else if(name==="stage"){params.id=parts[1];html=screens.stage(params);}
   else if(name==="resource"){params.id=parts[1];html=screens.resource(params);}
   else if(name==="story"){params.id=parts[1];html=screens.story(params);}

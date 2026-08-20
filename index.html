@@ -1127,16 +1127,6 @@ screens.home = () => shell("#/home", null, `
 
   <section class="section">
     <div class="between">
-      <div><h2 class="mb0">Latest updates / recently added resources</h2></div>
-      <div class="row"><a class="btn sm" onclick="go('#/library')">Quick Access →</a><a class="btn sm" onclick="go('#/library')">Read More →</a></div>
-    </div>
-    <div class="hscroll mt12">
-      ${RES.slice(0,8).map(resourceCard).join("")}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="between">
       <div><div class="eyebrow">Courses</div><h2 class="mb0">Trending Courses</h2></div>
       <a class="btn sm" onclick="go('#/courses')">View All Courses →</a>
     </div>

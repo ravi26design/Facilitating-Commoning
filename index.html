@@ -256,6 +256,15 @@ main{min-height:60vh;padding-bottom:40px}
 .pillars .pil.out{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:700}
 .pillars .pil-op{align-self:center;font-size:20px;font-weight:700;color:var(--ink-3)}
 @media(max-width:760px){ .pillars{flex-direction:column} .pillars .pil-op{align-self:center} }
+/* Commoning approach infographic (circular icon pathway) */
+.info-strip{border:1px solid var(--line);border-radius:var(--radius);background:var(--fill);padding:22px 16px;margin-top:12px}
+.info-flow{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:6px}
+.info-node{flex:0 0 132px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.info-circle{width:88px;height:88px;border-radius:50%;border:2px solid var(--ink);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:34px}
+.info-circle.out{border-color:var(--line-2);background:var(--panel-2)}
+.info-cap{font-size:11.5px;color:var(--ink-2);margin-top:10px;line-height:1.32;padding:0 2px}
+.info-op{align-self:center;margin-top:24px;font-size:26px;font-weight:700;color:var(--ink-3)}
+.info-note{text-align:center;color:var(--ink-2);font-size:13px;margin:16px auto 0;max-width:640px;line-height:1.5}
 .model-thread{margin-top:14px;border:1px dashed var(--ink);border-radius:var(--radius);padding:12px;text-align:center;background:var(--panel-2);font-weight:700;letter-spacing:.05em}
 
 /* Stage reveal (home journey) */
@@ -1531,13 +1540,18 @@ screens.commoning = () => shell("#/commoning",
     <div class="panel">
       <div class="eyebrow">Commoning Journey</div>
       <h2 style="margin:0 0 4px;font-size:18px">Approach of Commoning of Commons</h2>
-      <p class="sub" style="margin-top:0">The pathway for Commoning of all resource types is broadly the same. Variation in processes is based on the type of resource and the legal provisions and instruments in place for that resource type.</p>
-      <div class="ph-img" style="min-height:220px">Approach of Commoning of Commons — visual pathway (placeholder)</div>
-      <div class="pillars mt16">
-        <div class="pil"><strong>Secure community land rights</strong></div><span class="pil-op">+</span>
-        <div class="pil"><strong>Collective action</strong> for responsive and inclusive resource management &amp; governance</div><span class="pil-op">+</span>
-        <div class="pil"><strong>Access to resources &amp; finance</strong> for restoration action</div><span class="pil-op">=</span>
-        <div class="pil out">Ecological health &amp; Resilient livelihoods</div>
+      <div class="info-strip">
+        <div class="info-flow">
+          <div class="info-node"><div class="info-circle">⚖️</div><div class="info-cap">Secure community land rights</div></div>
+          <span class="info-op">+</span>
+          <div class="info-node"><div class="info-circle">👥</div><div class="info-cap">Collective action for responsive and inclusive resource management and governance</div></div>
+          <span class="info-op">+</span>
+          <div class="info-node"><div class="info-circle">🤲</div><div class="info-cap">Access to resources and finance for restoration action</div></div>
+          <span class="info-op">=</span>
+          <div class="info-node"><div class="info-circle out">🏞️</div><div class="info-cap">Ecological health</div></div>
+          <div class="info-node"><div class="info-circle out">🐄</div><div class="info-cap">Resilient livelihoods</div></div>
+        </div>
+        <p class="info-note">The pathway for Commoning of all resource types is broadly the same. Variation in processes is based on the type of resource and the legal provisions and instruments in place for that resource type.</p>
       </div>
       <div class="flow mt16">
         <div class="node">Build collective institutions</div><div class="arw">→</div>

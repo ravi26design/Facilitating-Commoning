@@ -173,14 +173,6 @@ main{min-height:60vh;padding-bottom:40px}
 .hero-media{min-height:230px;align-self:stretch}
 @media(max-width:760px){ .hero-split{grid-template-columns:1fr} .hero-media{min-height:150px} }
 .intro-block h3{margin:14px 0 0;font-size:17px}
-/* Approach to Capacity Building flow diagram */
-.cb-flow{display:flex;align-items:stretch;gap:0;margin-top:16px;overflow-x:auto;padding:8px 2px 14px}
-.cb-step{flex:0 0 128px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
-.cb-circle{width:70px;height:70px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--panel);color:var(--ink);z-index:1}
-.cb-circle.fill{background:var(--ink);color:#fff}
-.cb-circle.term{border-color:var(--line-2);background:var(--fill);font-size:11px;font-weight:700;line-height:1.15;padding:6px;color:var(--ink-2)}
-.cb-cap{font-size:11px;color:var(--ink-2);margin-top:10px;line-height:1.32;padding:0 4px}
-.cb-step:not(:last-child)::after{content:"→";position:absolute;top:24px;right:-9px;color:var(--ink-3);font-size:16px;z-index:2}
 .pw-field{position:relative}
 .pw-field .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
 .pw-field .pw-eye:hover{color:var(--ink)}
@@ -1627,18 +1619,7 @@ screens["learning-approach"] = () => shell("#/learning-approach",
         <div class="node">Handholding</div><div class="arw">→</div>
         <div class="node strong">Action Cycle ↻</div>
       </div>
-      <div class="ph-img mt12" style="min-height:200px">Learning action cycle diagram — placeholder</div>
-      <div class="wf-note mt16" style="text-align:left;font-weight:700;letter-spacing:.04em">APPROACH TO CAPACITY BUILDING</div>
-      <div class="cb-flow">
-        <div class="cb-step"><div class="cb-circle term">Approach to Capacity Building</div><div class="cb-cap">Start</div></div>
-        <div class="cb-step"><div class="cb-circle fill">👥</div><div class="cb-cap">Training of Trainers (Physical or virtual)</div></div>
-        <div class="cb-step"><div class="cb-circle fill">📱</div><div class="cb-cap">Learning using content on digital platforms following ToT</div></div>
-        <div class="cb-step"><div class="cb-circle">💡</div><div class="cb-cap">Field Implementation</div></div>
-        <div class="cb-step"><div class="cb-circle fill">🌐</div><div class="cb-cap">Guided Mentoring</div></div>
-        <div class="cb-step"><div class="cb-circle">🎓</div><div class="cb-cap">Learning on digital platforms following guided mentoring sessions</div></div>
-        <div class="cb-step"><div class="cb-circle fill">📋</div><div class="cb-cap">Refresher &amp; follow-up support</div></div>
-        <div class="cb-step"><div class="cb-circle term">✓</div><div class="cb-cap">Learning translated into action</div></div>
-      </div>
+      <div class="ph-img mt12" style="min-height:240px">Approach to Capacity Building diagram — placeholder</div>
     </div>
   </section>
 

@@ -576,11 +576,16 @@ function resFor(name, group){
 
 // Topics (course/subject areas) shown as a list before the resource grid
 const TOPICS = [
-  {id:"rights", name:"Rights & Legal Framework", desc:"Background, key definitions and the legal framework."},
-  {id:"institutions", name:"Community Institutions", desc:"Gram Sabha, governance and collective decision-making."},
-  {id:"claims", name:"Claiming Community Rights", desc:"Preparing, filing and following up on claims."},
-  {id:"planning", name:"Planning & Management", desc:"Plans, restoration and sustainable management."},
-  {id:"support", name:"Facilitation & Support", desc:"Guides, SoPs, handbooks and formats."}
+  {id:"rights", name:"Rights & Legal Framework", desc:"Background, key definitions and the legal framework.", count:2},
+  {id:"institutions", name:"Community Institutions", desc:"Gram Sabha, governance and collective decision-making.", count:2},
+  {id:"claims", name:"Claiming Community Rights", desc:"Preparing, filing and following up on claims.", count:1},
+  {id:"planning", name:"Planning & Management", desc:"Plans, restoration and sustainable management.", count:1},
+  {id:"mapping", name:"Mapping & Boundaries", desc:"Participatory mapping, GPS and boundary demarcation.", count:3},
+  {id:"restoration", name:"Ecological Restoration", desc:"Regeneration, protection and land treatment measures.", count:2},
+  {id:"livelihoods", name:"Livelihoods & Benefit Sharing", desc:"Produce, markets and equitable sharing of benefits.", count:2},
+  {id:"monitoring", name:"Monitoring & Records", desc:"Registers, formats and tracking of collective work.", count:1},
+  {id:"conflict", name:"Conflict Resolution", desc:"Resolving disputes and grievances within the commons.", count:1},
+  {id:"support", name:"Facilitation & Support", desc:"Guides, SoPs, handbooks and formats.", count:3}
 ];
 function topicById(id){return TOPICS.find(t=>t.id===id);}
 const RES_TOPIC = {
@@ -1555,7 +1560,9 @@ screens.modular = (params) => {
 
   /* -------- TOPIC LIST (no topic chosen) -------- */
   if(!topic){
-    const topics = s ? topicsForGroup(s.name, group) : TOPICS.map(t=>Object.assign({count:0},t));
+    const mapped = s ? topicsForGroup(s.name, group) : [];
+    const counts = {}; mapped.forEach(t=>counts[t.id]=t.count);
+    const topics = TOPICS.map(t=>Object.assign({}, t, {count: counts[t.id]!=null ? counts[t.id] : t.count}));
     return shell("#/resource-systems", crumbItems, `
       ${banner}
       <section class="section">
@@ -1568,7 +1575,7 @@ screens.modular = (params) => {
             <div class="fgroup"><h4>Select Language</h4>${["All Languages","English","Hindi"].map(x=>`<label class="fopt"><input type="radio" name="lang"> ${x}</label>`).join("")}</div>
             <div class="filter-actions"><a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply</a><a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a></div>
           </aside>
-          <div class="grid g2">
+          <div class="grid g3">
             ${topics.length?topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
               <div class="ph-img" style="min-height:104px">Topic image — placeholder</div>
               <h3>${t.name}</h3>

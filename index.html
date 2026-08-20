@@ -1392,13 +1392,7 @@ screens.system = (params) => {
       </div>
       <p class="sub">Understand context → Build institutions → Secure tenure → Plan → Restore/manage → Monitor &amp; adapt.</p>
       ${pathway("understand",{system:params.id})}
-      <div class="grid g3 mt16">
-        ${STATES.map(st=>`<div class="card">
-          <div class="ph-img" style="min-height:64px">Process photo — placeholder</div>
-          <h3 style="font-size:13px">Process Documentation — ${st}</h3>
-          <div class="cta"><a class="btn sm" onclick="toast('Open process document — ${st} (placeholder)')">Open →</a></div>
-        </div>`).join("")}
-      </div>
+      <div class="mt12"><a class="btn sm" onclick="toast('Link to process Documents — ${STATES.join(', ')} (placeholder)')">Link to process Documents →</a></div>
     </section>
 
     <section class="section">
@@ -1412,10 +1406,6 @@ screens.system = (params) => {
           <p class="muted" style="margin:0">${o.desc}</p>
           <div class="cta mt8"><a class="btn sm primary">Explore resources →</a></div>
         </div>`).join("")}
-      </div>
-      <div class="callout mt16">
-        <div class="txt"><strong>Or browse everything</strong><span>All courses, curriculum, training materials and supporting resources for ${s.name}.</span></div>
-        <a class="btn primary" onclick="go('#/modular/${params.id}')">All Resources →</a>
       </div>
     </section>
   `);

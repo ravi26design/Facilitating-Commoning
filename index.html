@@ -2360,46 +2360,61 @@ function resourceCrumbs(r){
 
 screens.resource = (params) => {
   const r = resById(params.id) || RES[0];
+  const idx = Math.max(0, RES.indexOf(r));
   const related = RES.filter(x=>x.id!==r.id && (x.system===r.system || x.stage===r.stage)).slice(0,3);
   const relatedFallback = related.length?related:RES.filter(x=>x.id!==r.id).slice(0,3);
+  const k = mediaKind(r.type);
+  const whoName = r.attribution ? r.attribution : DOC_CONTRIBUTORS[idx % DOC_CONTRIBUTORS.length];
+  const initials = r.attribution ? "PO" : DOC_CONTRIBUTORS[idx % DOC_CONTRIBUTORS.length].split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  const day = 24 - (idx % 20); const date = "2026-05-" + (day<10?("0"+day):day);
+  const bigPrev = k==="video"
+      ? `<div class="play" style="width:66px;height:66px;font-size:24px">▶</div><div class="doc-prev-name">${r.title}</div>`
+    : k==="audio"
+      ? `<div class="doc-prev-glyph">♪</div><div class="doc-prev-name">${r.title}</div>`
+    : `<div class="doc-prev-glyph">📄</div><div class="doc-prev-name">${r.title}</div>`;
+  const prevLabel = k==="video"?"Video Preview":k==="audio"?"Audio Preview":"Document Preview";
+  const tags = [r.system, r.type, r.stage, r.lang, r.design].filter(x=>x&&x!==""&&x!=="All Stages");
+  const metaRow = (label,val)=>`<div class="doc-meta-row"><h5>${label}</h5><div class="doc-meta-val">${val}</div></div>`;
   return shell(null, resourceCrumbs(r), `
     <section class="section">
-      <a class="btn sm" onclick="goBack()">← Back</a>
-      <div class="between mt12">
-        <h2 class="mb0">${r.title}</h2>
-        <div class="row"><a class="btn primary" onclick="toast('Open resource viewer (placeholder)')">View Resource</a>
-        <a class="btn" onclick="download('${r.title}')">Download</a>
+      <div class="between">
+        <h2 class="mb0"><span class="badge" style="vertical-align:middle;margin-right:8px">${r.type}</span>${r.title}</h2>
+        <div class="row"><a class="btn primary" onclick="download('${r.title}')">Download</a>
         ${isAdmin()?`<a class="btn" onclick="toast('Edit resource (placeholder)')">Edit</a>`:""}
         ${isRegistered()?`<a class="btn" onclick="toast('Saved to My Learning (placeholder)')">Save</a>`:""}</div>
-      </div>
-      <div class="meta-tags mt12">
-        <span class="tag solid">System / Theme: ${r.system}</span>
-        ${r.stage&&r.stage!==""?`<span class="tag solid">Commoning stage: ${r.stage}</span>`:""}
-        <span class="tag solid">Intended user: ${r.stake}</span>
-        <span class="tag solid">Learning design: ${r.design}</span>
-        <span class="tag solid">Type: ${r.type}</span>
-        <span class="tag solid">Language: ${r.lang}</span>
-        <span class="tag solid">Version / date: ${r.version}</span>
-        ${r.attribution?`<span class="tag solid">Contributor: ${r.attribution}</span>`:""}
       </div>
     </section>
 
     <section class="section">
-      <div class="grid g2">
-        <div class="ph-img" style="min-height:220px">Resource preview — placeholder</div>
-        <div class="stack">
-          <div class="ctx-row"><h5>What is this resource?</h5><p>${r.purpose}</p></div>
-          <div class="ctx-row"><h5>When should it be used?</h5><p>${r.stage&&r.stage!==""?`During the ${r.stage} stage of the Commoning process.`:`When working on ${r.system}.`}</p></div>
-          <div class="ctx-row"><h5>Who should use it?</h5><p>${r.stake}s and those supporting them.</p></div>
+      <div class="doc-layout">
+        <div class="panel doc-preview">
+          <div class="between" style="margin-bottom:10px">
+            <h4 style="margin:0;font-size:13px">${prevLabel}</h4>
+            <a class="btn sm" title="Full screen" onclick="toast('Open full-screen viewer (placeholder)')">⤢</a>
+          </div>
+          <div class="doc-prev-stage">${bigPrev}</div>
         </div>
-      </div>
-      <div class="grid g2 mt16">
-        <div class="ctx-row"><h5>What should happen before this?</h5><p>Complete the preceding learning and context-mapping for this stage.</p></div>
-        <div class="ctx-row"><h5>What should happen after this?</h5><p>Move to the facilitation session, then the related field action.</p></div>
-        <div class="ctx-row"><h5>How should it be facilitated / used?</h5><p>Follow the guided steps; adapt to the local community context.</p></div>
-        <div class="ctx-row"><h5>Related Field Action</h5><p><a class="btn sm" onclick="go('#/resource/tenure-claim-tool')">Community Rights Claim Toolkit →</a></p></div>
+
+        <aside class="panel doc-meta">
+          <div class="between" style="margin-bottom:6px"><h4 style="margin:0;font-size:15px">Resource Details</h4></div>
+          ${metaRow("System / Theme", r.system)}
+          ${metaRow("Type", `<span class="doc-pill">${r.type}</span>`)}
+          ${r.stage&&r.stage!==""?metaRow("Commoning Stage", r.stage):""}
+          ${metaRow("Intended User", r.stake)}
+          ${metaRow("Learning Design", r.design)}
+          ${metaRow("Language", r.lang)}
+          ${metaRow("Version / Date", `<code class="doc-ver">${r.version}</code>`)}
+          <div class="doc-meta-row"><h5>Contributor</h5>
+            <div class="doc-uploader"><span class="doc-avatar">${initials}</span><div><div style="font-weight:600;font-size:13px">${whoName}</div><div class="wf-note">${date}</div></div></div>
+          </div>
+          <div class="doc-meta-row" style="border-bottom:none">
+            <h5>Tags</h5>
+            <div class="doc-tags">${tags.map(x=>`<span class="doc-tag">🏷 ${x}</span>`).join("")}</div>
+          </div>
+        </aside>
       </div>
     </section>
+
 
     <section class="section">
       <div class="panel" style="border-width:1.5px">

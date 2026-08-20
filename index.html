@@ -1581,20 +1581,6 @@ screens.commoning = () => shell("#/commoning",
   </section>
 
   <section class="section">
-    <div class="between"><h2 class="mb0" style="font-size:18px">Commoning in Action</h2><span class="wf-note">Field stories</span></div>
-    <p class="sub">Short field stories showing what Commoning looks like on the ground — making the concept tangible.</p>
-    <div class="grid g3">
-      ${STORIES.map(s=>`<div class="card click" onclick="go('#/story/${s.id}')">
-        <div class="ph-img" style="min-height:120px">Field photograph — placeholder</div>
-        <div class="meta-tags mt8"><span class="tag">${s.system}</span><span class="tag">${s.stage}</span></div>
-        <h3 style="font-size:15px;margin:8px 0 0">${s.title}</h3>
-        <p>${s.excerpt}</p>
-        <div class="cta"><a class="btn sm primary">Read the Story →</a></div>
-      </div>`).join("")}
-    </div>
-  </section>
-
-  <section class="section">
     <div class="callout">
       <div class="txt"><strong>Continue</strong><span>See how the capacity-building approach works, or choose the resource system you are working with.</span></div>
       <div class="row"><a class="btn primary" onclick="go('#/learning-approach')">Learning Approach →</a><a class="btn" onclick="go('#/resource-systems')">Resource Systems →</a></div>

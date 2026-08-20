@@ -1566,8 +1566,10 @@ screens.modular = (params) => {
   const group = params.g; // supporting / modular / atomized
   const gq = group?("g="+group+"&"):"";
   const topic = params.topic ? topicById(params.topic) : null;
+  const ld = group ? LD.find(x=>x.id===group) : null;
   const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"}];
   if(s) crumbItems.push({label:s.name,href:"#/system/"+params.id});
+  if(ld) crumbItems.push({label:ld.name,href:`#/modular/${params.id}?g=${ld.id}`});
   crumbItems.push({label: topic?topic.name:"Topics"});
 
   const banner = `
@@ -1999,14 +2001,18 @@ screens.doc = (params) => {
   const t = (f.type||"").toLowerCase();
   const meta = screensDocMeta(f, s, idx);
   const backToFiles = `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${sub.code}`;
+  const ld = group ? LD.find(x=>x.id===group) : null;
   const crumbItems = [
     {label:"Home",href:"#/home"},
     {label:"Resource Systems & Themes",href:"#/resource-systems"},
-    s?{label:s.name,href:"#/system/"+params.id}:{label:"Resource System"},
+    s?{label:s.name,href:"#/system/"+params.id}:{label:"Resource System"}
+  ];
+  if(ld) crumbItems.push({label:ld.name,href:`#/modular/${params.id}?g=${ld.id}`});
+  crumbItems.push(
     {label:topic.name,href:`#/modular/${params.id}?${gq}topic=${topic.id}`},
     {label:sub.name,href:`#/modular/${params.id}?${gq}topic=${topic.id}&sub=${sub.code}`},
     {label:f.name}
-  ];
+  );
   const bigPrev = t==="video"
       ? `<div class="play" style="width:66px;height:66px;font-size:24px">▶</div><div class="doc-prev-name">${f.name}</div>`
     : t==="image"

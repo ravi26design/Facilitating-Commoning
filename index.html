@@ -173,6 +173,9 @@ main{min-height:60vh;padding-bottom:40px}
 .hero-media{min-height:230px;align-self:stretch}
 @media(max-width:760px){ .hero-split{grid-template-columns:1fr} .hero-media{min-height:150px} }
 .intro-block h3{margin:14px 0 0;font-size:17px}
+.pw-field{position:relative}
+.pw-field .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
+.pw-field .pw-eye:hover{color:var(--ink)}
 .tagbox{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--line-2);border-radius:10px;padding:9px 10px;cursor:text;
   background:repeating-linear-gradient(45deg,transparent,transparent 9px,#f1f1f1 9px,#f1f1f1 10px),var(--panel)}
 .tagbox:focus-within{border-color:var(--ink);box-shadow:var(--shadow-sm)}
@@ -732,17 +735,18 @@ function openChangePassword(){
     </div>
     <div class="stack" style="margin-top:16px">
       <div><label class="wf-note">Current password</label>
-        <input id="pw-old" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="••••••••"></div>
+        <div class="pw-field"><input id="pw-old" type="password" class="btn" style="width:100%;text-align:left;cursor:text;padding-right:44px" placeholder="••••••••"><a class="pw-eye" onclick="togglePw('pw-old',this)">show</a></div></div>
       <div><label class="wf-note">New password</label>
-        <input id="pw-new" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="At least 8 characters"></div>
+        <div class="pw-field"><input id="pw-new" type="password" class="btn" style="width:100%;text-align:left;cursor:text;padding-right:44px" placeholder="At least 8 characters"><a class="pw-eye" onclick="togglePw('pw-new',this)">show</a></div></div>
       <div><label class="wf-note">Confirm new password</label>
-        <input id="pw-conf" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Re-enter new password"></div>
+        <div class="pw-field"><input id="pw-conf" type="password" class="btn" style="width:100%;text-align:left;cursor:text;padding-right:44px" placeholder="Re-enter new password"><a class="pw-eye" onclick="togglePw('pw-conf',this)">show</a></div></div>
     </div>
     <div class="row" style="justify-content:flex-end;margin-top:18px"><a class="btn" onclick="closeChangePassword()">Cancel</a><a class="btn primary" onclick="submitChangePassword()">Update Password</a></div>`;
   document.getElementById('pwd-overlay').classList.add('open');
   setTimeout(()=>{const i=document.getElementById('pw-old');if(i)i.focus();},30);
 }
 function closeChangePassword(){ const o=document.getElementById('pwd-overlay'); if(o) o.classList.remove('open'); }
+function togglePw(id, btn){ const el=document.getElementById(id); if(!el) return; const show=el.type==='password'; el.type=show?'text':'password'; if(btn) btn.textContent=show?'hide':'show'; }
 function submitChangePassword(){
   const oldp=(document.getElementById('pw-old')||{}).value||"";
   const np=(document.getElementById('pw-new')||{}).value||"";

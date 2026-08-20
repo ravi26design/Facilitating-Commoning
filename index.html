@@ -1355,33 +1355,66 @@ screens["resource-systems"] = () => shell("#/resource-systems",
   </section>
 `);
 
-/* ---- RESOURCE SYSTEM ENTRY — list of topics (subjects) before the resource grid ---- */
+/* ---- RESOURCE-SYSTEM INFORMATION PAGE (deck slide 11) — intro, pathway, learning-design options ---- */
 screens.system = (params) => {
   const s = SYSTEMS[params.id];
   if(!s) return screens["resource-systems"]();
-  const topics = topicsForSystem(s.name);
+  const OPTIONS = [
+    {g:"atomized", name:"Atomized Course Curriculum (LDHF) & Learning Materials", desc:"Low-dose high-frequency atomised content and learning materials."},
+    {g:"modular", name:"Modular Learning", desc:"Progressive training modules delivered as a series."},
+    {g:"supporting", name:"Supporting Resources", desc:"Handbooks, facilitators' guides, SoPs, formats and tools."}
+  ];
   return shell("#/resource-systems",
     [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"},{label:s.name}], `
     <section class="section">
+      <div class="eyebrow">Resource-system Information Page · same page logic for Pastureland, Forests &amp; Water</div>
       <div class="banner">
         <div><div class="wf-note">Commoning of</div><h2>${s.name}</h2></div>
         <div class="sys-badge">${s.name}</div>
       </div>
     </section>
+
     <section class="section">
-      <div class="eyebrow">Topics under ${s.name}</div>
-      <h2>Choose a topic</h2>
-      <p class="sub">Select a topic to see its courses, modules and resources.</p>
-      <div class="grid g3">
-        ${topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?topic=${t.id}')">
-          <h3>${t.name}</h3>
-          <p>${t.desc}</p>
-          <div class="wf-note">${t.count} resource${t.count>1?'s':''}</div>
-          <div class="cta"><a class="btn sm">View resources →</a></div>
+      <div class="panel">
+        <h3 style="margin-top:0">${s.name} — Resource-system introduction</h3>
+        <div class="grid g3 mt8">
+          <div><div class="wf-note">Introduction</div><p class="muted" style="margin:4px 0 0">${s.desc}</p></div>
+          <div><div class="wf-note">Intended users</div><p class="muted" style="margin:4px 0 0">${s.users}</p></div>
+          <div><div class="wf-note">Expected outcome</div><p class="muted" style="margin:4px 0 0">${s.outcome}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="between">
+        <h2 class="mb0">Commoning Pathway / Process</h2>
+        <span class="wf-note">Key steps of the process / stages of Commoning</span>
+      </div>
+      <p class="sub">Understand context → Build institutions → Secure tenure → Plan → Restore/manage → Monitor &amp; adapt.</p>
+      ${pathway("understand",{system:params.id})}
+      <div class="grid g3 mt16">
+        ${STATES.map(st=>`<div class="card">
+          <div class="ph-img" style="min-height:64px">Process photo — placeholder</div>
+          <h3 style="font-size:13px">Process Documentation — ${st}</h3>
+          <div class="cta"><a class="btn sm" onclick="toast('Open process document — ${st} (placeholder)')">Open →</a></div>
         </div>`).join("")}
       </div>
-      <div class="callout mt24">
-        <div class="txt"><strong>Or browse everything</strong><span>See all resources under ${s.name} in one grid.</span></div>
+    </section>
+
+    <section class="section">
+      <div class="eyebrow">Learning Design and Materials</div>
+      <h2>Choose how you want to learn</h2>
+      <p class="sub">The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.</p>
+      <div class="ld-grid">
+        ${OPTIONS.map(o=>`<div class="ld-card" onclick="go('#/modular/${params.id}?g=${o.g}')">
+          <div class="badge">${o.g==='atomized'?'LDHF':o.g==='modular'?'Modular':'Support'}</div>
+          <h3 style="margin:6px 0 0">${o.name}</h3>
+          <p class="muted" style="margin:0">${o.desc}</p>
+          <div class="cta mt8"><a class="btn sm primary">Explore resources →</a></div>
+        </div>`).join("")}
+      </div>
+      <div class="callout mt16">
+        <div class="txt"><strong>Or browse everything</strong><span>All courses, curriculum, training materials and supporting resources for ${s.name}.</span></div>
         <a class="btn primary" onclick="go('#/modular/${params.id}')">All Resources →</a>
       </div>
     </section>

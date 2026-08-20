@@ -931,7 +931,7 @@ function libraryFileCard(r, idx){
       <a class="dms-kebab" onclick="event.stopPropagation();toast('File actions (placeholder)')">⋮</a>
     </div>
     ${libThumb(r.type, r.title)}
-    <div class="dms-theme"><a class="dms-theme-tag" title="Filter Resource Library by ${r.system}" onclick="event.stopPropagation();go('#/library?sys=${encodeURIComponent(r.system)}')">🏷 ${r.system}</a></div>
+    ${(r.system && r.system!=="All Systems") ? `<div class="dms-theme"><a class="dms-theme-tag" title="Filter Resource Library by ${r.system}" onclick="event.stopPropagation();go('#/library?sys=${encodeURIComponent(r.system)}')">🏷 ${r.system}</a></div>` : ""}
     <div class="dms-foot">
       <span class="dms-avatar">${libInitials(who)}</span>
       <span class="dms-foot-txt">${who==="You"?"PS You":who} · ${date}</span>

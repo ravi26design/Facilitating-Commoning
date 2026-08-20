@@ -1113,6 +1113,17 @@ screens.home = () => shell("#/home", null, `
 
   <section class="section">
     <div class="between">
+      <div><div class="eyebrow">Resource Library</div><h2 class="mb0">Featured learning resources</h2></div>
+      <a class="btn sm" onclick="go('#/library')">Browse all resources →</a>
+    </div>
+    <p class="sub">Hand-picked resources to get you started. Scroll to explore.</p>
+    <div class="hscroll mt8">
+      ${["facilitator-guide","cfr-course","fra-history","pasture-video","what-is-tenure","tenure-claim-tool","w-intro-video","fra-handbook"].map(id=>resById(id)).filter(Boolean).map((r,i)=>libraryFileCard(r,i)).join("")}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="between">
       <div><div class="eyebrow">Resource Library</div><h2 class="mb0">Latest updates / recently added resources</h2></div>
       <div class="row"><a class="btn sm" onclick="go('#/library')">Quick Access →</a><a class="btn sm" onclick="go('#/library')">Read More →</a></div>
     </div>

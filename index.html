@@ -385,6 +385,7 @@ footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;col
 .cur-mod-head:first-child{border-top:none}
 .cur-topic{display:flex;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line-2);cursor:pointer;font-size:13px}
 .cur-topic:hover{background:var(--panel-2)}
+.cur-topic.active{background:var(--fill-2);font-weight:600}
 .cur-topic .code{font-family:var(--mono);font-size:12px;color:var(--ink-3);min-width:34px}
 @media(max-width:900px){ .cur-wrap{grid-template-columns:1fr} .ld-grid{grid-template-columns:1fr} }
 /* Prototype hint banner */
@@ -591,7 +592,10 @@ const RES_TOPIC = {
   "p-legal-framework":"rights","p-rights-history":"rights","p-tenure-defs":"rights","p-rights-audio":"rights",
   "p-committee":"institutions","p-gramsabha":"institutions",
   "p-claim-module":"claims","p-evidence-pdf":"claims",
-  "p-grazing-plan":"planning","p-rest-cycle":"planning","p-facil-guide":"support"
+  "p-grazing-plan":"planning","p-rest-cycle":"planning","p-facil-guide":"support",
+  "w-intro-video":"rights","w-access-atom":"claims","w-stewardship-audio":"planning",
+  "w-institutions":"institutions","w-planning-module":"planning","w-handbook":"support",
+  "w-monitoring-format":"planning","w-facil-guide":"support"
 };
 function topicOf(r){return RES_TOPIC[r.id]||"support";}
 function resForTopic(name, topicId){ return resFor(name).filter(r=>!topicId||topicOf(r)===topicId); }
@@ -599,6 +603,33 @@ function topicsForSystem(name){
   const ids={}; resFor(name).forEach(r=>{ids[topicOf(r)]=(ids[topicOf(r)]||0)+1;});
   return TOPICS.filter(t=>ids[t.id]).map(t=>Object.assign({count:ids[t.id]},t));
 }
+// topics (with counts) that have resources for a system within a learning-design group
+function topicsForGroup(name, group){
+  const ids={}; resFor(name, group).forEach(r=>{ids[topicOf(r)]=(ids[topicOf(r)]||0)+1;});
+  return TOPICS.filter(t=>ids[t.id]).map(t=>Object.assign({count:ids[t.id]},t));
+}
+// Dummy subtopics (grouped by module, numbered) with files — for the topic details page
+function subtopicsFor(topic){
+  const F=(a,b,c)=>[{name:a,type:"PDF"},{name:b,type:"Video"}].concat(c?[{name:c,type:"Image"}]:[]);
+  return [
+    {mod:(topic?topic.name:"Topic")+" — Introduction & Basics", items:[
+      {code:"101", name:"Historical background", files:F("Background note","Intro video","Concept map")},
+      {code:"102", name:"Introduction to the topic", files:F("Overview","Explainer video")},
+      {code:"103", name:"Key definitions", files:F("Definitions sheet","Definitions video")},
+      {code:"104", name:"Classification & scope", files:F("Classification note","Walkthrough")},
+      {code:"105", name:"Important points", files:F("Key points","Summary video")}
+    ]},
+    {mod:"Community Institutions & Process", items:[
+      {code:"201", name:"Panchayat governance", files:F("Governance note","Governance video")},
+      {code:"202", name:"Role of the Gram Sabha", files:F("Roles & duties","Gram Sabha video","Meeting photo")},
+      {code:"203", name:"Gram Sabha quorum", files:F("Quorum rules","Explainer")},
+      {code:"204", name:"Meeting process", files:F("Process steps","Process video")},
+      {code:"205", name:"Participation", files:F("Participation guide","Short video")},
+      {code:"206", name:"Documentation", files:F("Documentation format","Sample records")}
+    ]}
+  ];
+}
+function allSubtopics(topic){ return subtopicsFor(topic).reduce(function(a,g){return a.concat(g.items);},[]); }
 
 // Atomized Course Curriculum (deck slide 13) — modules with numbered atomic topics
 const CURRICULUM = [
@@ -1503,48 +1534,77 @@ screens.curriculum = (params) => {
   `);
 };
 
-/* ---- MODULAR LEARNING & SUPPORTING RESOURCES (deck slide 14) — filtered grid ---- */
+/* ---- LEARNING-DESIGN AREA — Topic list, then resources for the chosen topic (deck slide 14) ---- */
 screens.modular = (params) => {
   const s = SYSTEMS[params.id];
   const label = s ? s.name : "Resource System";
-  const group = params.g; // optional: supporting / modular / atomized
+  const group = params.g; // supporting / modular / atomized
+  const gq = group?("g="+group+"&"):"";
   const topic = params.topic ? topicById(params.topic) : null;
-  const list = s ? resForTopic(s.name, params.topic).filter(r=>!group||r.group===group) : RES.filter(r=>!group||r.group===group);
   const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"}];
   if(s) crumbItems.push({label:s.name,href:"#/system/"+params.id});
-  crumbItems.push({label:topic?topic.name:"Resources"});
-  return shell("#/resource-systems", crumbItems, `
+  crumbItems.push({label: topic?topic.name:"Topics"});
+
+  const banner = `
     <section class="section">
       <div class="banner">
         <div><div class="wf-note">Commoning of</div><h2>${label}${topic?` <span style="font-size:14px;font-weight:400;color:var(--ink-3)">· ${topic.name}</span>`:""}</h2></div>
         <div class="sys-badge">${label}</div>
       </div>
-    </section>
+    </section>`;
+
+  /* -------- TOPIC LIST (no topic chosen) -------- */
+  if(!topic){
+    const topics = s ? topicsForGroup(s.name, group) : TOPICS.map(t=>Object.assign({count:0},t));
+    return shell("#/resource-systems", crumbItems, `
+      ${banner}
+      <section class="section">
+        <div class="between"><h2 class="mb0">Topics under ${label}${group?" · "+group:""}</h2><span class="wf-note">Choose a topic</span></div>
+        <p class="sub">Select a topic to see its courses, modules and resources.</p>
+        <div class="grid g3">
+          ${topics.length?topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
+            <div class="ph-img" style="min-height:104px">Topic image — placeholder</div>
+            <h3>${t.name}</h3>
+            <p>${t.desc}</p>
+            <div class="wf-note">${t.count} resource${t.count!==1?'s':''}</div>
+            <div class="cta"><a class="btn sm primary">View resources →</a></div>
+          </div>`).join(""):`<div class="panel muted">No topics yet for this selection.</div>`}
+        </div>
+      </section>
+    `);
+  }
+
+  /* -------- TOPIC DETAILS: subtopics (left) + selected subtopic's files (right) -------- */
+  const groups = subtopicsFor(topic);
+  const subs = allSubtopics(topic);
+  const activeSub = subs.find(x=>x.code===params.sub) || subs[0];
+  return shell("#/resource-systems", crumbItems, `
+    ${banner}
     <section class="section">
-      ${topic?`<a class="btn sm" onclick="go('#/system/${params.id}')">← All topics</a>`:""}
-      <div class="layout-side${topic?' mt12':''}">
+      <a class="btn sm" onclick="go('#/modular/${params.id}${group?('?g='+group):''}')">← All topics</a>
+      <h2 class="mt12" style="font-size:18px">${topic.name}</h2>
+      <div class="layout-side mt12">
         <aside class="filters">
-          <h4 style="margin:0 0 10px;font-size:13px">Filter Resources</h4>
+          <h4 style="margin:0 0 10px;font-size:13px">Filter</h4>
           <div class="fgroup"><h4>Select State</h4>${["All States"].concat(STATES).map(x=>`<label class="fopt"><input type="radio" name="st"> ${x}</label>`).join("")}</div>
-          <div class="fgroup"><h4>Resource Type</h4>${["Training Modules","Training Manuals","Atomised Courses"].map(x=>`<label class="fopt"><input type="checkbox"> ${x}</label>`).join("")}</div>
           <div class="fgroup"><h4>Select Language</h4>${["All Languages","English","Hindi"].map(x=>`<label class="fopt"><input type="radio" name="lang"> ${x}</label>`).join("")}</div>
-          <div class="filter-actions">
-            <a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply Filters</a>
-            <a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a>
+          <div class="filter-actions"><a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply</a><a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a></div>
+          <div class="fgroup" style="border-bottom:none;padding-bottom:0">
+            <h4>Subtopics</h4>
+            ${groups.map(g=>`<div class="cur-mod-head" style="border-radius:4px;margin:6px 0 2px;border-top:none">${g.mod}</div>
+              ${g.items.map(it=>`<div class="cur-topic ${it.code===activeSub.code?'active':''}" style="border-top:none;padding:7px 8px" onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
+                <span class="code">${it.code}</span><span>${it.name}</span>
+              </div>`).join("")}`).join("")}
           </div>
         </aside>
         <div>
           <div class="between">
-            <h2 class="mb0" style="font-size:18px">Explore Resources under ${label}${topic?" · "+topic.name:(group?" · "+group:"")}</h2>
-            <div class="row" style="align-items:center"><span class="muted" style="font-size:12px">Sort By:</span>
-              <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently added</option></select></div>
+            <h2 class="mb0" style="font-size:18px">${activeSub.code} · ${activeSub.name}</h2>
+            <span class="wf-note">${activeSub.files.length} file${activeSub.files.length!==1?'s':''}</span>
           </div>
-          <div class="course-grid mt16">
-            ${list.length?list.map((r,i)=>courseCard(r,i)).join(""):`<div class="panel muted">No resources yet for this selection.</div>`}
-          </div>
-          <div class="callout mt24">
-            <div class="txt"><strong>Prefer the atomised course curriculum?</strong><span>Browse short LDHF topics by module.</span></div>
-            <a class="btn primary" onclick="go('#/curriculum/${params.id||'forests'}')">Atomized Course Curriculum →</a>
+          <p class="sub">Files for this subtopic — open or download.</p>
+          <div class="grid g3">
+            ${activeSub.files.map(f=>fileCard(f)).join("")}
           </div>
         </div>
       </div>

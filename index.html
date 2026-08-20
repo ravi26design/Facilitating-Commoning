@@ -290,11 +290,11 @@ footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;col
 .wrapline{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:12px;margin:16px 0}
 .wrapline::before,.wrapline::after{content:"";flex:1;border-top:1px solid var(--line-2)}
 .pill-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
-/* horizontal scroll row (Trending Courses) */
+/* horizontal scroll row — shows exactly 5 cards per view, rest scroll */
 .hscroll{display:flex;gap:16px;overflow-x:auto;padding:2px 2px 12px;scroll-snap-type:x proximity}
 .hscroll::-webkit-scrollbar{height:8px}
 .hscroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:20px}
-.hscroll > *{flex:0 0 270px;scroll-snap-align:start}
+.hscroll > *{flex:0 0 calc((100% - 64px)/5);min-width:210px;scroll-snap-align:start}
 
 /* Responsive */
 @media(max-width:1000px){

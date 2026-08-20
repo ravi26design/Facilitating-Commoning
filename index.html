@@ -484,6 +484,9 @@ body.static-mode .overlay{ display:none !important; }
 <div id="doc-overlay" class="overlay">
   <div class="searchpanel" id="doc-panel" style="width:min(680px,94vw);max-height:86vh;overflow:auto"></div>
 </div>
+<div id="pwd-overlay" class="overlay">
+  <div class="searchpanel" id="pwd-panel" style="width:min(460px,94vw)"></div>
+</div>
 
 <script>
 /* ============================================================
@@ -718,6 +721,37 @@ function _nextCode(groups, groupIdx){
   let max = base;
   g.items.forEach(it=>{ const n=parseInt(it.code,10); if(!isNaN(n)&&n>max) max=n; });
   return String(max+1);
+}
+/* ---- Change password (wireframe placeholder) ---- */
+function openChangePassword(){
+  const m=document.getElementById('profile-menu'); if(m) m.classList.remove('open');
+  document.getElementById('pwd-panel').innerHTML=`
+    <div class="between" style="align-items:flex-start">
+      <div><h3 style="margin:0">Change Password</h3><p class="wf-note" style="margin:4px 0 0">Update your account password</p></div>
+      <a class="btn sm" onclick="closeChangePassword()">✕</a>
+    </div>
+    <div class="stack" style="margin-top:16px">
+      <div><label class="wf-note">Current password</label>
+        <input id="pw-old" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="••••••••"></div>
+      <div><label class="wf-note">New password</label>
+        <input id="pw-new" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="At least 8 characters"></div>
+      <div><label class="wf-note">Confirm new password</label>
+        <input id="pw-conf" type="password" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Re-enter new password"></div>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin-top:18px"><a class="btn" onclick="closeChangePassword()">Cancel</a><a class="btn primary" onclick="submitChangePassword()">Update Password</a></div>`;
+  document.getElementById('pwd-overlay').classList.add('open');
+  setTimeout(()=>{const i=document.getElementById('pw-old');if(i)i.focus();},30);
+}
+function closeChangePassword(){ const o=document.getElementById('pwd-overlay'); if(o) o.classList.remove('open'); }
+function submitChangePassword(){
+  const oldp=(document.getElementById('pw-old')||{}).value||"";
+  const np=(document.getElementById('pw-new')||{}).value||"";
+  const cp=(document.getElementById('pw-conf')||{}).value||"";
+  if(!oldp||!np||!cp){ toast("Fill in all fields"); return; }
+  if(np.length<8){ toast("New password must be at least 8 characters"); return; }
+  if(np!==cp){ toast("New passwords do not match"); return; }
+  closeChangePassword();
+  toast("Password changed (placeholder)");
 }
 /* ---- Admin: Upload a document to the Resource Library ---- */
 let docTags=[]; let docEditId=null;
@@ -1008,8 +1042,7 @@ function header(active){
         <div class="profile-menu" id="profile-menu">
           <div class="pm-head"><strong>${roleLabel()}</strong><div class="pm-sub">Signed in</div></div>
           <div class="pm-div"></div>
-          ${isRegistered()?`<a onclick="go('#/my-learning')">My Learning</a>`:""}
-          ${isAdmin()?`<a onclick="go('#/admin')">Admin Dashboard</a>`:""}
+          <a onclick="openChangePassword()">Change Password</a>
           <a onclick="toast('Profile &amp; settings (placeholder)')">Profile &amp; Settings</a>
           <div class="pm-div"></div>
           <a onclick="signOut()">Sign Out</a>
@@ -3086,6 +3119,7 @@ document.getElementById("contact-overlay").addEventListener("click",e=>{if(e.tar
 document.getElementById("tour-overlay").addEventListener("click",e=>{if(e.target.id==="tour-overlay")closeTour();});
 document.getElementById("topic-overlay").addEventListener("click",e=>{if(e.target.id==="topic-overlay")closeAddTopic();});
 document.getElementById("doc-overlay").addEventListener("click",e=>{if(e.target.id==="doc-overlay")closeUploadDoc();});
+document.getElementById("pwd-overlay").addEventListener("click",e=>{if(e.target.id==="pwd-overlay")closeChangePassword();});
 document.addEventListener("click",e=>{const p=document.getElementById("profile");const m=document.getElementById("profile-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
 
 /* boot */

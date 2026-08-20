@@ -1,0 +1,2475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facilitating Commoning — Web Repository Wireframe</title>
+<style>
+/* ============================================================
+   FES KARYASHALA — LOW-FIDELITY WIREFRAME PROTOTYPE
+   Grayscale, structure-first. No brand color, no decoration.
+   ============================================================ */
+:root{
+  --ink:#1f1f1f;
+  --ink-2:#555;
+  --ink-3:#7c7c7c;
+  --line:#c9c9c9;
+  --line-2:#e0e0e0;
+  --bg:#f4f4f4;
+  --panel:#ffffff;
+  --panel-2:#fafafa;
+  --fill:#ececec;
+  --fill-2:#e2e2e2;
+  --active:#2b2b2b;
+  --radius:4px;
+  --maxw:1160px;
+  --gap:20px;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  font-size:14px;
+  line-height:1.5;
+}
+a{color:inherit}
+img{max-width:100%}
+
+/* ---------- Wireframe primitives ---------- */
+.wf-note{font-size:11px;color:var(--ink-3);letter-spacing:.03em;text-transform:uppercase}
+.ph-img{
+  background:
+    repeating-linear-gradient(45deg,transparent,transparent 9px,#e6e6e6 9px,#e6e6e6 10px),
+    var(--fill);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);font-size:12px;text-align:center;
+  min-height:120px;
+}
+.ph-line{height:10px;background:var(--fill);border-radius:3px;margin:7px 0}
+.ph-line.w80{width:80%}.ph-line.w60{width:60%}.ph-line.w40{width:40%}.ph-line.w90{width:90%}
+.icon-box{
+  width:34px;height:34px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--panel-2);display:inline-flex;align-items:center;justify-content:center;
+  font-size:16px;flex:0 0 auto;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--ink);background:var(--panel);color:var(--ink);
+  padding:9px 15px;border-radius:var(--radius);font-size:13px;cursor:pointer;
+  text-decoration:none;white-space:nowrap;transition:background .12s;
+}
+.btn:hover{background:var(--fill)}
+.btn.primary{background:var(--active);color:#fff;border-color:var(--active)}
+.btn.primary:hover{background:#000}
+.btn.sm{padding:6px 10px;font-size:12px}
+.btn.link{border:none;background:none;padding:4px 0;text-decoration:underline;color:var(--ink)}
+.btn.block{width:100%;justify-content:center}
+.btn.icon-btn{padding:7px 9px;line-height:1}
+
+/* ---------- Layout ---------- */
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+header.site{
+  background:var(--panel);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:40;
+}
+.nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 12px;min-height:60px;padding:8px 0}
+.logo{
+  border:1.5px solid var(--ink);border-radius:var(--radius);
+  padding:6px 10px;font-weight:700;letter-spacing:.04em;cursor:pointer;font-size:13px;
+  flex:0 0 auto;
+}
+.logo small{display:block;font-weight:400;font-size:9px;color:var(--ink-3);letter-spacing:.08em}
+.nav ul{list-style:none;display:flex;gap:2px;margin:0;padding:0;flex-wrap:wrap;min-width:0}
+.nav a.navlink{
+  text-decoration:none;color:var(--ink-2);font-size:13px;
+  padding:6px 8px;border-radius:var(--radius);cursor:pointer;display:inline-block;white-space:nowrap;
+}
+.nav a.navlink:hover{background:var(--fill)}
+.nav a.navlink.active{color:var(--ink);background:var(--fill-2);font-weight:600}
+.nav .acct{justify-self:end;display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.nav .acct .navlink{white-space:nowrap}
+.role-chip{font-size:11px;border:1px solid var(--ink);border-radius:20px;padding:3px 10px;background:var(--panel-2);white-space:nowrap}
+/* Profile dropdown */
+.profile{position:relative}
+.profile-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);border-radius:24px;padding:3px 10px 3px 3px;cursor:pointer;font-size:12px}
+.profile-btn:hover{background:var(--fill)}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--active);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 auto;letter-spacing:.02em}
+.profile-btn .pname{white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.profile-btn .caret{color:var(--ink-3);font-size:10px}
+.profile-menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);min-width:200px;box-shadow:0 4px 16px rgba(0,0,0,.14);padding:6px;display:none;z-index:45}
+.profile-menu.open{display:block}
+.profile-menu a{display:block;padding:8px 10px;border-radius:3px;font-size:13px;cursor:pointer;color:var(--ink);white-space:nowrap}
+.profile-menu a:hover{background:var(--fill)}
+.pm-head{padding:8px 10px}
+.pm-head strong{font-size:13px}
+.pm-head .pm-sub{font-size:11px;color:var(--ink-3)}
+.pm-div{border-top:1px solid var(--line-2);margin:6px 0}
+
+/* Breadcrumbs */
+.crumbs{padding:12px 0;font-size:12px;color:var(--ink-3)}
+.crumbs a{color:var(--ink-2);text-decoration:none;cursor:pointer}
+.crumbs a:hover{text-decoration:underline}
+.crumbs span.sep{margin:0 7px;color:var(--line)}
+.crumbs span.here{color:var(--ink);font-weight:600}
+
+main{min-height:60vh;padding-bottom:40px}
+
+/* Section scaffolding */
+.section{padding:26px 0}
+.section h2{font-size:20px;margin:0 0 4px}
+.section .sub{color:var(--ink-2);margin:0 0 18px;max-width:720px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);margin-bottom:8px}
+.divider{border:none;border-top:1px solid var(--line-2);margin:0}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+
+/* Grid */
+.grid{display:grid;gap:var(--gap)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.row{display:flex;gap:var(--gap);flex-wrap:wrap}
+.between{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* Cards */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+}
+.card h3{margin:0;font-size:15px}
+.card p{margin:0;color:var(--ink-2);font-size:13px}
+.card .cta{margin-top:auto}
+.card.click{cursor:pointer;transition:box-shadow .12s,transform .12s}
+.card.click:hover{box-shadow:0 0 0 2px var(--ink);}
+
+/* System card */
+.syscard .ph-img{min-height:96px}
+.syscard.small{padding:13px}
+.syscard.small .ph-img{min-height:64px}
+
+/* Hero */
+.hero{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:34px;margin-top:18px}
+.hero h1{font-size:30px;margin:0 0 12px;line-height:1.2}
+.hero p.lead{font-size:16px;color:var(--ink-2);max-width:640px;margin:0 0 20px}
+.hero-split{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center}
+.hero-media{min-height:220px;align-self:stretch}
+@media(max-width:760px){ .hero-split{grid-template-columns:1fr} .hero-media{min-height:150px} }
+
+/* Pathway */
+.pathway{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.pw-step{
+  flex:1 1 150px;min-width:140px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--panel);padding:11px 12px;cursor:pointer;position:relative;transition:background .12s;
+}
+.pw-step:hover{background:var(--fill)}
+.pw-step .num{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.pw-step .nm{font-size:13px;font-weight:600;margin-top:2px}
+.pw-step.active{background:var(--active);border-color:var(--active)}
+.pw-step.active .nm,.pw-step.active .num{color:#fff}
+.pw-arrow{align-self:center;color:var(--line);font-size:16px}
+.pathway.compact .pw-step{flex-basis:120px;min-width:110px;padding:8px 9px}
+
+/* Resource card */
+.rcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:9px}
+.rcard .rc-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.rcard h4{margin:0;font-size:14px;line-height:1.35}
+.rcard .purpose{color:var(--ink-2);font-size:12.5px;margin:0}
+.meta-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:20px;padding:2px 9px;background:var(--panel-2);color:var(--ink-2);white-space:nowrap}
+.tag.solid{background:var(--fill-2);border-color:var(--fill-2)}
+.rc-actions{display:flex;gap:8px;margin-top:2px}
+.rc-type-chip{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);border:1px dashed var(--line);border-radius:3px;padding:2px 6px}
+
+/* Category columns (Learn / Facilitate / Act / Support) */
+.cat-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:12px}
+.cat-head{display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line-2);padding-bottom:9px}
+.cat-head .lbl{font-weight:700;font-size:13px;letter-spacing:.04em}
+.cat-head .desc{font-size:11px;color:var(--ink-3)}
+
+/* Filter sidebar */
+.layout-side{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:start}
+.filters{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;position:sticky;top:76px}
+.fgroup{border-bottom:1px solid var(--line-2);padding:12px 0}
+.fgroup:first-child{padding-top:0}
+.fgroup h4{margin:0 0 9px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2)}
+.fopt{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);padding:3px 0;cursor:pointer}
+.fopt input{accent-color:var(--ink)}
+.filter-actions{display:flex;gap:8px;margin-top:14px}
+
+/* Search bar */
+.searchfield{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:11px 14px}
+.searchfield input{border:none;outline:none;flex:1;font-size:14px;background:transparent}
+.searchfield .icon-box{width:28px;height:28px;font-size:14px}
+
+/* Process / flow diagram */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.flow .node{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:10px 14px;font-size:13px;text-align:center;min-width:96px}
+.flow .node.strong{border-width:1.5px;font-weight:600}
+.flow .arw{color:var(--ink-3);font-size:15px}
+
+/* Model diagram */
+.model{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}
+.model .m-node{border:1.5px solid var(--ink);border-radius:var(--radius);background:var(--panel);padding:18px 14px;text-align:center;font-weight:600}
+.model-thread{margin-top:14px;border:1px dashed var(--ink);border-radius:var(--radius);padding:12px;text-align:center;background:var(--panel-2);font-weight:700;letter-spacing:.05em}
+
+/* Stage reveal (home journey) */
+.reveal{border:1px solid var(--line-2);border-top:none;border-radius:0 0 var(--radius) var(--radius);background:var(--panel-2);padding:14px;font-size:13px;color:var(--ink-2)}
+.hidden{display:none}
+
+/* Info list */
+.qa{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden}
+.qa .qitem{border-bottom:1px solid var(--line-2)}
+.qa .qitem:last-child{border-bottom:none}
+.qa .qq{padding:13px 16px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:14px}
+.qa .qq:hover{background:var(--panel-2)}
+.qa .qa-body{padding:0 16px 14px;color:var(--ink-2);font-size:13px}
+
+/* Context definition rows (resource detail) */
+.ctx-row{border:1px solid var(--line-2);border-radius:var(--radius);padding:12px 14px;background:var(--panel)}
+.ctx-row h5{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3)}
+.ctx-row p{margin:0;color:var(--ink-2);font-size:13px}
+
+/* Callout / recommended next */
+.callout{border:1.5px solid var(--ink);border-radius:var(--radius);background:var(--panel-2);padding:16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.callout .txt strong{display:block;font-size:14px}
+.callout .txt span{font-size:13px;color:var(--ink-2)}
+
+/* Video placeholder */
+.video-ph{position:relative;min-height:170px}
+.video-ph .play{width:52px;height:52px;border-radius:50%;border:2px solid var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--ink-3)}
+
+/* Footer */
+footer.site{background:var(--panel);border-top:1px solid var(--line);margin-top:20px}
+footer.site .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;padding:30px 0}
+footer.site h5{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2)}
+footer.site ul{list-style:none;margin:0;padding:0}
+footer.site li{padding:4px 0;color:var(--ink-3);font-size:13px;cursor:pointer}
+footer.site li:hover{color:var(--ink);text-decoration:underline}
+footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* Search overlay */
+.overlay{position:fixed;inset:0;background:rgba(30,30,30,.35);z-index:60;display:none;align-items:flex-start;justify-content:center;padding-top:9vh}
+.overlay.open{display:flex}
+.searchpanel{background:var(--panel);border:1px solid var(--ink);border-radius:var(--radius);width:min(620px,92vw);padding:20px}
+.searchpanel h3{margin:0 0 4px;font-size:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;background:var(--panel-2)}
+.chip:hover{background:var(--fill)}
+
+/* result rows */
+.result-row{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.result-row .rr-main{flex:1}
+.result-row h4{margin:0 0 3px;font-size:15px}
+
+/* utility */
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.mb0{margin-bottom:0}
+.muted{color:var(--ink-3)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.wrapline{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:12px;margin:16px 0}
+.wrapline::before,.wrapline::after{content:"";flex:1;border-top:1px solid var(--line-2)}
+.pill-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+
+/* Responsive */
+@media(max-width:1000px){
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .layout-side{grid-template-columns:1fr}
+  .filters{position:static}
+  footer.site .cols{grid-template-columns:1fr 1fr}
+  .model{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .nav{grid-template-columns:auto 1fr}
+  .nav ul{display:none}
+  .nav .acct{flex-wrap:wrap;justify-content:flex-end;gap:6px}
+  .hero h1{font-size:24px}
+  footer.site .cols{grid-template-columns:1fr}
+}
+/* V3 — badge chip (Course / Module / Video / etc.) */
+.badge{font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:var(--active);color:#fff;border-radius:3px;padding:3px 8px;white-space:nowrap;flex:0 0 auto;align-self:flex-start}
+/* V3 — course-card grid (Explore Resources under a system/theme) */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:16px}
+.course-card{position:relative;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .12s}
+.course-card:hover{box-shadow:0 0 0 2px var(--ink)}
+.course-card .num-badge{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;background:var(--active);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;z-index:2}
+.course-thumb{min-height:110px;position:relative;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:11px;
+  background:repeating-linear-gradient(45deg,transparent,transparent 9px,#e6e6e6 9px,#e6e6e6 10px),var(--fill);border-bottom:1px solid var(--line)}
+.course-thumb .play,.file-prev .play{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--panel)}
+.course-thumb .doc-ic,.file-prev .doc-ic{width:38px;height:46px;border:2px solid var(--ink-3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink-3);background:var(--panel)}
+/* course viewer — active topic + file cards */
+.cur-unit.active{background:var(--fill-2);border-radius:3px;font-weight:600}
+.file-card{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel);display:flex;flex-direction:column}
+.file-prev{min-height:100px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:11px;border-bottom:1px solid var(--line);
+  background:repeating-linear-gradient(45deg,transparent,transparent 9px,#e6e6e6 9px,#e6e6e6 10px),var(--fill)}
+.file-body{padding:10px 12px}
+/* create-course form */
+.btn-disabled{opacity:.4;pointer-events:none}
+.req{color:var(--ink);font-weight:700}
+.dropzone{border:1.5px dashed var(--line);border-radius:var(--radius);background:var(--panel-2);padding:16px;text-align:center;color:var(--ink-3);font-size:12px}
+.cc-steps{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.cc-step{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-3)}
+.cc-step .n{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px}
+.cc-step.on{color:var(--ink)}
+.cc-step.on .n{background:var(--active);color:#fff;border-color:var(--active)}
+.cc-sticky{position:sticky;bottom:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.file-row-num{width:22px;height:22px;border-radius:50%;background:var(--fill-2);display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.topic-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:14px}
+.topic-head{display:flex;align-items:center;gap:8px}
+.tnum{width:26px;height:26px;border-radius:50%;background:var(--active);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.file-edit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.file-edit-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:8px}
+.upload-card{border:1.5px dashed var(--line);border-radius:var(--radius);background:var(--panel-2);padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;text-align:center;color:var(--ink-2);font-size:13px;min-height:118px;transition:background .12s,border-color .12s}
+.upload-card:hover{border-color:var(--ink);background:var(--fill)}
+.upload-card .up-plus{width:34px;height:34px;border-radius:50%;border:2px solid var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink-3)}
+/* single upload card with file-type switcher — compact, same footprint as a file card */
+.upload-single{border:1.5px dashed var(--line);border-radius:var(--radius);background:var(--panel-2);padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;color:var(--ink-2);min-height:118px}
+.upload-single .up-plus{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink-3);background:var(--panel)}
+.upload-single .up-plus:hover{border-color:var(--ink);color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--panel)}
+.seg-btn{padding:4px 10px;font-size:11px;background:var(--panel);border:none;cursor:pointer;color:var(--ink-2);font-family:inherit}
+.seg-btn+.seg-btn{border-left:1px solid var(--line)}
+.seg-btn:hover{background:var(--fill)}
+.seg-btn.on{background:var(--active);color:#fff}
+.course-card .cc-body{padding:10px 12px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
+.course-card .cc-body h4{font-size:12.5px;margin:0;line-height:1.35}
+.course-card .cc-lang{font-size:11px;color:var(--ink-3)}
+/* V3 — page banner (resource-system / theme header) */
+.banner{border:1px solid var(--line);border-radius:var(--radius);background:
+  repeating-linear-gradient(45deg,transparent,transparent 9px,#ececec 9px,#ececec 10px),var(--fill);
+  padding:26px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.banner h2{margin:0;font-size:24px}
+.banner .sys-badge{border:1.5px solid var(--ink);border-radius:var(--radius);padding:8px 12px;font-weight:700;font-size:12px;letter-spacing:.05em;background:var(--panel)}
+/* V3 — learning-design option cards */
+.ld-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+.ld-card{border:1.5px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:box-shadow .12s}
+.ld-card:hover{box-shadow:0 0 0 2px var(--ink)}
+.ld-card.sel{border-color:var(--active);box-shadow:0 0 0 2px var(--ink)}
+/* V3 — atomized course curriculum two-pane */
+.cur-wrap{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}
+.cur-side{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.cur-side .cur-unit{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:13px;cursor:pointer}
+.cur-side .cur-unit:last-child{border-bottom:none}
+.cur-side .swatch{width:14px;height:14px;border:1px solid var(--ink-3);border-radius:2px;background:var(--fill-2);flex:0 0 auto;margin-top:2px}
+.cur-main{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.cur-mod-head{background:var(--fill-2);padding:9px 14px;font-weight:700;font-size:13px;border-top:1px solid var(--line)}
+.cur-mod-head:first-child{border-top:none}
+.cur-topic{display:flex;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line-2);cursor:pointer;font-size:13px}
+.cur-topic:hover{background:var(--panel-2)}
+.cur-topic .code{font-family:var(--mono);font-size:12px;color:var(--ink-3);min-width:34px}
+@media(max-width:900px){ .cur-wrap{grid-template-columns:1fr} .ld-grid{grid-template-columns:1fr} }
+/* Prototype hint banner */
+#proto-hint{position:fixed;bottom:12px;right:12px;z-index:50;background:var(--active);color:#fff;font-size:11px;padding:7px 12px;border-radius:20px;opacity:.85;cursor:pointer}
+
+/* STATIC MODE — homepage only, fully non-interactive (toggle via STATIC_MODE in JS) */
+body.static-mode a,
+body.static-mode .btn,
+body.static-mode .navlink,
+body.static-mode .logo,
+body.static-mode .card,
+body.static-mode .pw-step,
+body.static-mode .searchfield,
+body.static-mode .search-btn,
+body.static-mode select,
+body.static-mode input,
+body.static-mode [onclick]{ cursor:default !important; pointer-events:none !important; }
+body.static-mode #proto-hint{ pointer-events:none !important; cursor:default !important; }
+body.static-mode .overlay{ display:none !important; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="search-overlay" class="overlay">
+  <div class="searchpanel" id="search-panel"></div>
+</div>
+<div id="contact-overlay" class="overlay">
+  <div class="searchpanel" id="contact-panel"></div>
+</div>
+<div id="tour-overlay" class="overlay">
+  <div class="searchpanel" id="tour-panel"></div>
+</div>
+
+<script>
+/* ============================================================
+   MODE SWITCH
+   STATIC_MODE = true  → homepage only, fully non-clickable.
+   Set to false to restore the full clickable prototype.
+   ============================================================ */
+const STATIC_MODE = false;
+
+/* ============================================================
+   ROLES / ACCESS (mock auth — wireframe only, no real backend)
+   visitor (default, no login) · registered · admin
+   ============================================================ */
+let currentRole = "visitor";
+let prevRoute = "#/home"; // the route the user came from (for contextual breadcrumbs + Back)
+/* Persist the signed-in role so a refresh keeps the user logged in (only manual Sign Out clears it) */
+function saveRole(){ try{ localStorage.setItem("fc_role", currentRole); }catch(e){} }
+function loadRole(){ try{ var r=localStorage.getItem("fc_role"); if(r==="visitor"||r==="registered"||r==="admin") currentRole=r; }catch(e){} }
+function goBack(){ if(prevRoute && prevRoute!==location.hash){ go(prevRoute); } else if(window.history && history.length>1){ history.back(); } else { go("#/home"); } }
+const ROLE_LABEL = {visitor:"Visitor", registered:"Registered User", admin:"Platform Super Admin"};
+function roleLabel(){return ROLE_LABEL[currentRole];}
+function isAdmin(){return currentRole==="admin";}
+function isRegistered(){return currentRole==="registered"||currentRole==="admin";}
+function canDownload(){return currentRole!=="visitor";}
+function setRole(role, dest){ currentRole=role; saveRole(); toast("Signed in as "+ROLE_LABEL[role]); go(dest||(role==="admin"?"#/admin":"#/home")); }
+function signOut(){ currentRole="visitor"; saveRole(); toast("Signed out"); go("#/home"); }
+function download(title){ if(canDownload()){ toast("Download (placeholder): "+title); } else { toast("Sign in to download — opening sign in…"); go("#/login"); } }
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const STAGES = [
+  {id:"understand", num:"01", name:"Understand Context", short:"Read the local social, ecological and institutional context before acting.", what:"Map the resource, the community, existing use patterns, power dynamics and prior institutions."},
+  {id:"institutions", num:"02", name:"Build Institutions", short:"Form or strengthen a legitimate community institution to govern the commons.", what:"Convene the community, define membership, draft collective rules and decision-making norms."},
+  {id:"tenure", num:"03", name:"Secure Tenure", short:"Establish legal recognition and secure rights over the shared resource.", what:"Prepare and file claims, gather evidence, engage authorities, obtain recognition of rights."},
+  {id:"plan", num:"04", name:"Plan", short:"Develop a collective management and restoration plan.", what:"Set shared goals, zone the resource, agree priorities, sequence actions and resources."},
+  {id:"restore", num:"05", name:"Restore & Manage", short:"Carry out restoration and day-to-day sustainable management.", what:"Implement restoration works, enforce collective rules, manage use and benefit-sharing."},
+  {id:"monitor", num:"06", name:"Monitor & Adapt", short:"Track outcomes and adapt the approach over time.", what:"Measure ecological and institutional health, reflect, and revise rules and plans."}
+];
+const SYSTEMS = {
+  forests:{name:"Forests", desc:"Community rights, institutions, collective governance, conservation and sustainable management.",
+    users:"Facilitators, field practitioners, learners and community institutions working on forest commons.",
+    outcome:"Secure community forest rights, functioning institutions, and restored, sustainably managed forests.",
+    process:"Understand → Institutions → Tenure → Plan → Restore → Monitor"},
+  pastureland:{name:"Pastureland", desc:"Community institutions, tenure/recognition, collective rules, restoration and sustainable use.",
+    users:"Facilitators, field practitioners, learners and community institutions working on pasturelands.",
+    outcome:"Recognised tenure, functioning institutions, and restored, sustainably managed grazing commons.",
+    process:"Understand → Institutions → Tenure → Plan → Restore → Monitor"},
+  water:{name:"Water", desc:"Collective institutions, equitable access, planning, management and stewardship.",
+    users:"Facilitators, field practitioners, learners and community institutions working on water commons.",
+    outcome:"Equitable access, functioning institutions, and sustainably managed and stewarded water systems.",
+    process:"Understand → Institutions → Access → Plan → Manage → Monitor"}
+};
+const STATES = ["Rajasthan","Andhra Pradesh","Karnataka"]; // process documentation states
+const THEMES = {
+  map:{id:"map", name:"Multi-Actor Platforms", desc:"Convening and aligning multiple stakeholders around shared commons goals.",
+    users:"Facilitators, partners and institutions coordinating across actors.",
+    outcome:"Aligned stakeholders and shared plans that advance commoning."},
+  leo:{id:"leo", name:"Local Economic Opportunities", desc:"Livelihoods and value from the sustainable use of the commons.",
+    users:"Community enterprises, facilitators and livelihood practitioners.",
+    outcome:"Sustainable livelihoods anchored in the commons."},
+  agri:{id:"agri", name:"Sustainable Agriculture Practices", desc:"Practices that sustain soil, water and productivity over the long term.",
+    users:"Farmers, facilitators and field practitioners.",
+    outcome:"Practices that sustain soil, water and long-term productivity."}
+};
+const THEME_LIST = Object.keys(THEMES).map(k=>THEMES[k]);
+function themeById(id){return THEMES[id]}
+
+// Learning-design groupings for the resource-system page (deck slide 11)
+const LD = [
+  {id:"modular", name:"Modular Learning", desc:"Progressive training modules delivered as a series."},
+  {id:"atomized", name:"Atomized Course Curriculum (LDHF)", desc:"Short, atomised topics for low-dose high-frequency learning."},
+  {id:"supporting", name:"Supporting Resources", desc:"Handbooks, facilitators' guides, SoPs, formats and tools."}
+];
+
+// 5-step orientation — used by the Take a Tour / Get Started popup (deck slide 2)
+const JOURNEY5 = [
+  {n:"1", k:"ORIENT", q:"What is this repository?", d:"Understand what the repository is and what it helps you do.", href:"#/commoning"},
+  {n:"2", k:"UNDERSTAND", q:"What is Commoning?", d:"The meaning of Commoning of Commons.", href:"#/commoning"},
+  {n:"3", k:"LEARN", q:"How does capacity building work?", d:"How continuous learning supports Commoning — and two methods of doing it.", href:"#/learning-approach"},
+  {n:"4", k:"CHOOSE", q:"Pastureland / Forest / Water", d:"Select the natural-resource system or theme you are working with.", href:"#/resource-systems"},
+  {n:"5", k:"ACT", q:"Use resources in sequence", d:"Access resources in a logical sequence to facilitate processes on the ground.", href:"#/library"}
+];
+// Commoning in Action — field stories (deck slide 4)
+const STORIES = [
+  {id:"gram-sabha-forest", title:"How a Gram Sabha strengthened governance of its Forest Commons", system:"Forests", stage:"Build Institutions", excerpt:"A village institution took charge of collective decisions and rules for its forest."},
+  {id:"pasture-rules", title:"How communities developed rules for managing pasturelands", system:"Pastureland", stage:"Plan", excerpt:"Herders agreed shared grazing rules and a seasonal rest cycle for the common pasture."},
+  {id:"water-access", title:"How a hamlet secured equitable access to a shared water source", system:"Water", stage:"Secure Tenure", excerpt:"Households negotiated fair access and a stewardship rota for the common water system."}
+];
+function storyById(id){return STORIES.find(s=>s.id===id)}
+// Help topics — each gets its own page (deck slide 10 / help)
+const HELP = [
+  {id:"faq", title:"Frequently Asked Questions", desc:"Common questions about the repository."},
+  {id:"how-to-use", title:"How to use the repository", desc:"Follow the guided journey or use direct access."},
+  {id:"how-to-find", title:"How to find a resource", desc:"Use the Resource Library, search and filters."},
+  {id:"commoning-stages", title:"Understanding Commoning stages", desc:"The six-stage Commoning pathway explained."},
+  {id:"modular-learning", title:"Understanding Modular Learning", desc:"Progressive modules with field activity."},
+  {id:"ldhf", title:"Understanding LDHF", desc:"Short, frequent, task-focused learning."}
+];
+function helpById(id){return HELP.find(h=>h.id===id)}
+const FAQS = [
+  ["How do I know which stage I am at?","Use the Commoning pathway on your resource-system page — the active stage is highlighted, and each stage explains what needs to happen."],
+  ["Do I have to follow the whole journey?","No. Experienced users can go straight to the Resource Library, search and filter to a specific resource."],
+  ["How are resources organised on a resource-system page?","By learning design — Modular Learning, Atomized Course Curriculum (LDHF), and Supporting Resources — with filters for stakeholder, format, language and stage."],
+  ["Is the content available in Hindi?","Many resources are available in Hindi and English — filter by Language in the Resource Library."]
+];
+// Resources — V3 metadata: system OR theme, stage (systems only), stakeholder,
+// learning design, type, language, version, contributor attribution, and the
+// learning-design group used to organise the resource-system page (deck slide 11/17).
+const RES = [
+  {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forests", stage:"Secure Tenure", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-claim", title:"CFR Claim Process", purpose:"Step-by-step course on preparing and filing a CFR claim.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"ifr-module", title:"IFR Claim Process", purpose:"Modular training on the Individual Forest Rights claim process.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-history", title:"Background and History of FRA", purpose:"Short video on the background and history of the Forest Rights Act.", system:"Forests", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"English", version:"v1.0 · 2026", attribution:"Contributed by a partner organisation"},
+  {id:"what-is-tenure", title:"What is Tenurial Security?", purpose:"Atomised topic explaining why secure tenure matters and forms of recognition.", system:"Forests", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"gram-sabha-atom", title:"Role of the Gram Sabha", purpose:"Atomised topic on the powers and duties of the Gram Sabha.", system:"Forests", stage:"Build Institutions", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"tenure-claim-tool", title:"Community Rights Claim Toolkit", purpose:"Field tool to prepare and file a community rights claim.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Both", type:"Tool", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-handbook", title:"FRA Facilitators' Handbook", purpose:"Reference handbook and SoPs for facilitators working on forest rights.", system:"Forests", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Handbook", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"context-mapping", title:"Context Mapping Worksheet", purpose:"Worksheet to map the resource, community and existing institutions.", system:"All Systems", stage:"Understand Context", stake:"Field Practitioner", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"institution-basics", title:"Building Community Institutions", purpose:"Modular course on forming a legitimate, inclusive community institution.", system:"All Systems", stage:"Build Institutions", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water", stage:"Plan", stake:"Facilitator", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pastureland", stage:"Restore & Manage", stake:"Field Practitioner", design:"Both", type:"SoP", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pastureland", stage:"All Stages", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-audio", title:"Grazing Rules — Audio Guide", purpose:"Audio guide on developing collective grazing rules.", system:"Pastureland", stage:"Plan", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-pdf", title:"Pastureland Restoration Handbook", purpose:"Downloadable PDF handbook for pastureland restoration.", system:"Pastureland", stage:"Restore & Manage", stake:"Field Practitioner", design:"Both", type:"PDF", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-legal-framework", title:"Legal Framework for Pasture Commons", purpose:"Course on the laws and rights governing pastureland commons.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-history", title:"History of Grazing Rights", purpose:"Video on the history and evolution of community grazing rights.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-tenure-defs", title:"Key Definitions — Pasture Tenure", purpose:"Atomised topic covering key tenure definitions for pasturelands.", system:"Pastureland", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-audio", title:"Pasture Rights — Audio Explainer", purpose:"Short audio explainer on pastureland rights and recognition.", system:"Pastureland", stage:"Secure Tenure", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-committee", title:"Forming a Pasture Management Committee", purpose:"Course on setting up an inclusive pasture management committee.", system:"Pastureland", stage:"Build Institutions", stake:"Facilitator", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-gramsabha", title:"Gram Sabha in Pasture Governance", purpose:"Atomised topic on the Gram Sabha's role in pasture governance.", system:"Pastureland", stage:"Build Institutions", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-claim-module", title:"Claiming Pastureland Rights", purpose:"Training module on preparing and filing pastureland rights claims.", system:"Pastureland", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-evidence-pdf", title:"Evidence & Documentation for Pasture Claims", purpose:"PDF checklist and formats for pasture claim documentation.", system:"Pastureland", stage:"Secure Tenure", stake:"Field Practitioner", design:"Both", type:"PDF", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pastureland", stage:"Plan", stake:"Facilitator", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pastureland", stage:"Plan", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pastureland", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms", stage:"", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"leo-course", title:"Livelihoods from the Commons", purpose:"Atomised topics on building local economic opportunities from the commons.", system:"Local Economic Opportunities", stage:"", stake:"Community Member", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture Practices", stage:"", stake:"Farmer", design:"Modular", type:"Training Module", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
+];
+function resById(id){return RES.find(r=>r.id===id)}
+// resources for a system/theme name, optionally filtered to a learning-design group
+function resFor(name, group){
+  return RES.filter(r=>(r.system===name || r.system==="All Systems") && (!group || r.group===group));
+}
+
+// Topics (course/subject areas) shown as a list before the resource grid
+const TOPICS = [
+  {id:"rights", name:"Rights & Legal Framework", desc:"Background, key definitions and the legal framework."},
+  {id:"institutions", name:"Community Institutions", desc:"Gram Sabha, governance and collective decision-making."},
+  {id:"claims", name:"Claiming Community Rights", desc:"Preparing, filing and following up on claims."},
+  {id:"planning", name:"Planning & Management", desc:"Plans, restoration and sustainable management."},
+  {id:"support", name:"Facilitation & Support", desc:"Guides, SoPs, handbooks and formats."}
+];
+function topicById(id){return TOPICS.find(t=>t.id===id);}
+const RES_TOPIC = {
+  "facilitator-guide":"support","cfr-course":"rights","cfr-claim":"claims","ifr-module":"claims",
+  "fra-history":"rights","what-is-tenure":"rights","gram-sabha-atom":"institutions","tenure-claim-tool":"claims",
+  "fra-handbook":"support","context-mapping":"planning","institution-basics":"institutions","water-access-plan":"planning",
+  "restoration-field":"planning","pasture-course":"rights","map-guide":"support","leo-course":"planning","agri-course":"planning",
+  "pasture-video":"rights","pasture-audio":"planning","pasture-pdf":"planning",
+  "p-legal-framework":"rights","p-rights-history":"rights","p-tenure-defs":"rights","p-rights-audio":"rights",
+  "p-committee":"institutions","p-gramsabha":"institutions",
+  "p-claim-module":"claims","p-evidence-pdf":"claims",
+  "p-grazing-plan":"planning","p-rest-cycle":"planning","p-facil-guide":"support"
+};
+function topicOf(r){return RES_TOPIC[r.id]||"support";}
+function resForTopic(name, topicId){ return resFor(name).filter(r=>!topicId||topicOf(r)===topicId); }
+function topicsForSystem(name){
+  const ids={}; resFor(name).forEach(r=>{ids[topicOf(r)]=(ids[topicOf(r)]||0)+1;});
+  return TOPICS.filter(t=>ids[t.id]).map(t=>Object.assign({count:ids[t.id]},t));
+}
+
+// Atomized Course Curriculum (deck slide 13) — modules with numbered atomic topics
+const CURRICULUM = [
+  {code:"100", title:"Introduction to the Rights Framework", topics:[
+    ["101","Historical background of the Act"],["102","Introduction to the Act"],
+    ["103","Key definitions"],["104","Classification of land under the Act"],["105","Important legal points"]
+  ]},
+  {code:"200", title:"Community Institutions", topics:[
+    ["201","Panchayat governance"],["202","Role of the Gram Sabha"],["203","Gram Sabha quorum"],
+    ["204","Gram Sabha meeting process"],["205","Participation in the Gram Sabha"],["206","Documentation of the Gram Sabha"]
+  ]},
+  {code:"300", title:"Claiming Community Rights", topics:[
+    ["301","Preparing the claim"],["302","Evidence and documentation"],["303","Filing and follow-up"]
+  ]}
+];
+
+// Courses — each has topics; each topic has multiple files (Image / PDF / Video)
+const COURSES = [
+  {id:"cfr", title:"Community Forest Resource Rights", system:"Forests", lang:"Hindi", topics:[
+    {id:"intro", name:"Introduction to CFR", files:[
+      {name:"CFR overview", type:"PDF"},{name:"What is CFR — intro video", type:"Video"},{name:"CFR concept map", type:"Image"}
+    ]},
+    {id:"legal", name:"Legal Framework", files:[
+      {name:"Key sections of the Act", type:"PDF"},{name:"Legal framework explainer", type:"Video"}
+    ]},
+    {id:"process", name:"Claim Process", files:[
+      {name:"Step-by-step claim guide", type:"PDF"},{name:"Filing a claim — walkthrough", type:"Video"},{name:"Claim form sample", type:"Image"},{name:"Evidence checklist", type:"PDF"}
+    ]},
+    {id:"gramsabha", name:"Role of the Gram Sabha", files:[
+      {name:"Gram Sabha roles &amp; duties", type:"PDF"},{name:"Gram Sabha meeting", type:"Image"}
+    ]}
+  ]},
+  {id:"pasture", title:"Commoning of Pasturelands", system:"Pastureland", lang:"Hindi", topics:[
+    {id:"intro", name:"Introduction to Pasture Commons", files:[
+      {name:"Pasture commons overview", type:"PDF"},{name:"Overview video", type:"Video"}
+    ]},
+    {id:"rules", name:"Collective Grazing Rules", files:[
+      {name:"Sample grazing rules", type:"PDF"},{name:"Grazing rules — walkthrough", type:"Video"},{name:"Grazing zone map", type:"Image"}
+    ]},
+    {id:"restore", name:"Restoration &amp; Management", files:[
+      {name:"Restoration protocol", type:"PDF"},{name:"Before / after restoration", type:"Image"}
+    ]}
+  ]},
+  {id:"water", title:"Equitable Water Stewardship", system:"Water", lang:"English", topics:[
+    {id:"access", name:"Equitable Access", files:[
+      {name:"Access planning guide", type:"PDF"},{name:"Access explainer", type:"Video"}
+    ]},
+    {id:"steward", name:"Stewardship &amp; Monitoring", files:[
+      {name:"Stewardship handbook", type:"PDF"},{name:"Monitoring indicators", type:"Image"}
+    ]}
+  ]},
+  {id:"institutions", title:"Building Community Institutions", system:"All Systems", lang:"Hindi", topics:[
+    {id:"form", name:"Forming the Institution", files:[
+      {name:"Institution formation guide", type:"PDF"},{name:"Formation video", type:"Video"}
+    ]},
+    {id:"rules", name:"Rules &amp; Governance", files:[
+      {name:"Model bylaws", type:"PDF"},{name:"Governance diagram", type:"Image"}
+    ]}
+  ]},
+  {id:"tenure", title:"Securing Tenure &amp; Recognition", system:"Forests", lang:"English", topics:[
+    {id:"why", name:"Why Tenure Matters", files:[
+      {name:"Tenure security explainer", type:"Video"},{name:"Forms of recognition", type:"PDF"}
+    ]},
+    {id:"evidence", name:"Evidence &amp; Documentation", files:[
+      {name:"Evidence checklist", type:"PDF"},{name:"Sample records", type:"Image"},{name:"Documentation walkthrough", type:"Video"}
+    ]}
+  ]},
+  {id:"restoration", title:"Ecological Restoration Practices", system:"Pastureland", lang:"Hindi", topics:[
+    {id:"assess", name:"Assessing the Commons", files:[
+      {name:"Assessment format", type:"PDF"},{name:"Field survey photos", type:"Image"}
+    ]},
+    {id:"works", name:"Restoration Works", files:[
+      {name:"Restoration protocol", type:"PDF"},{name:"Works demonstration", type:"Video"}
+    ]}
+  ]},
+  {id:"water-gov", title:"Water Governance &amp; Institutions", system:"Water", lang:"Hindi", topics:[
+    {id:"access", name:"Equitable Access", files:[
+      {name:"Access planning guide", type:"PDF"},{name:"Access explainer", type:"Video"}
+    ]},
+    {id:"monitor", name:"Monitoring &amp; Stewardship", files:[
+      {name:"Monitoring indicators", type:"Image"},{name:"Stewardship handbook", type:"PDF"}
+    ]}
+  ]},
+  {id:"map-course", title:"Facilitating Multi-Actor Platforms", system:"Multi-Actor Platforms", lang:"English", topics:[
+    {id:"convene", name:"Convening Stakeholders", files:[
+      {name:"Convening guide", type:"PDF"},{name:"Stakeholder mapping", type:"Image"}
+    ]},
+    {id:"align", name:"Aligning on Goals", files:[
+      {name:"Facilitation video", type:"Video"},{name:"Shared-plan template", type:"PDF"}
+    ]}
+  ]},
+  {id:"leo-course-c", title:"Local Economic Opportunities", system:"Local Economic Opportunities", lang:"Hindi", topics:[
+    {id:"identify", name:"Identifying Opportunities", files:[
+      {name:"Opportunity scan", type:"PDF"},{name:"Case examples", type:"Image"}
+    ]},
+    {id:"build", name:"Building Enterprises", files:[
+      {name:"Enterprise basics", type:"Video"},{name:"Business format", type:"PDF"}
+    ]}
+  ]},
+  {id:"agri-course-c", title:"Sustainable Agriculture Practices", system:"Sustainable Agriculture Practices", lang:"Hindi", topics:[
+    {id:"soil", name:"Soil &amp; Water", files:[
+      {name:"Soil health guide", type:"PDF"},{name:"Practice demonstration", type:"Video"}
+    ]},
+    {id:"crop", name:"Cropping Practices", files:[
+      {name:"Cropping calendar", type:"Image"},{name:"Practice handbook", type:"PDF"}
+    ]}
+  ]}
+];
+function courseById(id){return COURSES.find(c=>c.id===id);}
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+const NAV = [
+  {id:"#/home", label:"Home"},
+  {id:"#/about", label:"About"},
+  {id:"#/commoning", label:"Commoning of Commons"},
+  {id:"#/learning-approach", label:"Learning Approach"},
+  {id:"#/resource-systems", label:"Resource Systems & Themes"},
+  {id:"#/courses", label:"Courses"},
+  {id:"#/library", label:"Resource Library"},
+  {id:"#/help", label:"Help"}
+];
+
+function header(active){
+  const initials = {visitor:"V", registered:"RU", admin:"SA"}[currentRole];
+  const acct = currentRole==="visitor"
+    ? `<a class="btn sm primary" onclick="go('#/login')">Sign In</a>`
+    : `<div class="profile" id="profile">
+        <button class="profile-btn" onclick="toggleProfile(event)" title="${roleLabel()}" aria-label="${roleLabel()}">
+          <span class="avatar">${initials}</span>
+          <span class="caret">▾</span>
+        </button>
+        <div class="profile-menu" id="profile-menu">
+          <div class="pm-head"><strong>${roleLabel()}</strong><div class="pm-sub">Signed in</div></div>
+          <div class="pm-div"></div>
+          ${isRegistered()?`<a onclick="go('#/my-learning')">My Learning</a>`:""}
+          ${isAdmin()?`<a onclick="go('#/admin')">Admin Dashboard</a>`:""}
+          <a onclick="toast('Profile &amp; settings (placeholder)')">Profile &amp; Settings</a>
+          <div class="pm-div"></div>
+          <a onclick="signOut()">Sign Out</a>
+        </div>
+      </div>`;
+  return `<header class="site"><div class="container"><nav class="nav">
+    <div class="logo" onclick="go('#/home')">Facilitating<small>COMMONING</small></div>
+    <ul>
+      ${NAV.map(n=>`<li><a class="navlink ${active===n.id?'active':''}" onclick="go('${n.id}')">${n.label}</a></li>`).join("")}
+    </ul>
+    <div class="acct"><a class="btn sm icon-btn" onclick="openSearch()" title="Search" aria-label="Search">🔍</a>${acct}</div>
+  </nav></div></header>`;
+}
+
+function crumbs(items){
+  return `<div class="container"><div class="crumbs">${
+    items.map((it,i)=>{
+      const last=i===items.length-1;
+      return (last
+        ? `<span class="here">${it.label}</span>`
+        : `<a onclick="go('${it.href}')">${it.label}</a><span class="sep">/</span>`);
+    }).join("")
+  }</div></div>`;
+}
+
+function footer(){
+  return `<footer class="site"><div class="container">
+    <div class="cols">
+      <div>
+        <div class="logo" style="display:inline-block" onclick="go('#/home')">Facilitating<small>COMMONING</small></div>
+        <p class="muted mt12" style="max-width:260px">A learning system to understand and facilitate the Commoning of Commons.</p>
+      </div>
+      <div><h5>Learn</h5><ul>
+        <li onclick="go('#/commoning')">Commoning of Commons</li>
+        <li onclick="go('#/learning-approach')">Learning Approach</li>
+        <li onclick="go('#/resource-systems')">Resource Systems</li>
+      </ul></div>
+      <div><h5>Find</h5><ul>
+        <li onclick="go('#/library')">Resource Library</li>
+        <li onclick="openSearch()">Search</li>
+        <li onclick="go('#/help')">Help &amp; FAQ</li>
+      </ul></div>
+      <div><h5>Resource Systems</h5><ul>
+        <li onclick="go('#/system/forests')">Forests</li>
+        <li onclick="go('#/system/pastureland')">Pastureland</li>
+        <li onclick="go('#/system/water')">Water</li>
+      </ul></div>
+    </div>
+    <div class="bar"><span>Facilitating Commoning — Web Repository (low-fidelity wireframe)</span></div>
+  </div></footer>`;
+}
+
+/* Commoning pathway (reusable). activeId optional; system optional for links */
+function pathway(activeId, opts={}){
+  const compact=opts.compact?"compact":"";
+  const sys=opts.system?`/${opts.system}`:"";
+  const steps=STAGES.map((s,i)=>{
+    const active=s.id===activeId?"active":"";
+    const arrow=i<STAGES.length-1?`<div class="pw-arrow">→</div>`:"";
+    return `<div class="pw-step ${active}" onclick="go('#/stage/${s.id}${sys?('?sys='+opts.system):''}')">
+        <div class="num">${s.num}</div><div class="nm">${s.name}</div>
+      </div>${arrow}`;
+  }).join("");
+  return `<div class="pathway ${compact}">${steps}</div>`;
+}
+
+function resourceCard(r){
+  const isSystem = r.stage && r.stage!=="";
+  return `<div class="rcard">
+    <div class="rc-top">
+      <h4>${r.title}</h4>
+      <span class="badge">${r.type}</span>
+    </div>
+    <p class="purpose">${r.purpose}</p>
+    <div class="meta-tags">
+      <span class="tag">${r.system}</span>
+      ${isSystem?`<span class="tag">${r.stage}</span>`:""}
+      <span class="tag">${r.stake}</span>
+      <span class="tag">${r.design}</span>
+      <span class="tag">${r.lang}</span>
+      <span class="tag">${r.version}</span>
+    </div>
+    ${r.attribution?`<div class="wf-note">${r.attribution}</div>`:""}
+    <div class="rc-actions">
+      <a class="btn sm primary" onclick="go('#/resource/${r.id}')">View</a>
+      <a class="btn sm" onclick="download('${r.title}')">Download</a>
+    </div>
+  </div>`;
+}
+
+function systemCard(id, s, size){
+  const small=size==="small";
+  return `<div class="card syscard click ${small?'small':''}" onclick="go('#/system/${id}')">
+    <div class="ph-img">${s.name} — process image placeholder</div>
+    <h3>${s.name}</h3>
+    <p>${s.desc}</p>
+    ${!small?`<div class="wf-note">Process: ${s.process}</div>
+    <a class="btn link" style="font-size:12px" onclick="event.stopPropagation();toast('Process Documents for 3 states: ${STATES.join(', ')} (placeholder)')">Process Documents (3 states) →</a>`:""}
+    <div class="cta"><a class="btn sm">Begin your Learning Journey →</a></div>
+  </div>`;
+}
+
+// Visual course card (deck slide 14 "Explore Resources under …" grid)
+function mediaKind(type){
+  const t=(type||"").toLowerCase();
+  if(t.indexOf("video")>=0) return "video";
+  if(t.indexOf("audio")>=0) return "audio";
+  if(/pdf|handbook|guide|manual|sop|format/.test(t)) return "pdf";
+  return "other";
+}
+function courseCard(r, i){
+  const k=mediaKind(r.type);
+  const thumb = k==="video" ? `<div class="play">▶</div>`
+    : k==="audio" ? `<div class="play">♪</div>`
+    : k==="pdf" ? `<div class="doc-ic">PDF</div>`
+    : `Thumbnail`;
+  return `<div class="course-card" onclick="go('#/resource/${r.id}')">
+    <span class="num-badge">${i+1}</span>
+    <div class="course-thumb">${thumb}</div>
+    <div class="cc-body">
+      <span class="badge" style="align-self:center">${r.type}</span>
+      <h4>${r.title}</h4>
+      <div class="cc-lang">🌐 ${r.lang}</div>
+    </div>
+  </div>`;
+}
+
+// File card for a course topic (Image / PDF / Video). Pass course/topic/index to make View open the file page.
+function filePreviewGlyph(type){
+  const t=(type||"").toLowerCase();
+  return t==="video" ? `<div class="play">▶</div>` : t==="pdf" ? `<div class="doc-ic">PDF</div>` : t==="image" ? `Image` : `File`;
+}
+function fileCard(f, courseId, topicId, idx){
+  const view = (courseId!=null) ? `go('#/file/${courseId}/${topicId}/${idx}')` : `toast('Open ${f.type}: ${f.name} (placeholder)')`;
+  return `<div class="file-card">
+    <div class="file-prev" style="cursor:pointer" onclick="${view}">${filePreviewGlyph(f.type)}</div>
+    <div class="file-body">
+      <span class="badge">${f.type}</span>
+      <h4 style="margin:6px 0 0;font-size:13px">${f.name}</h4>
+      <div class="rc-actions" style="margin-top:8px">
+        <a class="btn sm primary" onclick="${view}">View</a>
+        <a class="btn sm" onclick="download('${f.name}')">Download</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Admin variant of a file card — with Replace / Delete instead of View / Download
+function adminFileCard(f){
+  const t=(f.type||"").toLowerCase();
+  const prev = t==="video" ? `<div class="play">▶</div>` : t==="pdf" ? `<div class="doc-ic">PDF</div>` : t==="image" ? `Image` : `File`;
+  return `<div class="file-card">
+    <div class="file-prev">${prev}</div>
+    <div class="file-body">
+      <span class="badge">${f.type}</span>
+      <h4 style="margin:6px 0 0;font-size:13px">${f.name}</h4>
+      <div class="rc-actions" style="margin-top:8px">
+        <a class="btn sm" onclick="toast('Replace file (placeholder)')">Replace</a>
+        <a class="btn sm" onclick="toast('Delete file (placeholder)')">Delete</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function themeCard(t){
+  return `<div class="card click small syscard" onclick="go('#/theme/${t.id}')">
+    <div class="ph-img" style="min-height:56px">${t.name}</div>
+    <h3 style="font-size:14px">${t.name}</h3><p>${t.desc}</p>
+    <div class="cta"><a class="btn sm">Begin your Learning Journey / Access Resource →</a></div>
+  </div>`;
+}
+
+function filterSidebar(){
+  const box=(items)=>items.map(i=>`<label class="fopt"><input type="checkbox" onchange="applyFilterFlash()"> ${i}</label>`).join("");
+  return `<aside class="filters">
+    <div class="fgroup"><h4>Resource System</h4>${box(["Pastureland","Forests","Water"])}</div>
+    <div class="fgroup"><h4>Stage of Commoning</h4>${box(STAGES.map(s=>s.name))}</div>
+    <div class="fgroup"><h4>Stakeholder</h4>${box(["Facilitator","Learner","Field Practitioner","Community Member","Mentor"])}</div>
+    <div class="fgroup"><h4>Learning Design</h4>${box(["Modular","LDHF","Both"])}</div>
+    <div class="fgroup"><h4>Resource Type</h4>${box(["Course","Training Module","Atomised Course","Video","Handbook","Facilitators' Guide","SoP","Format","Tool"])}</div>
+    <div class="fgroup"><h4>Language</h4>${box(["English","Hindi","Other"])}</div>
+    <div class="filter-actions">
+      <a class="btn sm primary" onclick="go('#/search?filtered=1')">Apply Filters</a>
+      <a class="btn sm" onclick="toast('Filters cleared (placeholder)')">Clear All</a>
+    </div>
+  </aside>`;
+}
+
+function shell(active, crumbItems, body){
+  return header(active) + (crumbItems?crumbs(crumbItems):"") +
+    `<main><div class="container">${body}</div></main>` + footer();
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+const screens = {};
+
+/* ---- HOME ---- */
+screens.home = () => shell("#/home", null, `
+  <div class="hero hero-split">
+    <div class="hero-text">
+      <div class="eyebrow">Facilitating Commoning · Web Repository</div>
+      <h1>Commoning of Commons: Learn. Facilitate. Act.</h1>
+      <p class="lead">A learning system that enables ecosystem actors to understand and facilitate the Commoning of Commons.</p>
+      <div class="row">
+        <a class="btn primary" onclick="go('#/commoning')">Start Learning →</a>
+        <a class="btn" onclick="go('#/resource-systems')">Choose a Resource System or Theme →</a>
+        <a class="btn" onclick="openTour()">Take a Tour / Get Started</a>
+      </div>
+    </div>
+    <div class="hero-media ph-img">Hero image — placeholder</div>
+  </div>
+
+  <section class="section">
+    <div class="panel">
+      <div class="eyebrow">About the Repository</div>
+      <h2 style="margin:0 0 8px;font-size:18px">About the Repository</h2>
+      <p class="muted">The Web Repository is a learning system that supports ecosystem actors to build capacities and facilitate the Commoning of Commons. It explains what users can learn and access here.</p>
+      <p class="muted">Inside you will find learning modules, facilitation guides, field tools and mentoring — organised around the Commoning process rather than by file type. Explore by resource system, follow the pathway, or search the library directly for what you need.</p>
+      <div class="mt12"><a class="btn sm" onclick="go('#/about')">Know More →</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid g2">
+      <div class="panel">
+        <div class="between" style="align-items:flex-start">
+          <div style="flex:1">
+            <h3 style="margin:0;font-size:16px">Commoning of Commons</h3>
+            <p class="muted mt8">Commoning involves communities collectively securing, governing, restoring and sustainably managing their shared natural resources, with community agency at the centre.</p>
+          </div>
+          <a class="btn sm" style="flex:0 0 auto;margin-left:12px" onclick="go('#/commoning')">Explore More →</a>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="between" style="align-items:flex-start">
+          <div style="flex:1">
+            <h3 style="margin:0;font-size:16px">Capacity Building Approach</h3>
+            <p class="muted mt8">The learning design — Modular Learning and LDHF — and how continuous learning, field application and guided support help translate training into action.</p>
+          </div>
+          <a class="btn sm" style="flex:0 0 auto;margin-left:12px" onclick="go('#/learning-approach')">Explore More →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="between">
+      <div><h2 class="mb0">Explore by Resource System or Theme</h2></div>
+      <span class="wf-note">Marquee</span>
+    </div>
+    <p class="sub">Choose the natural-resource system you are working with to understand its Commoning process and access the relevant learning pathway.</p>
+    <div class="grid g3">
+      ${["pastureland","forests","water"].map(id=>`<div class="card click" onclick="go('#/system/${id}')">
+        <h3>${SYSTEMS[id].name}</h3>
+        <p>${SYSTEMS[id].desc}</p>
+        <div class="cta"><a class="btn sm">Explore More →</a></div>
+      </div>`).join("")}
+    </div>
+    <div class="wrapline">Additional Themes</div>
+    <div class="grid g3">
+      ${THEME_LIST.map(themeCard).join("")}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="between">
+      <div><div class="eyebrow">Resource Library</div><h2 class="mb0">Latest updates / recently added resources</h2></div>
+      <div class="row"><a class="btn sm" onclick="go('#/library')">Quick Access →</a><a class="btn sm" onclick="go('#/library')">Read More →</a></div>
+    </div>
+    <div class="grid g3 mt12">
+      ${RES.slice(0,3).map(resourceCard).join("")}
+    </div>
+  </section>
+`);
+
+/* ---- STORY DETAIL (Commoning in Action) ---- */
+screens.story = (params) => {
+  const s = storyById(params.id) || STORIES[0];
+  return shell(null,
+    [{label:"Home",href:"#/home"},{label:"Commoning in Action"},{label:s.title}], `
+    <section class="section">
+      <div class="eyebrow">Commoning in Action — Field Story</div>
+      <h2>${s.title}</h2>
+      <div class="meta-tags mt8"><span class="tag solid">${s.system}</span><span class="tag solid">${s.stage}</span></div>
+      <div class="grid g2 mt16">
+        <div class="ph-img" style="min-height:220px">Field photograph — placeholder</div>
+        <div class="stack">
+          <p class="muted">${s.excerpt}</p>
+          <div class="ph-line w90"></div><div class="ph-line w80"></div><div class="ph-line w90"></div><div class="ph-line w60"></div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="callout">
+        <div class="txt"><strong>Want to do this in your context?</strong><span>Follow the ${s.stage} stage for this resource system.</span></div>
+        <div class="row"><a class="btn primary" onclick="go('#/resource-systems')">Choose Resource System →</a>
+        <a class="btn" onclick="go('#/home')">More stories</a></div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- ABOUT ---- */
+screens.about = () => shell("#/about",
+  [{label:"Home",href:"#/home"},{label:"About"}], `
+  <section class="section">
+    <div class="eyebrow">About</div>
+    <h2>About the Repository</h2>
+    <p class="sub">A learning and action-oriented repository that helps ecosystem actors understand and facilitate the Commoning of Commons.</p>
+    <div class="grid g2">
+      <div class="panel"><h3 style="margin-top:0">Purpose</h3>
+        <p class="muted">This repository helps ecosystem actors understand and facilitate the Commoning of Commons. It brings learning, facilitation guides, field tools and mentoring together in one place — organised around the Commoning process rather than by file type — so users can move from understanding to action on the ground.</p>
+      </div>
+      <div class="panel"><h3 style="margin-top:0">Who it supports</h3>
+        <p class="muted">Ecosystem actors, facilitators, learners, field practitioners and stakeholders.</p>
+        <p class="muted">It is designed for facilitators running sessions with communities, field practitioners carrying out on-ground tasks, learners building their understanding, and the wider stakeholders who support Commoning.</p>
+      </div>
+      <div class="panel"><h3 style="margin-top:0">What you can learn</h3>
+        <p class="muted">What Commoning of Commons means and why it matters, how the capacity-building approach works (Modular Learning and LDHF), the six-stage Commoning pathway, and what needs to happen at each stage for the resource system you are working with.</p>
+      </div>
+      <div class="panel"><h3 style="margin-top:0">What resources are available</h3>
+        <p class="muted">At each stage you will find Learn, Facilitate, Act and Support resources — concept notes and videos, session plans and facilitation guides, field tools and tasks, and mentoring, FAQs and guidance — available in English and Hindi.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">How it is organized</div>
+    <h2>Information Architecture</h2>
+    <p class="sub">Top navigation stays simple; deeper content is reached through guided pathways. Each resource system → Commoning pathway (process) → stages → learning modules / tools / resources.</p>
+    <div class="panel">
+      <div class="row" style="gap:8px">
+        ${["Home","About","Commoning of Commons","Learning Approach","Resource Systems & Themes","Resource Library","Help"].map(n=>`<span class="tag solid">${n}</span>`).join("")}
+      </div>
+      <div class="flow mt16">
+        <div class="node strong">Resource Systems &amp; Themes</div><div class="arw">→</div>
+        <div class="node">Pastureland · Forests · Water</div><div class="arw">→</div>
+        <div class="node">Commoning Pathway (process)</div><div class="arw">→</div>
+        <div class="node">Stages / Steps</div><div class="arw">→</div>
+        <div class="node strong">Learning modules · tools · resources</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout">
+      <div class="txt"><strong>Ready to begin?</strong><span>Understand the idea, then choose your resource system.</span></div>
+      <div class="row"><a class="btn primary" onclick="go('#/commoning')">Start Learning →</a><a class="btn" onclick="go('#/library')">Resource Library</a></div>
+    </div>
+  </section>
+`);
+
+/* ---- COMMONING OF COMMONS ---- */
+screens.commoning = () => shell("#/commoning",
+  [{label:"Home",href:"#/home"},{label:"Commoning of Commons"}], `
+  <section class="section">
+    <div class="eyebrow">Concept + Approach</div>
+    <h2>Commoning of Commons</h2>
+  </section>
+
+  <section class="section">
+    <div class="grid g2">
+      <div class="panel">
+        <h3 style="margin-top:0">What does ‘Commoning of Commons’ mean?</h3>
+        <p class="muted">In simple language: Commoning is the ongoing practice through which a community takes collective responsibility for a shared natural resource — securing it, governing it, restoring it and sustainably managing it together.</p>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Why is Commoning important / why it matters</h3>
+        <p class="muted">Communities exercise custodianship and agency over shared natural resources; collective institutions make decisions and sustain action over time.</p>
+        <ul class="muted" style="margin:8px 0 0;padding-left:18px">
+          <li>Community custodianship</li>
+          <li>Community agency</li>
+          <li>Collective decision-making</li>
+          <li>Long-term institutions</li>
+          <li>Sustainable management</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="panel">
+      <div class="eyebrow">Key Pillars of Commoning</div>
+      <h2 style="margin:0 0 12px;font-size:18px">Approach to Commoning of Commons</h2>
+      <div class="model">
+        <div class="m-node">Institution Building &amp; Governance</div>
+        <div class="m-node">Tenurial Security</div>
+        <div class="m-node">Restoration &amp; Sustainable Management</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="panel" style="border-width:1.5px">
+      <div class="eyebrow">The common thread</div>
+      <h2 style="margin:0 0 6px;font-size:18px">Community Agency is the common thread across all three</h2>
+      <p class="muted">Communities understand rights and responsibilities, deliberate collectively, make informed decisions, act, reflect and adapt.</p>
+      <div class="flow mt16">
+        <div class="node strong">Understand</div><div class="arw">→</div>
+        <div class="node strong">Deliberate</div><div class="arw">→</div>
+        <div class="node strong">Decide</div><div class="arw">→</div>
+        <div class="node strong">Act</div><div class="arw">→</div>
+        <div class="node strong">Reflect</div><div class="arw">→</div>
+        <div class="node strong">Adapt</div>
+      </div>
+      <div class="wf-note mt12">This links the need and importance of capacity building — to build agency, knowledge and capacity.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout">
+      <div class="txt"><strong>Continue</strong><span>See how the capacity-building approach works, or choose the resource system you are working with.</span></div>
+      <div class="row"><a class="btn primary" onclick="go('#/learning-approach')">Learning Approach →</a><a class="btn" onclick="go('#/resource-systems')">Resource Systems →</a></div>
+    </div>
+  </section>
+`);
+
+/* ---- LEARNING APPROACH ---- */
+screens["learning-approach"] = () => shell("#/learning-approach",
+  [{label:"Home",href:"#/home"},{label:"Learning Approach"}], `
+  <section class="section">
+    <div class="eyebrow">Approach</div>
+    <h2>Learning Approach — from information to action</h2>
+  </section>
+
+  <section class="section">
+    <div class="grid g2">
+      <div class="panel">
+        <h3 style="margin:0 0 10px;font-size:18px">Why Capacity Building?</h3>
+        <p class="muted" style="margin:0">Commoning is a continuous process that requires ongoing learning, field application, reflection and handholding — rather than a one-time transfer of information.</p>
+      </div>
+      <div class="panel">
+        <h3 style="margin:0 0 10px;font-size:18px">Common Purpose</h3>
+        <p class="muted" style="margin:0">Build stakeholder capacities <strong>and</strong> handhold learners as they translate training inputs into action on the ground.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">Two methods of learning for facilitating Commoning</div>
+    <h2 style="font-size:18px">Core Elements of the Prakriti Karyashala Approach &amp; Design</h2>
+    <div class="grid g2 mt12">
+      <div class="panel">
+        <h3 style="margin-top:0">Modular Learning Design</h3>
+        <ul class="muted" style="margin:0 0 12px;padding-left:18px">
+          <li>Breaks complex learning into manageable, progressive stages (Commoning process broken into a series of modules)</li>
+          <li>In-person sessions at periodic intervals</li>
+          <li>Field activities between modules</li>
+          <li>Each module builds on prior learning and action</li>
+          <li>Cumulative field actions contribute to outcomes</li>
+        </ul>
+        <div class="flow">
+          <div class="node">Learning Module</div><div class="arw">→</div>
+          <div class="node">Field Activity</div><div class="arw">→</div>
+          <div class="node">Next Module</div><div class="arw">→</div>
+          <div class="node strong">Outcome</div>
+        </div>
+        <div class="wf-note mt8">[Modular Design Image]</div>
+        <div class="mt12"><a class="btn sm" onclick="toast('Open Karyashala Operations Manual (placeholder)')">Link to the Karyashala Operations manual →</a></div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Low Dose High Frequency (LDHF)</h3>
+        <ul class="muted" style="margin:0 0 12px;padding-left:18px">
+          <li>Short, frequent virtual learning engagements</li>
+          <li>Atomized content focused on specific concepts/tasks</li>
+          <li>Guided mentoring between sessions</li>
+          <li>Repeated learning–application–feedback cycles</li>
+          <li>Enables timely support while action is underway</li>
+        </ul>
+        <div class="flow">
+          <div class="node">Short Learning</div><div class="arw">→</div>
+          <div class="node">Field Application</div><div class="arw">→</div>
+          <div class="node">Feedback</div><div class="arw">→</div>
+          <div class="node strong">Repeat ↻</div>
+        </div>
+        <div class="wf-note mt8">[LDHF image]</div>
+        <div class="mt12"><a class="btn sm" onclick="toast('Open Guided Mentoring module (placeholder)')">Link to the Guided Mentoring module →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="panel" style="text-align:center">
+      <p class="muted" style="margin:0 0 14px"><strong>The LDHF design complements the modular approach</strong> by enabling continuous learning and reinforcement between formal training interventions.</p>
+      <div class="flow" style="justify-content:center">
+        <div class="node">Training Input</div><div class="arw">→</div>
+        <div class="node">Field Application</div><div class="arw">→</div>
+        <div class="node">Reflection</div><div class="arw">→</div>
+        <div class="node">Handholding</div><div class="arw">→</div>
+        <div class="node strong">Action Cycle ↻</div>
+      </div>
+      <div class="wf-note mt8">[Learning Action Cycle Image]</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout">
+      <div class="txt"><strong>Apply the approach to your context</strong><span>Choose the resource system you are working with.</span></div>
+      <a class="btn primary" onclick="go('#/resource-systems')">Resource Systems &amp; Themes →</a>
+    </div>
+  </section>
+`);
+
+/* ---- RESOURCE SYSTEMS & THEMES ---- */
+screens["resource-systems"] = () => shell("#/resource-systems",
+  [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes"}], `
+  <section class="section">
+    <div class="eyebrow">Choose the Commons (resource-system) or theme you are working with</div>
+    <h2>Resource Systems &amp; Themes</h2>
+    <p class="sub">Each pathway explains the process first and then provides resources in the order they are likely to be used.</p>
+    <div class="grid g3">
+      ${systemCard("pastureland",SYSTEMS.pastureland)}
+      ${systemCard("forests",SYSTEMS.forests)}
+      ${systemCard("water",SYSTEMS.water)}
+    </div>
+    <div class="wrapline">Themes</div>
+    <div class="grid g3">
+      ${THEME_LIST.map(themeCard).join("")}
+    </div>
+  </section>
+`);
+
+/* ---- RESOURCE SYSTEM ENTRY — list of topics (subjects) before the resource grid ---- */
+screens.system = (params) => {
+  const s = SYSTEMS[params.id];
+  if(!s) return screens["resource-systems"]();
+  const topics = topicsForSystem(s.name);
+  return shell("#/resource-systems",
+    [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"},{label:s.name}], `
+    <section class="section">
+      <div class="banner">
+        <div><div class="wf-note">Commoning of</div><h2>${s.name}</h2></div>
+        <div class="sys-badge">${s.name}</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="eyebrow">Topics under ${s.name}</div>
+      <h2>Choose a topic</h2>
+      <p class="sub">Select a topic to see its courses, modules and resources.</p>
+      <div class="grid g3">
+        ${topics.map(t=>`<div class="card click" onclick="go('#/modular/${params.id}?topic=${t.id}')">
+          <h3>${t.name}</h3>
+          <p>${t.desc}</p>
+          <div class="wf-note">${t.count} resource${t.count>1?'s':''}</div>
+          <div class="cta"><a class="btn sm">View resources →</a></div>
+        </div>`).join("")}
+      </div>
+      <div class="callout mt24">
+        <div class="txt"><strong>Or browse everything</strong><span>See all resources under ${s.name} in one grid.</span></div>
+        <a class="btn primary" onclick="go('#/modular/${params.id}')">All Resources →</a>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- STAGE DETAIL (what needs to happen + resources filtered to this stage) ---- */
+screens.stage = (params) => {
+  const s = STAGES.find(x=>x.id===params.id) || STAGES[2];
+  const sys = params.sys;
+  const sysName = sys && SYSTEMS[sys] ? SYSTEMS[sys].name : null;
+  const idx = STAGES.indexOf(s);
+  const next = STAGES[idx+1];
+  const crumbItems = [{label:"Home",href:"#/home"}];
+  if(sysName){crumbItems.push({label:"Resource Systems",href:"#/resource-systems"});crumbItems.push({label:sysName,href:"#/system/"+sys});}
+  crumbItems.push({label:`Stage ${s.num} — ${s.name}`});
+  const pool = (sysName?resFor(sysName):RES).filter(r=>r.stage===s.name || r.stage==="All Stages");
+
+  return shell(null, crumbItems, `
+    <section class="section">
+      <div class="eyebrow">${sysName?sysName+" · ":""}Commoning Stage</div>
+      <h2 class="mb0">Stage ${s.num} — ${s.name}</h2>
+      <div class="mt16">${pathway(s.id,{system:sys})}</div>
+    </section>
+
+    <section class="section">
+      <div class="panel">
+        <h3 style="margin-top:0">What needs to happen?</h3>
+        <p class="muted">${s.what}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="between">
+        <h2 class="mb0">Resources for this stage</h2>
+        <div class="row" style="gap:8px">
+          <select class="btn sm" style="padding:6px"><option>Stakeholder</option><option>Facilitator</option><option>Learner</option><option>Field Practitioner</option></select>
+          <select class="btn sm" style="padding:6px"><option>Format</option><option>Course</option><option>Training Module</option><option>Atomised Course</option><option>Video</option></select>
+          <select class="btn sm" style="padding:6px"><option>Language</option><option>English</option><option>Hindi</option></select>
+        </div>
+      </div>
+      <p class="sub">Grouped by learning design — Modular Learning, Atomized Course Curriculum (LDHF) and Supporting Resources.</p>
+      <div class="grid g3">
+        ${pool.length?pool.map(resourceCard).join(""):`<div class="panel muted">Placeholder — resources for this stage coming soon.</div>`}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="callout">
+        <div class="txt"><strong>Recommended next step</strong><span>${next?`Continue to Stage ${next.num} — ${next.name}.`:"You have reached the final stage."}</span></div>
+        ${next?`<a class="btn primary" onclick="go('#/stage/${next.id}${sys?('?sys='+sys):''}')">Next Stage: ${next.name} →</a>`:`<a class="btn" onclick="go('${sys?('#/system/'+sys):'#/resource-systems'}')">Back to Resource System</a>`}
+      </div>
+      <div class="between mt24">
+        <a class="btn" onclick="go('#/stage/${STAGES[Math.max(0,idx-1)].id}${sys?('?sys='+sys):''}')">← Previous Stage</a>
+        <a class="btn" onclick="go('${sys?('#/system/'+sys):'#/resource-systems'}')">Keep pathway visible →</a>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- ATOMIZED COURSE CURRICULUM (deck slide 13) ---- */
+screens.curriculum = (params) => {
+  const s = SYSTEMS[params.id];
+  const label = s ? s.name : "Resource System";
+  const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"}];
+  if(s) crumbItems.push({label:s.name,href:"#/system/"+params.id});
+  crumbItems.push({label:"Atomized Course Curriculum"});
+  return shell("#/resource-systems", crumbItems, `
+    <section class="section">
+      <div class="eyebrow">Atomized Course Curriculum · Low Dose High Frequency (LDHF)</div>
+      <h2>Training Curriculum — ${label}</h2>
+      <p class="sub">Clicking a topic or sub-topic opens the relevant atomised content on the repository.</p>
+      <div class="cur-wrap">
+        <div class="cur-side">
+          <div class="wf-note" style="margin-bottom:8px">Modules</div>
+          ${CURRICULUM.map(m=>`<div class="cur-unit" onclick="toast('Jump to module ${m.code} (placeholder)')">
+            <span class="swatch"></span><div><strong>${m.code}</strong> · ${m.title}<div class="wf-note">${m.topics[0][0]}–${m.topics[m.topics.length-1][0]}</div></div>
+          </div>`).join("")}
+        </div>
+        <div class="cur-main">
+          ${CURRICULUM.map(m=>`<div class="cur-mod-head">${m.title}</div>
+            ${m.topics.map(t=>`<div class="cur-topic" onclick="go('#/resource/what-is-tenure')">
+              <span class="code">${t[0]}</span><span>${t[1]}</span>
+            </div>`).join("")}`).join("")}
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="callout">
+        <div class="txt"><strong>Looking for modules or supporting resources instead?</strong><span>Switch to the modular learning and supporting resources view.</span></div>
+        <a class="btn primary" onclick="go('#/modular/${params.id||'forests'}')">Modular &amp; Supporting →</a>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- MODULAR LEARNING & SUPPORTING RESOURCES (deck slide 14) — filtered grid ---- */
+screens.modular = (params) => {
+  const s = SYSTEMS[params.id];
+  const label = s ? s.name : "Resource System";
+  const group = params.g; // optional: supporting / modular / atomized
+  const topic = params.topic ? topicById(params.topic) : null;
+  const list = s ? resForTopic(s.name, params.topic).filter(r=>!group||r.group===group) : RES.filter(r=>!group||r.group===group);
+  const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"}];
+  if(s) crumbItems.push({label:s.name,href:"#/system/"+params.id});
+  crumbItems.push({label:topic?topic.name:"Resources"});
+  return shell("#/resource-systems", crumbItems, `
+    <section class="section">
+      <div class="banner">
+        <div><div class="wf-note">Commoning of</div><h2>${label}${topic?` <span style="font-size:14px;font-weight:400;color:var(--ink-3)">· ${topic.name}</span>`:""}</h2></div>
+        <div class="sys-badge">${label}</div>
+      </div>
+    </section>
+    <section class="section">
+      ${topic?`<a class="btn sm" onclick="go('#/system/${params.id}')">← All topics</a>`:""}
+      <div class="layout-side${topic?' mt12':''}">
+        <aside class="filters">
+          <h4 style="margin:0 0 10px;font-size:13px">Filter Resources</h4>
+          <div class="fgroup"><h4>Select State</h4>${["All States"].concat(STATES).map(x=>`<label class="fopt"><input type="radio" name="st"> ${x}</label>`).join("")}</div>
+          <div class="fgroup"><h4>Resource Type</h4>${["Training Modules","Training Manuals","Atomised Courses"].map(x=>`<label class="fopt"><input type="checkbox"> ${x}</label>`).join("")}</div>
+          <div class="fgroup"><h4>Select Language</h4>${["All Languages","English","Hindi"].map(x=>`<label class="fopt"><input type="radio" name="lang"> ${x}</label>`).join("")}</div>
+          <div class="filter-actions">
+            <a class="btn sm primary" onclick="toast('Filters applied (placeholder)')">Apply Filters</a>
+            <a class="btn sm" onclick="toast('Filters reset (placeholder)')">Reset</a>
+          </div>
+        </aside>
+        <div>
+          <div class="between">
+            <h2 class="mb0" style="font-size:18px">Explore Resources under ${label}${topic?" · "+topic.name:(group?" · "+group:"")}</h2>
+            <div class="row" style="align-items:center"><span class="muted" style="font-size:12px">Sort By:</span>
+              <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently added</option></select></div>
+          </div>
+          <div class="course-grid mt16">
+            ${list.length?list.map((r,i)=>courseCard(r,i)).join(""):`<div class="panel muted">No resources yet for this selection.</div>`}
+          </div>
+          <div class="callout mt24">
+            <div class="txt"><strong>Prefer the atomised course curriculum?</strong><span>Browse short LDHF topics by module.</span></div>
+            <a class="btn primary" onclick="go('#/curriculum/${params.id||'forests'}')">Atomized Course Curriculum →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- THEME INFORMATION PAGE (deck slide 15) — same logic, no pathway ---- */
+screens.theme = (params) => {
+  const t = THEMES[params.id];
+  if(!t) return screens["resource-systems"]();
+  const rcards = resFor(t.name).slice(0,6);
+  return shell("#/resource-systems",
+    [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"},{label:t.name}], `
+    <section class="section">
+      <div class="eyebrow">Theme Information Page · same page logic for all themes</div>
+      <div class="banner">
+        <div><div class="wf-note">Theme</div><h2>${t.name}</h2></div>
+        <div class="sys-badge">Theme</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="panel">
+        <h3 style="margin-top:0">${t.name}</h3>
+        <div class="grid g3 mt8">
+          <div><div class="wf-note">Purpose &amp; relevance to Commons</div><p class="muted" style="margin:4px 0 0">${t.desc}</p></div>
+          <div><div class="wf-note">Intended users</div><p class="muted" style="margin:4px 0 0">${t.users}</p></div>
+          <div><div class="wf-note">Expected outcome</div><p class="muted" style="margin:4px 0 0">${t.outcome}</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="eyebrow">Learning Design and Materials</div>
+      <h2>Choose how you want to learn</h2>
+      <p class="sub">Delivered as modular learning and as atomised (LDHF) content, plus supporting resources.</p>
+      <div class="ld-grid">
+        <div class="ld-card" onclick="toast('Course Curriculum / Atomized Learning (placeholder)')">
+          <div class="badge">LDHF</div>
+          <h3 style="margin:6px 0 0">Course Curriculum · Atomized Learning</h3>
+          <p class="muted" style="margin:0">Low-dose high-frequency atomised topics.</p>
+          <div class="cta mt8"><a class="btn sm">Open →</a></div>
+        </div>
+        <div class="ld-card" onclick="toast('Modular learning (placeholder)')">
+          <div class="badge">Modular</div>
+          <h3 style="margin:6px 0 0">Modular Learning</h3>
+          <p class="muted" style="margin:0">Progressive training modules.</p>
+          <div class="cta mt8"><a class="btn sm">Open →</a></div>
+        </div>
+        <div class="ld-card" onclick="toast('Supporting resources (placeholder)')">
+          <div class="badge">Support</div>
+          <h3 style="margin:6px 0 0">Supporting Resources</h3>
+          <p class="muted" style="margin:0">Handbooks, facilitators' guides, SoPs, formats.</p>
+          <div class="cta mt8"><a class="btn sm">Open →</a></div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="between">
+        <h2 class="mb0">Resource cards for all contents / training resources</h2>
+        <div class="row" style="gap:8px">
+          <select class="btn sm" style="padding:6px"><option>Stakeholder</option><option>Facilitator</option><option>Community Member</option><option>Farmer</option></select>
+          <select class="btn sm" style="padding:6px"><option>Format</option><option>Course</option><option>Training Module</option><option>Atomised Course</option></select>
+          <select class="btn sm" style="padding:6px"><option>Language</option><option>English</option><option>Hindi</option></select>
+        </div>
+      </div>
+      <p class="sub">[Title] · [Purpose] · [For whom] · [Format] · [Language] · [Download / View]</p>
+      <div class="grid g3">
+        ${rcards.length?rcards.map(resourceCard).join(""):`<div class="panel muted">Placeholder — resources for this theme coming soon.</div>`}
+      </div>
+    </section>
+  `);
+};
+
+/* ---- COURSES (list) ---- */
+/* Create-course wizard (admin) — Phase 1: course details · Phase 2: topics & files. In-memory. */
+let courseDraft = null;
+function newDraft(){ return {title:"",banner:"",desc:"",system:"Forests",lang:"English",topics:[],sel:0,step:1,uploadType:"Image"}; }
+function draftSetUploadType(t){ ensureCourseDraft().uploadType=t; go("#/course-new"); }
+function ensureCourseDraft(){ if(!courseDraft) courseDraft=newDraft(); return courseDraft; }
+function startCourseFlow(){ courseDraft=newDraft(); go("#/course-new"); }
+/* Quick-start templates — pre-fill the draft to remove the blank-page problem */
+const COURSE_TEMPLATES = [
+  {id:"forests", name:"Forests starter", title:"Commoning of Forests", system:"Forests", lang:"Hindi",
+    desc:"Rights framework, institutions and the claim process.", topics:[
+      {name:"Introduction to Forest Rights", files:[{name:"Overview",type:"PDF"},{name:"Intro video",type:"Video"}]},
+      {name:"Community Institutions", files:[{name:"Gram Sabha roles",type:"PDF"},{name:"Meeting photo",type:"Image"}]},
+      {name:"Claim Process", files:[{name:"Step-by-step guide",type:"PDF"},{name:"Walkthrough",type:"Video"}]}
+    ]},
+  {id:"pastureland", name:"Pastureland starter", title:"Commoning of Pasturelands", system:"Pastureland", lang:"Hindi",
+    desc:"Rules, restoration and sustainable management.", topics:[
+      {name:"Introduction to Pasture Commons", files:[{name:"Overview",type:"PDF"}]},
+      {name:"Collective Grazing Rules", files:[{name:"Sample rules",type:"PDF"},{name:"Grazing map",type:"Image"}]},
+      {name:"Restoration & Management", files:[{name:"Restoration protocol",type:"PDF"},{name:"Before / after",type:"Image"}]}
+    ]},
+  {id:"water", name:"Water starter", title:"Commoning of Water", system:"Water", lang:"English",
+    desc:"Equitable access, governance and stewardship.", topics:[
+      {name:"Equitable Access", files:[{name:"Planning guide",type:"PDF"},{name:"Explainer",type:"Video"}]},
+      {name:"Stewardship & Monitoring", files:[{name:"Stewardship handbook",type:"PDF"},{name:"Monitoring indicators",type:"Image"}]}
+    ]}
+];
+function useCourseTemplate(id){
+  const t=COURSE_TEMPLATES.find(x=>x.id===id);
+  if(t){ courseDraft={title:t.title,banner:"course-banner.jpg",desc:t.desc,system:t.system,lang:t.lang,
+    topics:t.topics.map(function(tp){return {name:tp.name,files:tp.files.map(function(f){return {name:f.name,type:f.type};})};}),
+    sel:0,step:2}; }
+  else { courseDraft=newDraft(); }
+  toast(t?("Loaded template: "+t.name+" — review & publish"):"Started a blank course");
+  go("#/course-new");
+}
+/* Phase 1 — course details */
+function draftSet(field,val){ ensureCourseDraft()[field]=val; }
+function draftUploadBanner(){ ensureCourseDraft().banner="course-banner.jpg"; toast("Banner image uploaded (placeholder)"); go("#/course-new"); }
+function draftRemoveBanner(){ ensureCourseDraft().banner=""; go("#/course-new"); }
+function draftToStep2(){ ensureCourseDraft(); if(!courseDraft.title.trim()){ toast("Please enter a course name"); return; } courseDraft.step=2; go("#/course-new"); }
+function draftToStep1(){ ensureCourseDraft().step=1; go("#/course-new"); }
+/* Phase 2 — two-pane editor: topics on the left, selected topic's files on the right */
+function draftAddTopic(){ ensureCourseDraft(); courseDraft.topics.push({name:"Topic "+(courseDraft.topics.length+1),files:[]}); courseDraft.sel=courseDraft.topics.length-1; go("#/course-new"); }
+function draftSelectTopic(i){ ensureCourseDraft().sel=i; go("#/course-new"); }
+function draftSetTopicName(i,val){ courseDraft.topics[i].name=val; }
+function draftRemoveTopic(i){ ensureCourseDraft().topics.splice(i,1); if(courseDraft.sel>=courseDraft.topics.length) courseDraft.sel=courseDraft.topics.length-1; if(courseDraft.sel<0) courseDraft.sel=0; go("#/course-new"); }
+function draftAddFile(type){ ensureCourseDraft(); if(!courseDraft.topics.length) draftAddTopic(); courseDraft.topics[courseDraft.sel].files.push({name:"",type:type||"PDF"}); go("#/course-new"); }
+function draftRemoveFile(fi){ courseDraft.topics[courseDraft.sel].files.splice(fi,1); go("#/course-new"); }
+function draftSetFile(fi,field,val){ courseDraft.topics[courseDraft.sel].files[fi][field]=val; }
+function draftCancel(){ courseDraft=null; go("#/courses"); }
+/* Edit an existing published course — load it into the wizard editor */
+function editCourse(id){
+  const c=courseById(id); if(!c){ toast("Course not found"); return; }
+  courseDraft={ editingId:c.id, title:c.title, banner:c.banner||"", desc:c.desc||"", system:c.system, lang:c.lang,
+    topics:c.topics.map(function(t){return {name:t.name,files:t.files.map(function(f){return {name:f.name,type:f.type};})};}),
+    sel:0, step:1, uploadType:"Image" };
+  go("#/course-new");
+}
+/* Delete a course */
+function deleteCourse(id){
+  const idx=COURSES.findIndex(function(c){return c.id===id;});
+  if(idx<0){ toast("Course not found"); return; }
+  const name=COURSES[idx].title; COURSES.splice(idx,1); toast("Course deleted: "+name);
+  go(isAdmin()?"#/admin":"#/courses");
+}
+function publishCourse(){ ensureCourseDraft();
+  if(!courseDraft.title.trim()){ toast("Course name is required"); draftToStep1(); return; }
+  if(!courseDraft.topics.length){ toast("Add at least one topic before saving"); draftToStep2(); return; }
+  const topics=courseDraft.topics.map(function(t,i){return {id:"t"+(i+1),name:(t.name||("Topic "+(i+1))),files:t.files.map(function(f){return {name:f.name,type:f.type};})};});
+  if(courseDraft.editingId){
+    const c=courseById(courseDraft.editingId);
+    if(c){ c.title=courseDraft.title.trim(); c.system=courseDraft.system; c.lang=courseDraft.lang; c.desc=courseDraft.desc; c.banner=courseDraft.banner; c.topics=topics; }
+    const id=courseDraft.editingId; courseDraft=null; toast("Course updated"); go("#/course/"+id); return;
+  }
+  let base=courseDraft.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"").slice(0,24)||"course";
+  let uid=base,n=2; while(courseById(uid)){ uid=base+"-"+n; n++; }
+  const course={id:uid,title:courseDraft.title.trim(),system:courseDraft.system,lang:courseDraft.lang,desc:courseDraft.desc,banner:courseDraft.banner,topics:topics};
+  COURSES.push(course); courseDraft=null; toast("Course published: "+course.title); go("#/course/"+uid);
+}
+
+function courseListCard(c){
+  const files=c.topics.reduce((n,t)=>n+t.files.length,0);
+  return `<div class="card click" onclick="go('#/course/${c.id}')">
+    <div class="ph-img" style="min-height:90px">Course cover — placeholder</div>
+    <span class="badge">Course</span>
+    <h3>${c.title}</h3>
+    <div class="meta-tags"><span class="tag">${c.system}</span><span class="tag">${c.lang}</span><span class="tag">${c.topics.length} topics</span><span class="tag">${files} files</span></div>
+    <div class="cta"><a class="btn sm primary">Open Course →</a></div>
+  </div>`;
+}
+function filterCourses(){
+  const q=((document.getElementById("course-search")||{}).value||"").toLowerCase();
+  const checked=(fg)=>Array.prototype.slice.call(document.querySelectorAll('.filters input[data-fg="'+fg+'"]:checked')).map(x=>x.value);
+  const sys=checked("sys"), langs=checked("lang"), ftypes=checked("ftype");
+  return COURSES.filter(c=>{
+    if(q){ const hay=(c.title+" "+c.system+" "+c.lang+" "+c.topics.map(t=>t.name).join(" ")).toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    if(sys.length && sys.indexOf(c.system)<0) return false;
+    if(langs.length && langs.indexOf(c.lang)<0) return false;
+    if(ftypes.length){ const types=c.topics.reduce((a,t)=>a.concat(t.files.map(f=>f.type)),[]); if(!ftypes.some(ft=>types.indexOf(ft)>=0)) return false; }
+    return true;
+  });
+}
+function applyCourseFilters(){
+  const rows=filterCourses();
+  const el=document.getElementById("course-results");
+  if(el) el.innerHTML=rows.length?rows.map(courseListCard).join(""):`<div class="panel muted">No courses match the selected filters. Try clearing some.</div>`;
+  const cnt=document.getElementById("course-count");
+  if(cnt) cnt.textContent=rows.length+" course"+(rows.length!==1?"s":"");
+}
+function clearCourseFilters(){
+  Array.prototype.slice.call(document.querySelectorAll('.filters input[type=checkbox]')).forEach(x=>x.checked=false);
+  const s=document.getElementById("course-search"); if(s) s.value="";
+  applyCourseFilters();
+}
+screens.courses = (params) => {
+  const q = params && params.q ? decodeURIComponent(params.q) : "";
+  const initial = COURSES.filter(c=>{
+    if(!q) return true;
+    const hay=(c.title+" "+c.system+" "+c.lang+" "+c.topics.map(t=>t.name).join(" ")).toLowerCase();
+    return hay.includes(q.toLowerCase());
+  });
+  const box=(fg,items)=>items.map(i=>`<label class="fopt"><input type="checkbox" data-fg="${fg}" value="${i}" onchange="applyCourseFilters()"> ${i}</label>`).join("");
+  return shell("#/courses",
+    [{label:"Home",href:"#/home"},{label:"Courses"}], `
+    <section class="section">
+      <div class="eyebrow">Courses</div>
+      <div class="between">
+        <h2 class="mb0">Courses</h2>
+        ${isAdmin()?`<a class="btn primary" onclick="startCourseFlow()">+ Create Course</a>`:""}
+      </div>
+      <p class="sub">Structured courses. Each course has a set of topics, and each topic holds multiple learning files — images, PDFs and videos.</p>
+      <div class="searchfield">
+        <span class="icon-box">🔍</span>
+        <input id="course-search" placeholder="Search courses by title, topic or keyword…" value="${q.replace(/"/g,'&quot;')}"
+          oninput="applyCourseFilters()" onkeydown="if(event.key==='Enter'){applyCourseFilters()}">
+        <a class="btn sm primary" onclick="applyCourseFilters()">Search</a>
+      </div>
+    </section>
+    <section class="section">
+      <div class="layout-side">
+        <aside class="filters">
+          <h4 style="margin:0 0 10px;font-size:13px">Filter Courses</h4>
+          <div class="fgroup"><h4>Resource System / Theme</h4>${box("sys",["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]))}</div>
+          <div class="fgroup"><h4>Language</h4>${box("lang",["English","Hindi"])}</div>
+          <div class="fgroup"><h4>File Type</h4>${box("ftype",["Image","PDF","Video"])}</div>
+          <div class="filter-actions">
+            <a class="btn sm primary" onclick="applyCourseFilters()">Apply Filters</a>
+            <a class="btn sm" onclick="clearCourseFilters()">Clear All</a>
+          </div>
+        </aside>
+        <div>
+          <div class="between">
+            <div class="wf-note"><span id="course-count">${initial.length} course${initial.length!==1?'s':''}</span></div>
+            <div class="row" style="align-items:center"><span class="muted" style="font-size:12px">Sort By:</span>
+              <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently added</option></select></div>
+          </div>
+          <div id="course-results" class="grid g3 mt16">
+            ${initial.length?initial.map(courseListCard).join(""):`<div class="panel muted">No courses match “${q}”.</div>`}
+          </div>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- COURSE VIEWER (topics left · files right) ---- */
+screens.course = (params) => {
+  const c = courseById(params.id) || COURSES[0];
+  const active = (params.t && c.topics.find(t=>t.id===params.t)) || c.topics[0];
+  return shell("#/courses",
+    [{label:"Home",href:"#/home"},{label:"Courses",href:"#/courses"},{label:c.title}], `
+    <section class="section">
+      <div class="banner">
+        <div><div class="wf-note">Course</div><h2>${c.title}</h2>${c.desc?`<p class="muted" style="margin:6px 0 0;max-width:560px">${c.desc}</p>`:""}</div>
+        <div class="sys-badge">${c.system}</div>
+      </div>
+    </section>
+    ${isAdmin()?`<section class="section" style="padding-bottom:0">
+      <div class="callout">
+        <div class="txt"><strong>Admin — managing this course</strong><span>Edit the course, its topics and files (add, rename, remove).</span></div>
+        <div class="row"><a class="btn primary" onclick="editCourse('${c.id}')">Edit Course</a><a class="btn" onclick="if(confirm('Delete this course?'))deleteCourse('${c.id}')">Delete Course</a></div>
+      </div>
+    </section>`:""}
+    <section class="section">
+      <div class="cur-wrap">
+        <div class="cur-side">
+          <div class="wf-note" style="margin-bottom:8px">Topics</div>
+          ${c.topics.map(t=>`<div class="cur-unit ${t.id===active.id?'active':''}" onclick="go('#/course/${c.id}?t=${t.id}')">
+            <span class="swatch"></span><div>${t.name}<div class="wf-note">${t.files.length} file${t.files.length>1?'s':''}</div></div>
+          </div>`).join("")}
+        </div>
+        <div>
+          <div class="between">
+            <h2 class="mb0" style="font-size:18px">${active.name}</h2>
+            <span class="wf-note">${active.files.length} file${active.files.length>1?'s':''}</span>
+          </div>
+          <p class="sub">Files for this topic — open or download.${isAdmin()?" Use <strong>Edit Course</strong> to add, rename or remove files.":""}</p>
+          <div class="grid g3">
+            ${active.files.map((f,i)=>fileCard(f,c.id,active.id,i)).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- FILE VIEW PAGE (a single course file — Image / PDF / Video) ---- */
+screens.file = (params) => {
+  const c = courseById(params.id) || COURSES[0];
+  const topic = c.topics.find(t=>t.id===params.t) || c.topics[0];
+  const idx = Math.max(0, Math.min(topic.files.length-1, parseInt(params.f,10)||0));
+  const f = topic.files[idx];
+  const t = (f.type||"").toLowerCase();
+  const bigPrev = t==="video"
+      ? `<div class="play" style="width:64px;height:64px;font-size:24px">▶</div><div class="wf-note" style="position:absolute;bottom:12px">Video player — placeholder</div>`
+    : t==="pdf"
+      ? `<div class="doc-ic" style="width:70px;height:86px;font-size:14px">PDF</div><div class="wf-note" style="position:absolute;bottom:12px">PDF preview — placeholder</div>`
+    : t==="image"
+      ? `Image preview — placeholder`
+      : `File preview — placeholder`;
+  return shell("#/courses",
+    [{label:"Home",href:"#/home"},{label:"Courses",href:"#/courses"},{label:c.title,href:"#/course/"+c.id},{label:topic.name,href:"#/course/"+c.id+"?t="+topic.id},{label:f.name}], `
+    <section class="section">
+      <a class="btn sm" onclick="goBack()">← Back</a>
+      <div class="between mt12">
+        <div><span class="badge">${f.type}</span><h2 class="mb0" style="margin-top:8px">${f.name}</h2></div>
+        <div class="row">
+          <a class="btn primary" onclick="toast('Open ${f.type} viewer (placeholder)')">Open ${f.type}</a>
+          <a class="btn" onclick="download('${f.name}')">Download</a>
+          ${isAdmin()?`<a class="btn" onclick="toast('Replace file (placeholder)')">Replace</a>`:""}
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid g2">
+        <div class="ph-img" style="min-height:340px;position:relative;flex-direction:column">${bigPrev}</div>
+        <div class="stack">
+          <div class="ctx-row"><h5>Course</h5><p><a class="btn link" style="font-size:13px" onclick="go('#/course/${c.id}')">${c.title} →</a></p></div>
+          <div class="ctx-row"><h5>Topic</h5><p><a class="btn link" style="font-size:13px" onclick="go('#/course/${c.id}?t=${topic.id}')">${topic.name} →</a></p></div>
+          <div class="ctx-row"><h5>File type</h5><p>${f.type}</p></div>
+          <div class="ctx-row"><h5>Language</h5><p>${c.lang}</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="between"><h2 class="mb0" style="font-size:18px">More files in “${topic.name}”</h2><a class="btn sm" onclick="go('#/course/${c.id}?t=${topic.id}')">Back to topic →</a></div>
+      <div class="grid g3 mt16">
+        ${topic.files.map((ff,i)=>i===idx?"":fileCard(ff,c.id,topic.id,i)).join("")||`<div class="panel muted">No other files.</div>`}
+      </div>
+    </section>
+  `);
+};
+
+/* ---- CREATE COURSE (admin) — add course, topics and files ---- */
+screens["course-new"] = () => {
+  if(!isAdmin()) return gateScreen("Create Course","Sign in as the Platform Super Admin to create courses.");
+  const d = ensureCourseDraft();
+  const esc=(s)=>(s||"").replace(/"/g,"&quot;");
+  const sysOptions = ["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]);
+  const totalFiles = d.topics.reduce((n,t)=>n+t.files.length,0);
+  const editing = !!d.editingId;
+  const pageName = editing?"Edit Course":"Create a Course";
+  const steps = `
+    <div class="cc-steps">
+      <span class="cc-step ${d.step>=1?"on":""}" style="cursor:pointer" onclick="draftToStep1()"><span class="n">1</span> Create a course</span>
+      <span class="pw-arrow">&rarr;</span>
+      <span class="cc-step ${d.step>=2?"on":""}" style="cursor:pointer" onclick="draftToStep2()"><span class="n">2</span> Course details (topics &amp; files)</span>
+      <span class="pw-arrow">&rarr;</span>
+      <span class="cc-step"><span class="n">3</span> Publish</span>
+    </div>`;
+
+  /* ---------------- PHASE 1 : CREATE A COURSE ---------------- */
+  if(d.step===1){
+    return shell(null,
+      [{label:"Home",href:"#/home"},{label:"Courses",href:"#/courses"},{label:pageName}], `
+      <section class="section">
+        <h2>${pageName}</h2>
+        ${steps}
+      </section>
+
+      <section class="section">
+        <div class="panel" style="max-width:640px">
+          <h3 style="margin-top:0">Course details</h3>
+          <div class="stack">
+            <div>
+              <label class="wf-note">Course name <span class="req">*</span></label>
+              <input class="btn" style="width:100%;text-align:left;cursor:text" value="${esc(d.title)}" oninput="draftSet('title',this.value)" placeholder="e.g. Community Forest Resource Rights">
+            </div>
+            <div>
+              <label class="wf-note">Course description</label>
+              <textarea class="btn" style="width:100%;min-height:90px;text-align:left;cursor:text;resize:vertical" oninput="draftSet('desc',this.value)" placeholder="What is this course about? Who is it for?">${esc(d.desc)}</textarea>
+            </div>
+            <div>
+              <label class="wf-note">Upload cover image</label>
+              ${d.banner
+                ? `<div class="ph-img" style="min-height:120px">Cover image &mdash; uploaded (placeholder)</div>
+                   <div class="row mt8"><a class="btn sm" onclick="draftUploadBanner()">Change</a><a class="btn sm" onclick="draftRemoveBanner()">Remove</a></div>`
+                : `<div class="dropzone" onclick="draftUploadBanner()" style="cursor:pointer;padding:28px">Drag &amp; drop a cover image here, or click to upload</div>`}
+            </div>
+            <div class="grid g2">
+              <div><label class="wf-note">Resource system / Theme</label>
+                <select class="btn" style="width:100%" onchange="draftSet('system',this.value)">${sysOptions.map(o=>`<option ${o===d.system?"selected":""}>${o}</option>`).join("")}</select></div>
+              <div><label class="wf-note">Language</label>
+                <select class="btn" style="width:100%" onchange="draftSet('lang',this.value)">${["English","Hindi"].map(o=>`<option ${o===d.lang?"selected":""}>${o}</option>`).join("")}</select></div>
+            </div>
+            <div class="row"><a class="btn primary" onclick="draftToStep2()">Continue &rarr;</a><a class="btn" onclick="draftCancel()">Cancel</a></div>
+          </div>
+        </div>
+      </section>
+    `);
+  }
+
+  /* ---------------- PHASE 2 : COURSE DETAILS (topics left · files right) ---------------- */
+  const sel = Math.max(0, Math.min(d.topics.length-1, d.sel||0));
+  const active = d.topics[sel];
+  const fileRow = (f,fi)=>`<div class="file-edit-card">
+      <div class="between" style="align-items:center">
+        <span class="file-row-num">${fi+1}</span>
+        <span class="badge">${f.type}</span>
+        <a class="btn sm" onclick="draftRemoveFile(${fi})" title="Remove file">&times;</a>
+      </div>
+      <div class="file-prev" style="min-height:64px">${filePreviewGlyph(f.type)}</div>
+      <div><label class="wf-note">Type</label>
+        <select class="btn sm" style="width:100%;padding:6px" onchange="draftSetFile(${fi},'type',this.value)">${["Image","PDF","Video"].map(o=>`<option ${o===f.type?"selected":""}>${o}</option>`).join("")}</select></div>
+      <div><label class="wf-note">File name</label>
+        <input class="btn sm" style="width:100%;text-align:left;cursor:text" value="${esc(f.name)}" oninput="draftSetFile(${fi},'name',this.value)" placeholder="File name (e.g. Overview)"></div>
+    </div>`;
+  return shell(null,
+    [{label:"Home",href:"#/home"},{label:"Courses",href:"#/courses"},{label:d.title||"Course Details"}], `
+    <section class="section">
+      <h2>Course Details</h2>
+      ${steps}
+    </section>
+
+    <section class="section">
+      <div class="banner">
+        <div><div class="wf-note">Course</div><h2>${d.title||"Untitled course"}</h2>${d.desc?`<p class="muted" style="margin:6px 0 0;max-width:520px">${d.desc}</p>`:""}</div>
+        <div class="sys-badge">${d.system}</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="cur-wrap">
+        <div class="cur-side">
+          <div class="wf-note" style="margin-bottom:8px">Topics (${d.topics.length})</div>
+          ${d.topics.map((t,ti)=>`<div class="cur-unit ${ti===sel?"active":""}" onclick="draftSelectTopic(${ti})">
+            <span class="swatch"></span><div>${t.name||("Topic "+(ti+1))}<div class="wf-note">${t.files.length} file${t.files.length!==1?"s":""}</div></div>
+          </div>`).join("")||`<div class="wf-note">No topics yet.</div>`}
+          <div class="mt12"><a class="btn sm primary block" onclick="draftAddTopic()">+ Add topic</a></div>
+        </div>
+        <div>
+          ${d.topics.length? `
+            <div class="between">
+              <input class="btn" style="flex:1;max-width:420px;text-align:left;cursor:text;font-weight:700" value="${esc(active.name)}" oninput="draftSetTopicName(${sel},this.value)" placeholder="Topic name">
+              <a class="btn sm" onclick="draftRemoveTopic(${sel})" title="Remove topic">&#128465; Remove topic</a>
+            </div>
+            <div class="wf-note mt16">Files in this topic (${active.files.length}) &mdash; choose a type and upload</div>
+            <div class="file-edit-grid mt8">
+              ${active.files.map(fileRow).join("")}
+              <div class="upload-single">
+                <div class="seg">
+                  ${["Image","PDF","Video"].map(t=>`<button class="seg-btn ${d.uploadType===t?"on":""}" onclick="draftSetUploadType('${t}')">${t}</button>`).join("")}
+                </div>
+                <div class="up-plus" onclick="draftAddFile('${d.uploadType}')" style="cursor:pointer">+</div>
+                <div onclick="draftAddFile('${d.uploadType}')" style="cursor:pointer">
+                  <strong style="font-size:13px">Upload ${d.uploadType}</strong>
+                  <div class="wf-note">Drag &amp; drop or click</div>
+                </div>
+              </div>
+            </div>
+          ` : `<div class="dropzone" style="padding:40px">Add a topic on the left to start uploading files.</div>`}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="cc-sticky">
+        <div><strong>Step 2 of 2</strong> <span class="wf-note">${d.topics.length} topic${d.topics.length!==1?"s":""} &middot; ${totalFiles} file${totalFiles!==1?"s":""}</span></div>
+        <div class="row"><a class="btn" onclick="draftToStep1()">&larr; Details</a><a class="btn primary ${d.topics.length?"":"btn-disabled"}" onclick="publishCourse()">${editing?"Save Changes":"Publish Course"}</a></div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- RESOURCE LIBRARY ---- */
+screens.library = () => shell("#/library",
+  [{label:"Home",href:"#/home"},{label:"Resource Library"}], `
+  <section class="section">
+    <div class="eyebrow">Direct access</div>
+    <h2>Resource Library</h2>
+    <p class="sub">Experienced users can bypass the guided journey. Search or filter to find a specific resource.</p>
+    <div class="searchfield" onclick="go('#/search')">
+      <span class="icon-box">🔍</span>
+      <input placeholder="Search by topic, process, tool or keyword…" onfocus="go('#/search')">
+      <a class="btn sm primary" onclick="go('#/search')">Search</a>
+    </div>
+  </section>
+  <section class="section">
+    <div class="layout-side">
+      ${filterSidebar()}
+      <div>
+        <div class="between">
+          <div class="wf-note">${RES.length} resources · placeholder set</div>
+          <div class="row" style="align-items:center">
+            <span class="muted" style="font-size:12px">Sort:</span>
+            <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently Added</option></select>
+          </div>
+        </div>
+        <div class="grid g2 mt16">
+          ${RES.map(resourceCard).join("")}
+        </div>
+      </div>
+    </div>
+  </section>
+`);
+
+/* ---- SEARCH RESULTS ---- */
+screens.search = (params) => {
+  const q = params.q ? decodeURIComponent(params.q) : "";
+  const filtered = params.filtered;
+  const tagsFor=(r)=>[r.system,r.stage,r.type,r.design,r.lang].filter(x=>x&&x!==""&&x!=="All Stages");
+  const rows = RES.filter(r=>{
+    if(!q) return true;
+    const hay=(r.title+" "+r.purpose+" "+tagsFor(r).join(" ")).toLowerCase();
+    return hay.includes(q.toLowerCase());
+  });
+  return shell("#/library",
+    [{label:"Home",href:"#/home"},{label:"Resource Library",href:"#/library"},{label:"Search Results"}], `
+    <section class="section">
+      <div class="searchfield">
+        <span class="icon-box">🔍</span>
+        <input id="results-search" placeholder="Search by topic, process, tool or keyword…" value="${q.replace(/"/g,'&quot;')}"
+          onkeydown="if(event.key==='Enter'){go('#/search?q='+encodeURIComponent(this.value))}">
+        <a class="btn sm primary" onclick="go('#/search?q='+encodeURIComponent(document.getElementById('results-search').value))">Search</a>
+      </div>
+    </section>
+    <section class="section">
+      <div class="layout-side">
+        ${filterSidebar()}
+        <div>
+          <div class="between">
+            <div class="wf-note">${rows.length} results${q?` for “${q}”`:""}${filtered?` · filters applied`:""}</div>
+            <div class="row" style="align-items:center">
+              <span class="muted" style="font-size:12px">Sort:</span>
+              <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently Added</option></select>
+            </div>
+          </div>
+          <div class="stack mt16">
+            ${rows.map(r=>`<div class="result-row">
+              <div class="rr-main">
+                <h4>${r.title}</h4>
+                <p class="purpose">${r.purpose}</p>
+                <div class="meta-tags mt8">${tagsFor(r).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+              </div>
+              <div class="stack" style="gap:8px">
+                <a class="btn sm primary" onclick="go('#/resource/${r.id}')">View</a>
+                <a class="btn sm" onclick="download('${r.title}')">Download</a>
+              </div>
+            </div>`).join("") || `<div class="panel muted">No results. Try a different keyword or clear filters.</div>`}
+          </div>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- RESOURCE DETAIL ---- */
+/* Contextual breadcrumb for a resource, based on where the user came from (prevRoute) */
+function resourceCrumbs(r){
+  const home={label:"Home",href:"#/home"};
+  const raw=prevRoute||"";
+  const q=raw.indexOf("?")>=0?raw.slice(raw.indexOf("?")+1):"";
+  const p=raw.replace(/\?.*$/,"");
+  const seg=p.replace(/^#\//,"").split("/"); // e.g. ["modular","pastureland"]
+  const topicId=(q.match(/topic=([^&]+)/)||[])[1];
+  const here={label:r.title};
+  if((seg[0]==="modular"||seg[0]==="system") && SYSTEMS[seg[1]]){
+    const s=SYSTEMS[seg[1]];
+    const t=topicId?topicById(topicId):null;
+    const mid = t? {label:t.name,href:"#/modular/"+seg[1]+"?topic="+topicId} : {label:"Resources",href:"#/system/"+seg[1]};
+    return [home,{label:"Resource Systems",href:"#/resource-systems"},{label:s.name,href:"#/system/"+seg[1]},mid,here];
+  }
+  if(seg[0]==="curriculum" && SYSTEMS[seg[1]]){
+    const s=SYSTEMS[seg[1]];
+    return [home,{label:"Resource Systems",href:"#/resource-systems"},{label:s.name,href:"#/system/"+seg[1]},{label:"Atomized Course Curriculum",href:"#/curriculum/"+seg[1]},here];
+  }
+  if(seg[0]==="theme" && THEMES[seg[1]]){
+    return [home,{label:"Resource Systems",href:"#/resource-systems"},{label:THEMES[seg[1]].name,href:"#/theme/"+seg[1]},{label:"Resources"},here];
+  }
+  if(seg[0]==="search") return [home,{label:"Resource Library",href:"#/library"},{label:"Search Results",href:"#/search"},here];
+  if(seg[0]==="my-learning") return [home,{label:"My Learning",href:"#/my-learning"},here];
+  if(seg[0]==="stage") return [home,{label:"Resource Library",href:"#/library"},here];
+  return [home,{label:"Resource Library",href:"#/library"},here];
+}
+
+screens.resource = (params) => {
+  const r = resById(params.id) || RES[0];
+  const related = RES.filter(x=>x.id!==r.id && (x.system===r.system || x.stage===r.stage)).slice(0,3);
+  const relatedFallback = related.length?related:RES.filter(x=>x.id!==r.id).slice(0,3);
+  return shell(null, resourceCrumbs(r), `
+    <section class="section">
+      <a class="btn sm" onclick="goBack()">← Back</a>
+      <div class="between mt12">
+        <h2 class="mb0">${r.title}</h2>
+        <div class="row"><a class="btn primary" onclick="toast('Open resource viewer (placeholder)')">View Resource</a>
+        <a class="btn" onclick="download('${r.title}')">Download</a>
+        ${isAdmin()?`<a class="btn" onclick="toast('Edit resource (placeholder)')">Edit</a>`:""}
+        ${isRegistered()?`<a class="btn" onclick="toast('Saved to My Learning (placeholder)')">Save</a>`:""}</div>
+      </div>
+      <div class="meta-tags mt12">
+        <span class="tag solid">System / Theme: ${r.system}</span>
+        ${r.stage&&r.stage!==""?`<span class="tag solid">Commoning stage: ${r.stage}</span>`:""}
+        <span class="tag solid">Intended user: ${r.stake}</span>
+        <span class="tag solid">Learning design: ${r.design}</span>
+        <span class="tag solid">Type: ${r.type}</span>
+        <span class="tag solid">Language: ${r.lang}</span>
+        <span class="tag solid">Version / date: ${r.version}</span>
+        ${r.attribution?`<span class="tag solid">Contributor: ${r.attribution}</span>`:""}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid g2">
+        <div class="ph-img" style="min-height:220px">Resource preview — placeholder</div>
+        <div class="stack">
+          <div class="ctx-row"><h5>What is this resource?</h5><p>${r.purpose}</p></div>
+          <div class="ctx-row"><h5>When should it be used?</h5><p>${r.stage&&r.stage!==""?`During the ${r.stage} stage of the Commoning process.`:`When working on ${r.system}.`}</p></div>
+          <div class="ctx-row"><h5>Who should use it?</h5><p>${r.stake}s and those supporting them.</p></div>
+        </div>
+      </div>
+      <div class="grid g2 mt16">
+        <div class="ctx-row"><h5>What should happen before this?</h5><p>Complete the preceding learning and context-mapping for this stage.</p></div>
+        <div class="ctx-row"><h5>What should happen after this?</h5><p>Move to the facilitation session, then the related field action.</p></div>
+        <div class="ctx-row"><h5>How should it be facilitated / used?</h5><p>Follow the guided steps; adapt to the local community context.</p></div>
+        <div class="ctx-row"><h5>Related Field Action</h5><p><a class="btn sm" onclick="go('#/resource/tenure-claim-tool')">Community Rights Claim Toolkit →</a></p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="panel" style="border-width:1.5px">
+        <div class="eyebrow">Guided Mentoring Prompt</div>
+        <p class="muted" style="margin:0">“After using this resource, reflect with the community: what changed in how you make collective decisions? Note one question to raise with your mentor.”</p>
+        <div class="mt12"><a class="btn sm" onclick="go('#/help')">Get Support →</a></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="callout">
+        <div class="txt"><strong>Recommended Next Resource</strong><span>Continue the guided journey with the next resource for this stage.</span></div>
+        <a class="btn primary" onclick="go('#/resource/cfr-claim')">Continue →</a>
+      </div>
+      <div class="wf-note mt24">Related Resources</div>
+      <div class="grid g3 mt8">
+        ${relatedFallback.map(x=>`<div class="card click" onclick="go('#/resource/${x.id}')">
+          <h3 style="font-size:14px">${x.title}</h3>
+          <p>${x.purpose}</p>
+          <div class="meta-tags"><span class="tag">${x.stage}</span><span class="tag">${x.type}</span></div>
+          <div class="cta"><a class="btn sm">View →</a></div>
+        </div>`).join("")}
+      </div>
+    </section>
+  `);
+};
+
+/* ---- HELP (index) ---- */
+screens.help = () => shell("#/help",
+  [{label:"Home",href:"#/home"},{label:"Help"}], `
+  <section class="section">
+    <div class="eyebrow">Support</div>
+    <h2>Help</h2>
+    <p class="sub">Guidance on using the repository, finding resources and understanding the Commoning approach. Each topic opens its own page.</p>
+    <div class="grid g3">
+      ${HELP.map(h=>`<div class="card click" onclick="go('#/help/${h.id}')">
+        <h3>${h.title}</h3><p>${h.desc}</p>
+        <div class="cta"><a class="btn sm">Open →</a></div>
+      </div>`).join("")}
+    </div>
+  </section>
+  <section class="section">
+    <div class="callout">
+      <div class="txt"><strong>Contact / Support</strong><span>Reach a mentor for guided support (placeholder).</span></div>
+      <a class="btn primary" onclick="openContact()">Get Support →</a>
+    </div>
+  </section>
+`);
+
+/* ---- HELP TOPIC (dedicated page per card) ---- */
+screens.helptopic = (params) => {
+  const h = helpById(params.id) || HELP[0];
+  const idx = HELP.indexOf(h);
+  const nextTopic = HELP[(idx+1)%HELP.length];
+  let body="";
+
+  if(h.id==="faq"){
+    body=`<div class="qa">
+      ${FAQS.map((f,i)=>`<div class="qitem">
+        <div class="qq" onclick="toggleReveal('faqb-${i}')">${f[0]}<span>▾</span></div>
+        <div id="faqb-${i}" class="qa-body ${i>0?'hidden':''}">${f[1]}</div>
+      </div>`).join("")}</div>`;
+  }
+  else if(h.id==="how-to-use"){
+    body=`<p class="muted">There are two ways to use the repository. New users follow the guided journey; experienced users go straight to what they need.</p>
+    <div class="grid g2 mt16">
+      <div class="panel"><h3 style="margin-top:0">Guided journey</h3><p class="muted">Understand → Learn the approach → Choose a resource system → Follow the pathway → Access Learn / Facilitate / Act / Support at each stage.</p>
+        <a class="btn sm" onclick="go('#/commoning')">Start Learning →</a></div>
+      <div class="panel"><h3 style="margin-top:0">Direct access</h3><p class="muted">Go to the Resource Library, search or filter, and open the resource you need.</p>
+        <a class="btn sm" onclick="go('#/library')">Resource Library →</a></div>
+    </div>
+    <div class="wf-note mt16">Tip — the Commoning pathway stays visible so you always know where you are.</div>`;
+  }
+  else if(h.id==="how-to-find"){
+    body=`<p class="muted">Find a specific resource in three ways:</p>
+    <div class="grid g3 mt8">
+      <div class="card"><h3 style="font-size:14px">1 · Search</h3><p>Search by topic, process, tool or keyword.</p><a class="btn sm" onclick="openSearch()">Open Search</a></div>
+      <div class="card"><h3 style="font-size:14px">2 · Filter</h3><p>Filter by system, stage, stakeholder, learning design, type and language.</p><a class="btn sm" onclick="go('#/library')">Open Library</a></div>
+      <div class="card"><h3 style="font-size:14px">3 · Browse by stage</h3><p>Open a resource system and pick a stage to see its resources.</p><a class="btn sm" onclick="go('#/resource-systems')">Resource Systems</a></div>
+    </div>`;
+  }
+  else if(h.id==="commoning-stages"){
+    body=`<p class="muted">The Commoning process has six stages. The active stage is always highlighted, and each stage tells you what needs to happen.</p>
+    <div class="mt16">${pathway(null)}</div>
+    <div class="stack mt16">
+      ${STAGES.map(s=>`<div class="ctx-row"><h5>${s.num} · ${s.name}</h5><p>${s.what}</p></div>`).join("")}
+    </div>`;
+  }
+  else if(h.id==="modular-learning"){
+    body=`<p class="muted">Modular Learning breaks the Commoning process into progressive modules, with field activity between them.</p>
+    <div class="flow mt16">
+      <div class="node">Learning Module</div><div class="arw">→</div>
+      <div class="node">Field Activity</div><div class="arw">→</div>
+      <div class="node">Next Module</div><div class="arw">→</div>
+      <div class="node">Field Action</div><div class="arw">→</div>
+      <div class="node strong">Outcome</div>
+    </div>
+    <ul class="muted mt16" style="padding-left:18px">
+      <li>Progressive stages</li><li>Periodic in-person sessions</li><li>Field activities between modules</li>
+      <li>Each module builds on the previous</li><li>Cumulative field action</li>
+    </ul>
+    <a class="btn sm mt8" onclick="go('#/learning-approach')">See full Learning Approach →</a>`;
+  }
+  else if(h.id==="ldhf"){
+    body=`<p class="muted">Low Dose High Frequency (LDHF) delivers short, frequent, task-focused learning with mentoring between sessions.</p>
+    <div class="flow mt16">
+      <div class="node">Short Learning</div><div class="arw">→</div>
+      <div class="node">Field Application</div><div class="arw">→</div>
+      <div class="node">Feedback</div><div class="arw">→</div>
+      <div class="node">Mentoring</div><div class="arw">→</div>
+      <div class="node strong">Repeat ↻</div>
+    </div>
+    <ul class="muted mt16" style="padding-left:18px">
+      <li>Short virtual engagements</li><li>Atomized content</li><li>Task-focused learning</li>
+      <li>Guided mentoring</li><li>Repeated learning / application / feedback</li>
+    </ul>
+    <a class="btn sm mt8" onclick="go('#/learning-approach')">See full Learning Approach →</a>`;
+  }
+
+  return shell("#/help",
+    [{label:"Home",href:"#/home"},{label:"Help",href:"#/help"},{label:h.title}], `
+    <section class="section">
+      <div class="eyebrow">Help</div>
+      <h2>${h.title}</h2>
+      <p class="sub">${h.desc}</p>
+      <div class="panel">${body}</div>
+    </section>
+    <section class="section">
+      <div class="between">
+        <a class="btn" onclick="go('#/help')">← All Help topics</a>
+        <div class="row">
+          <a class="btn" onclick="openContact()">Contact / Support</a>
+          <a class="btn primary" onclick="go('#/help/${nextTopic.id}')">Next: ${nextTopic.title} →</a>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- LOGIN / CHOOSE ROLE (mock auth — wireframe only) ---- */
+screens.login = () => shell(null,
+  [{label:"Home",href:"#/home"},{label:"Sign In"}], `
+  <section class="section">
+    <div class="eyebrow">Access</div>
+    <h2>Sign in to Facilitating Commoning</h2>
+    <p class="sub">Choose how you want to enter. This is a wireframe — no real account or password is required.</p>
+    <div class="grid g3">
+
+      <div class="card">
+        <div class="badge">No login</div>
+        <h3 style="margin:6px 0 0">Visitor</h3>
+        <p>Browse and read the entire repository without an account. Downloading a resource will ask you to sign in.</p>
+        <ul class="muted" style="margin:0;padding-left:18px;font-size:12.5px">
+          <li>Explore all pages &amp; pathways</li>
+          <li>View resources</li>
+          <li>Search &amp; filter</li>
+        </ul>
+        <div class="cta"><a class="btn block primary" onclick="setRole('visitor')">Continue as Visitor →</a></div>
+      </div>
+
+      <div class="card">
+        <div class="badge">Account</div>
+        <h3 style="margin:6px 0 0">Registered User</h3>
+        <p>Sign in to download resources and use My Learning.</p>
+        <label class="wf-note">Email</label>
+        <input class="btn" style="width:100%;text-align:left;cursor:text" placeholder="you@example.org">
+        <label class="wf-note">Password</label>
+        <input class="btn" style="width:100%;text-align:left;cursor:text" type="password" placeholder="••••••••">
+        <div class="cta"><a class="btn block primary" onclick="setRole('registered')">Sign In →</a></div>
+        <div class="wf-note" style="text-align:center">New here? <a class="btn link" style="font-size:12px" onclick="toast('Create account (placeholder)')">Create an account</a></div>
+      </div>
+
+      <div class="card">
+        <div class="badge">Admin</div>
+        <h3 style="margin:6px 0 0">Platform Super Admin</h3>
+        <p>Manage resources, uploads, users and metadata.</p>
+        <label class="wf-note">Admin email</label>
+        <input class="btn" style="width:100%;text-align:left;cursor:text" placeholder="admin@fes.org">
+        <label class="wf-note">Password</label>
+        <input class="btn" style="width:100%;text-align:left;cursor:text" type="password" placeholder="••••••••">
+        <div class="cta"><a class="btn block primary" onclick="setRole('admin')">Sign In to Admin →</a></div>
+      </div>
+
+    </div>
+    <div class="wf-note mt16">Prototype note: each button just switches the demo role — you can switch again any time from the header (Sign Out).</div>
+  </section>
+`);
+
+/* ---- MY LEARNING (registered / admin) ---- */
+screens["my-learning"] = () => {
+  if(!isRegistered()) return gateScreen("My Learning","Sign in as a Registered User to save resources and track your learning.");
+  const saved = RES.slice(0,3);
+  return shell(null,
+    [{label:"Home",href:"#/home"},{label:"My Learning"}], `
+    <section class="section">
+      <div class="eyebrow">${roleLabel()}</div>
+      <h2>My Learning</h2>
+      <p class="sub">Your saved resources, progress and recommended next steps.</p>
+      <div class="grid g3">
+        <div class="panel"><div class="wf-note">In progress</div><h3 style="margin:4px 0 0;font-size:22px">2</h3><p class="muted">courses started</p></div>
+        <div class="panel"><div class="wf-note">Saved</div><h3 style="margin:4px 0 0;font-size:22px">3</h3><p class="muted">resources bookmarked</p></div>
+        <div class="panel"><div class="wf-note">Downloads</div><h3 style="margin:4px 0 0;font-size:22px">5</h3><p class="muted">files downloaded</p></div>
+      </div>
+    </section>
+    <section class="section">
+      <h2 class="mb0">Saved resources</h2>
+      <p class="sub">Resources you bookmarked for later.</p>
+      <div class="grid g3">${saved.map(resourceCard).join("")}</div>
+    </section>
+    <section class="section">
+      <div class="callout">
+        <div class="txt"><strong>Recommended next</strong><span>Continue where you left off.</span></div>
+        <a class="btn primary" onclick="go('#/resource/cfr-claim')">Continue →</a>
+      </div>
+    </section>
+  `);
+};
+
+/* ---- ADMIN DASHBOARD (super admin only) ---- */
+screens.admin = () => {
+  if(!isAdmin()) return gateScreen("Admin Dashboard","Sign in as the Platform Super Admin to manage the repository.");
+  const metaFields = ["Resource title","1-line purpose","Resource system or Theme","Commoning stage (systems only)","Intended stakeholder / user","Learning design (Modular / LDHF / Both)","Resource type","Language","Version / date","Attribution to Contributor (non-FES)","File (View / Download)"];
+  return shell(null,
+    [{label:"Home",href:"#/home"},{label:"Admin Dashboard"}], `
+    <section class="section">
+      <div class="eyebrow">Platform Super Admin</div>
+      <div class="between">
+        <h2 class="mb0">Admin Dashboard</h2>
+        <a class="btn primary" onclick="toast('Add / Upload resource (placeholder)')">+ Add / Upload Resource</a>
+      </div>
+      <div class="grid g4 mt16">
+        <div class="panel"><div class="wf-note">Resources</div><h3 style="margin:4px 0 0;font-size:22px">${RES.length}</h3></div>
+        <div class="panel"><div class="wf-note">Resource systems</div><h3 style="margin:4px 0 0;font-size:22px">3</h3></div>
+        <div class="panel"><div class="wf-note">Themes</div><h3 style="margin:4px 0 0;font-size:22px">${THEME_LIST.length}</h3></div>
+        <div class="panel"><div class="wf-note">Registered users</div><h3 style="margin:4px 0 0;font-size:22px">128</h3></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="between">
+        <h2 class="mb0">Content Management</h2>
+        <div class="row"><a class="btn sm" onclick="toast('Manage systems (placeholder)')">Systems</a><a class="btn sm" onclick="toast('Manage themes (placeholder)')">Themes</a></div>
+      </div>
+      <p class="sub">Add, edit, upload and publish resources. Every resource follows the required metadata structure.</p>
+      <div class="panel" style="padding:0;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:640px">
+          <thead><tr style="text-align:left;background:var(--fill-2)">
+            <th style="padding:10px 14px">Title</th><th style="padding:10px 14px">System / Theme</th><th style="padding:10px 14px">Type</th><th style="padding:10px 14px">Design</th><th style="padding:10px 14px">Lang</th><th style="padding:10px 14px">Actions</th>
+          </tr></thead>
+          <tbody>
+            ${RES.slice(0,6).map(r=>`<tr style="border-top:1px solid var(--line-2)">
+              <td style="padding:10px 14px">${r.title}</td>
+              <td style="padding:10px 14px">${r.system}</td>
+              <td style="padding:10px 14px">${r.type}</td>
+              <td style="padding:10px 14px">${r.design}</td>
+              <td style="padding:10px 14px">${r.lang}</td>
+              <td style="padding:10px 14px"><a class="btn link" style="font-size:12px" onclick="toast('Edit: ${r.title} (placeholder)')">Edit</a> · <a class="btn link" style="font-size:12px" onclick="toast('Unpublish (placeholder)')">Unpublish</a></td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="between">
+        <h2 class="mb0">Course Management</h2>
+        <a class="btn primary" onclick="startCourseFlow()">+ Create Course</a>
+      </div>
+      <p class="sub">Create courses, add topics, and upload files (Image / PDF / Video) to each topic.</p>
+      <div class="panel" style="padding:0;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:640px">
+          <thead><tr style="text-align:left;background:var(--fill-2)">
+            <th style="padding:10px 14px">Course</th><th style="padding:10px 14px">System / Theme</th><th style="padding:10px 14px">Topics</th><th style="padding:10px 14px">Files</th><th style="padding:10px 14px">Actions</th>
+          </tr></thead>
+          <tbody>
+            ${COURSES.map(c=>{const files=c.topics.reduce((n,t)=>n+t.files.length,0);return `<tr style="border-top:1px solid var(--line-2)">
+              <td style="padding:10px 14px">${c.title}</td>
+              <td style="padding:10px 14px">${c.system}</td>
+              <td style="padding:10px 14px">${c.topics.length}</td>
+              <td style="padding:10px 14px">${files}</td>
+              <td style="padding:10px 14px"><a class="btn link" style="font-size:12px" onclick="go('#/course/${c.id}')">View</a> · <a class="btn link" style="font-size:12px" onclick="editCourse('${c.id}')">Edit</a> · <a class="btn link" style="font-size:12px" onclick="if(confirm('Delete this course?'))deleteCourse('${c.id}')">Delete</a></td>
+            </tr>`;}).join("")}
+          </tbody>
+        </table>
+      </div>
+      <div class="panel mt16">
+        <h3 style="margin-top:0">Create Course — fields</h3>
+        <div class="grid g3">
+          <div><label class="wf-note">Course title</label><input class="btn" style="width:100%;text-align:left;cursor:text" placeholder="e.g. Community Forest Resource Rights"></div>
+          <div><label class="wf-note">Resource system / Theme</label><input class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Forests / Pastureland / Water / Theme"></div>
+          <div><label class="wf-note">Language</label><input class="btn" style="width:100%;text-align:left;cursor:text" placeholder="English / Hindi"></div>
+        </div>
+        <div class="wf-note mt12">Then add topics, and upload files per topic:</div>
+        <div class="row mt8">
+          <a class="btn sm" onclick="toast('Add topic (placeholder)')">+ Add Topic</a>
+          <a class="btn sm" onclick="toast('Upload Image (placeholder)')">Upload Image</a>
+          <a class="btn sm" onclick="toast('Upload PDF (placeholder)')">Upload PDF</a>
+          <a class="btn sm" onclick="toast('Upload Video (placeholder)')">Upload Video</a>
+        </div>
+        <div class="mt12"><a class="btn sm primary" onclick="startCourseFlow()">Create Course</a></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid g2">
+        <div class="panel">
+          <h3 style="margin-top:0">Add / Upload Resource — required fields</h3>
+          <p class="muted">A consistent metadata structure keeps the repository easy to navigate and maintain.</p>
+          <ul class="muted" style="margin:0;padding-left:18px">${metaFields.map(f=>`<li>${f}</li>`).join("")}</ul>
+          <div class="mt12"><a class="btn sm primary" onclick="toast('Open upload form (placeholder)')">Open upload form →</a></div>
+        </div>
+        <div class="panel">
+          <div class="between"><h3 style="margin-top:0">User Management</h3><a class="btn sm" onclick="toast('Invite user (placeholder)')">+ Invite user</a></div>
+          <div class="stack">
+            ${[["a.sharma@fes.org","Registered User"],["m.rao@partner.org","Registered User"],["admin@fes.org","Platform Super Admin"]].map(u=>`<div class="ctx-row"><div class="between"><div><strong>${u[0]}</strong><div class="wf-note">${u[1]}</div></div><a class="btn link" style="font-size:12px" onclick="toast('Manage user (placeholder)')">Manage</a></div></div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+  `);
+};
+
+/* restricted-access screen shown when a role lacks permission */
+function gateScreen(title, msg){
+  return shell(null,
+    [{label:"Home",href:"#/home"},{label:title}], `
+    <section class="section">
+      <div class="eyebrow">Restricted</div>
+      <h2>${title}</h2>
+      <div class="callout">
+        <div class="txt"><strong>You don't have access to this area</strong><span>${msg}</span></div>
+        <a class="btn primary" onclick="go('#/login')">Sign In →</a>
+      </div>
+    </section>
+  `);
+}
+
+/* ============================================================
+   SEARCH OVERLAY
+   ============================================================ */
+function searchOverlayHTML(){
+  const suggestions=["Secure Tenure","Facilitator Guide","Forest rights","Restoration protocol","Water access","LDHF"];
+  return `<div class="between"><h3>What are you looking for?</h3><a class="btn sm" onclick="closeSearch()">Close ✕</a></div>
+    <p class="muted" style="margin:2px 0 0">Search by topic, process, tool, resource or keyword.</p>
+    <div class="searchfield mt12">
+      <span class="icon-box">🔍</span>
+      <input id="overlay-input" placeholder="Type to search…" onkeydown="if(event.key==='Enter'){runSearch(this.value)}">
+      <a class="btn sm primary" onclick="runSearch(document.getElementById('overlay-input').value)">Search</a>
+    </div>
+    <div class="wf-note mt16">Recent / popular</div>
+    <div class="chips">${suggestions.map(s=>`<span class="chip" onclick="runSearch('${s}')">${s}</span>`).join("")}</div>`;
+}
+function openSearch(){document.getElementById("search-panel").innerHTML=searchOverlayHTML();document.getElementById("search-overlay").classList.add("open");setTimeout(()=>{const i=document.getElementById("overlay-input");if(i)i.focus()},30);}
+function closeSearch(){document.getElementById("search-overlay").classList.remove("open");}
+function runSearch(v){closeSearch();go('#/search?q='+encodeURIComponent(v||""));}
+
+/* Contact / Support modal */
+function contactModalHTML(){
+  return `<div class="between"><h3>Contact &amp; Support</h3><a class="btn sm" onclick="closeContact()">Close ✕</a></div>
+    <p class="muted" style="margin:2px 0 0">Reach the Karyashala team or a mentor for guided support.</p>
+    <div class="stack mt16">
+      <div class="ctx-row"><h5>Guided Mentoring</h5><p>Request a mentoring session for your current Commoning stage (placeholder).</p></div>
+      <div class="ctx-row"><h5>Email</h5><p>support@fes-karyashala.example (placeholder)</p></div>
+      <div class="ctx-row"><h5>Phone</h5><p>+91 00000 00000 · Mon–Fri, 10am–5pm (placeholder)</p></div>
+      <div class="ctx-row"><h5>Help Desk</h5><p>Raise a query and the team will respond within 2 working days (placeholder).</p></div>
+    </div>
+    <div class="row mt16">
+      <a class="btn primary" onclick="toast('Request mentoring (placeholder)')">Request Guided Mentoring</a>
+      <a class="btn" onclick="closeContact()">Close</a>
+    </div>`;
+}
+function openContact(){document.getElementById("contact-panel").innerHTML=contactModalHTML();document.getElementById("contact-overlay").classList.add("open");}
+function closeContact(){document.getElementById("contact-overlay").classList.remove("open");}
+
+/* Take a Tour / Get Started popup (deck slide 4/5) */
+function tourModalHTML(){
+  return `<div class="between"><h3>Take a Tour / Get Started</h3><a class="btn sm" onclick="closeTour()">Close ✕</a></div>
+    <p class="muted" style="margin:2px 0 0">Five steps to find your way around the repository.</p>
+    <div class="stack mt16">
+      ${JOURNEY5.map(s=>`<div class="ctx-row" style="cursor:pointer" onclick="closeTour();go('${s.href}')">
+        <h5>Step ${s.n} · ${s.k} — ${s.q}</h5><p>${s.d}</p>
+      </div>`).join("")}
+    </div>
+    <div class="row mt16">
+      <a class="btn primary" onclick="closeTour();go('#/commoning')">Start Learning →</a>
+      <a class="btn" onclick="closeTour();go('#/resource-systems')">Choose a Resource System →</a>
+    </div>`;
+}
+function openTour(){document.getElementById("tour-panel").innerHTML=tourModalHTML();document.getElementById("tour-overlay").classList.add("open");}
+function closeTour(){document.getElementById("tour-overlay").classList.remove("open");}
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+function parseHash(){
+  const raw=(location.hash||"#/home").replace(/^#\//,"");
+  const [pathPart,queryPart]=raw.split("?");
+  const parts=pathPart.split("/").filter(Boolean);
+  const params={};
+  if(queryPart){queryPart.split("&").forEach(kv=>{const[k,v]=kv.split("=");params[k]=v;});}
+  return {parts,params};
+}
+function render(){
+  if(STATIC_MODE){
+    document.body.classList.add("static-mode");
+    document.getElementById("app").innerHTML=screens.home({});
+    window.scrollTo(0,0);
+    return;
+  }
+  const {parts,params}=parseHash();
+  const name=parts[0]||"home";
+  let html;
+  if(name==="system"){params.id=parts[1];html=screens.system(params);}
+  else if(name==="curriculum"){params.id=parts[1];html=screens.curriculum(params);}
+  else if(name==="modular"){params.id=parts[1];html=screens.modular(params);}
+  else if(name==="theme"){params.id=parts[1];html=screens.theme(params);}
+  else if(name==="course"){params.id=parts[1];html=screens.course(params);}
+  else if(name==="file"){params.id=parts[1];params.t=parts[2];params.f=parts[3];html=screens.file(params);}
+  else if(name==="stage"){params.id=parts[1];html=screens.stage(params);}
+  else if(name==="resource"){params.id=parts[1];html=screens.resource(params);}
+  else if(name==="story"){params.id=parts[1];html=screens.story(params);}
+  else if(name==="help"&&parts[1]){params.id=parts[1];html=screens.helptopic(params);}
+  else if(screens[name]){html=screens[name](params);}
+  else{html=screens.home();}
+  document.getElementById("app").innerHTML=html;
+  window.scrollTo(0,0);
+}
+function go(hash){ if(STATIC_MODE) return; if(location.hash===hash){render();} else {location.hash=hash;} }
+window.addEventListener("hashchange",function(e){
+  if(e && e.oldURL && e.oldURL.indexOf("#")>=0){ prevRoute = e.oldURL.slice(e.oldURL.indexOf("#")); }
+  render();
+});
+
+/* ============================================================
+   UI HELPERS
+   ============================================================ */
+function toggleReveal(id){const el=document.getElementById(id);if(el)el.classList.toggle("hidden");}
+function toggleProfile(e){ if(e){e.stopPropagation();} const m=document.getElementById("profile-menu"); if(m) m.classList.toggle("open"); }
+function applyFilterFlash(){ /* wireframe: filter state is illustrative */ }
+let toastTimer;
+function toast(msg){
+  let t=document.getElementById("wf-toast");
+  if(!t){t=document.createElement("div");t.id="wf-toast";
+    t.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2b2b2b;color:#fff;padding:10px 16px;border-radius:6px;font-size:13px;z-index:80;max-width:80vw";
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity="1";
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.opacity="0";},1800);
+}
+document.getElementById("search-overlay").addEventListener("click",e=>{if(e.target.id==="search-overlay")closeSearch();});
+document.getElementById("contact-overlay").addEventListener("click",e=>{if(e.target.id==="contact-overlay")closeContact();});
+document.getElementById("tour-overlay").addEventListener("click",e=>{if(e.target.id==="tour-overlay")closeTour();});
+document.addEventListener("click",e=>{const p=document.getElementById("profile");const m=document.getElementById("profile-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
+
+/* boot */
+loadRole();                     // restore signed-in role across refresh
+if(STATIC_MODE){
+  document.body.classList.add("static-mode");
+  const hint=document.getElementById("proto-hint");
+  if(hint) hint.textContent="◻︎ HOMEPAGE WIREFRAME · static preview";
+}
+if(!location.hash) location.hash="#/home";   // same URL/page is preserved on refresh
+render();
+</script>
+</body>
+</html>

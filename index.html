@@ -2076,7 +2076,7 @@ screens.doc = (params) => {
   return shell("#/resource-systems", crumbItems, `
     <section class="section">
       <div class="between">
-        <h2 class="mb0" style="font-size:20px"><span class="badge" style="vertical-align:middle;margin-right:8px">${f.type}</span>${f.name}</h2>
+        <h2 class="mb0" style="font-size:20px">${f.name}</h2>
         <div class="row"><a class="btn primary" onclick="download('${f.name}')">Download</a></div>
       </div>
     </section>
@@ -2381,7 +2381,7 @@ screens.resource = (params) => {
   return shell(null, resourceCrumbs(r), `
     <section class="section">
       <div class="between">
-        <h2 class="mb0"><span class="badge" style="vertical-align:middle;margin-right:8px">${r.type}</span>${r.title}</h2>
+        <h2 class="mb0">${r.title}</h2>
         <div class="row"><a class="btn primary" onclick="download('${r.title}')">Download</a>
         ${isAdmin()?`<a class="btn" onclick="toast('Edit resource (placeholder)')">Edit</a>`:""}
         ${isRegistered()?`<a class="btn" onclick="toast('Saved to My Learning (placeholder)')">Save</a>`:""}</div>

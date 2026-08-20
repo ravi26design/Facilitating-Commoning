@@ -475,6 +475,9 @@ body.static-mode .overlay{ display:none !important; }
 <div id="topic-overlay" class="overlay">
   <div class="searchpanel" id="topic-panel"></div>
 </div>
+<div id="doc-overlay" class="overlay">
+  <div class="searchpanel" id="doc-panel" style="width:min(680px,94vw);max-height:86vh;overflow:auto"></div>
+</div>
 
 <script>
 /* ============================================================
@@ -709,6 +712,75 @@ function _nextCode(groups, groupIdx){
   let max = base;
   g.items.forEach(it=>{ const n=parseInt(it.code,10); if(!isNaN(n)&&n>max) max=n; });
   return String(max+1);
+}
+/* ---- Admin: Upload a document to the Resource Library ---- */
+let docTags=[];
+function docThemeOptions(){ return ["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]); }
+function openUploadDoc(){
+  if(!isAdmin()) return;
+  docTags=[];
+  const opt=(items,ph)=>`<option value="" disabled selected>${ph}</option>`+items.map(i=>`<option>${i}</option>`).join("");
+  document.getElementById('doc-panel').innerHTML=`
+    <div class="between" style="align-items:flex-start">
+      <div><h3 style="margin:0">Upload New Document</h3><p class="wf-note" style="margin:4px 0 0">Add a new document to the Resource Library with metadata</p></div>
+      <a class="btn sm" onclick="closeUploadDoc()">✕</a>
+    </div>
+    <div class="dropzone" style="margin:18px 0;padding:36px 16px;cursor:pointer" onclick="toast('Choose a file (placeholder)')">
+      <div style="font-size:26px;line-height:1">⤒</div>
+      <div style="font-weight:700;margin-top:8px;color:var(--ink)">Drag and drop files here, or click to browse</div>
+      <div class="wf-note" style="margin-top:4px">Supported formats: PDF, DOCX, XLSX, JPEG, PPTX, MP4, MP3</div>
+    </div>
+    <div class="stack">
+      <div><label class="wf-note">File Name</label>
+        <input id="dc-name" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="File name (e.g. Biodiversity Assessment)"></div>
+      <div class="grid g2">
+        <div><label class="wf-note">Theme</label>
+          <select id="dc-theme" class="btn" style="width:100%">${opt(docThemeOptions(),"Select theme")}</select></div>
+        <div><label class="wf-note">Type</label>
+          <select id="dc-type" class="btn" style="width:100%">${opt(["PDF","Document","Spreadsheet","Presentation","Image","Video","Audio"],"Select file type")}</select></div>
+      </div>
+      <div><label class="wf-note">Category</label>
+        <select id="dc-cat" class="btn" style="width:100%">${opt(["Report","Reference","Guide","Template","Training","Dataset"],"Select category")}</select></div>
+      <div><label class="wf-note">Visibility</label>
+        <div class="seg" id="dc-vis" data-v="Public" style="width:100%;display:flex;border-radius:8px">
+          <a class="seg-btn on" style="flex:1;padding:11px;font-size:13px;text-align:center" onclick="setDocVis('Public')">🌐 Public</a>
+          <a class="seg-btn" style="flex:1;padding:11px;font-size:13px;text-align:center" onclick="setDocVis('Private')">🔒 Private</a>
+        </div></div>
+      <div><label class="wf-note">Tags</label>
+        <input id="dc-tag" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="Type a tag and press Enter" onkeydown="if(event.key==='Enter'){event.preventDefault();addDocTag(this.value);this.value='';}">
+        <div id="dc-tags" class="chips" style="margin-top:8px">${renderDocTags()}</div></div>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin-top:18px"><a class="btn" onclick="closeUploadDoc()">Cancel</a><a class="btn primary" onclick="adminUploadDoc()">⤒ Upload</a></div>`;
+  document.getElementById('doc-overlay').classList.add('open');
+  setTimeout(()=>{const i=document.getElementById('dc-name');if(i)i.focus();},30);
+}
+function closeUploadDoc(){ const o=document.getElementById('doc-overlay'); if(o) o.classList.remove('open'); }
+function setDocVis(v){ const el=document.getElementById('dc-vis'); if(!el) return; el.setAttribute('data-v',v);
+  Array.prototype.slice.call(el.querySelectorAll('.seg-btn')).forEach(b=>b.classList.remove('on'));
+  const btns=el.querySelectorAll('.seg-btn'); (v==='Public'?btns[0]:btns[1]).classList.add('on'); }
+function renderDocTags(){ return docTags.map((t,i)=>`<span class="chip" onclick="removeDocTag(${i})">${t} ✕</span>`).join(""); }
+function addDocTag(v){ v=(v||"").trim(); if(!v) return; if(docTags.indexOf(v)<0) docTags.push(v); const el=document.getElementById('dc-tags'); if(el) el.innerHTML=renderDocTags(); }
+function removeDocTag(i){ docTags.splice(i,1); const el=document.getElementById('dc-tags'); if(el) el.innerHTML=renderDocTags(); }
+function adminUploadDoc(){
+  if(!isAdmin()) return;
+  const name=(document.getElementById('dc-name')||{}).value||"";
+  const theme=(document.getElementById('dc-theme')||{}).value||"";
+  const type=(document.getElementById('dc-type')||{}).value||"";
+  const cat=(document.getElementById('dc-cat')||{}).value||"";
+  const visEl=document.getElementById('dc-vis'); const vis=visEl?visEl.getAttribute('data-v'):"Public";
+  if(!name.trim()){ toast("Enter a file name"); return; }
+  if(!theme){ toast("Select a theme"); return; }
+  if(!type){ toast("Select a file type"); return; }
+  const id = (name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||'doc')+'-'+(RES.length+1);
+  RES.unshift({
+    id:id, title:name.trim(), purpose:"Added to the Resource Library by the admin.",
+    system:theme, stage:"", stake:"Learner", design:"Both", type:type,
+    group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:"",
+    category:cat||"Resource", visibility:vis, tags:docTags.slice()
+  });
+  closeUploadDoc();
+  toast("Document uploaded: "+name.trim());
+  go('#/library');
 }
 /* ---- Admin edit mode for the topic details page ---- */
 let editMode=false;
@@ -2389,7 +2461,7 @@ screens.library = (params) => {
   [{label:"Home",href:"#/home"},{label:"Resource Library"}], `
   <section class="section">
     <div class="eyebrow">Direct access</div>
-    <h2>Resource Library</h2>
+    <div class="between"><h2 class="mb0">Resource Library</h2>${isAdmin()?`<a class="btn primary" onclick="openUploadDoc()">⤒ Upload Document</a>`:""}</div>
     <p class="sub">Experienced users can bypass the guided journey. Search or filter to find a specific resource.</p>
     <div class="searchfield" onclick="go('#/search')">
       <span class="icon-box">🔍</span>
@@ -2996,6 +3068,7 @@ document.getElementById("search-overlay").addEventListener("click",e=>{if(e.targ
 document.getElementById("contact-overlay").addEventListener("click",e=>{if(e.target.id==="contact-overlay")closeContact();});
 document.getElementById("tour-overlay").addEventListener("click",e=>{if(e.target.id==="tour-overlay")closeTour();});
 document.getElementById("topic-overlay").addEventListener("click",e=>{if(e.target.id==="topic-overlay")closeAddTopic();});
+document.getElementById("doc-overlay").addEventListener("click",e=>{if(e.target.id==="doc-overlay")closeUploadDoc();});
 document.addEventListener("click",e=>{const p=document.getElementById("profile");const m=document.getElementById("profile-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
 
 /* boot */

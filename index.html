@@ -1566,7 +1566,7 @@ screens.modular = (params) => {
   const group = params.g; // supporting / modular / atomized
   const gq = group?("g="+group+"&"):"";
   const topic = params.topic ? topicById(params.topic) : null;
-  const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems",href:"#/resource-systems"}];
+  const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"}];
   if(s) crumbItems.push({label:s.name,href:"#/system/"+params.id});
   crumbItems.push({label: topic?topic.name:"Topics"});
 
@@ -2001,9 +2001,10 @@ screens.doc = (params) => {
   const backToFiles = `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${sub.code}`;
   const crumbItems = [
     {label:"Home",href:"#/home"},
-    {label:"Resource Systems",href:"#/resource-systems"},
+    {label:"Resource Systems & Themes",href:"#/resource-systems"},
     s?{label:s.name,href:"#/system/"+params.id}:{label:"Resource System"},
     {label:topic.name,href:`#/modular/${params.id}?${gq}topic=${topic.id}`},
+    {label:sub.name,href:`#/modular/${params.id}?${gq}topic=${topic.id}&sub=${sub.code}`},
     {label:f.name}
   ];
   const bigPrev = t==="video"

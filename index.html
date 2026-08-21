@@ -908,30 +908,38 @@ function adminRemoveSubtopic(topicId, code){
   render();
 }
 /* ---- Admin mutations for the resource-system topic flow ---- */
-function openAddTopic(sysId, group){
+function openAddTopic(sysId, group, editId){
   if(!isAdmin()) return;
+  const editing=!!editId; const t = editing ? topicById(editId) : null;
   const panel=document.getElementById('topic-panel');
   panel.innerHTML=`
-    <div class="between" style="align-items:center"><h3 style="margin:0">Add a topic</h3><a class="btn sm" onclick="closeAddTopic()">✕</a></div>
-    <p class="wf-note" style="margin:4px 0 14px">Create a new topic under ${(entityById(sysId)||{name:'this system'}).name}${group?" · "+group:""}.</p>
+    <div class="between" style="align-items:center"><h3 style="margin:0">${editing?"Edit topic":"Add a topic"}</h3><a class="btn sm" onclick="closeAddTopic()">✕</a></div>
+    <p class="wf-note" style="margin:4px 0 14px">${editing?"Update this topic’s details.":"Create a new topic under "+(entityById(sysId)||{name:'this system'}).name+(group?" · "+group:"")+"."}</p>
     <div class="stack">
       <div><label class="wf-note">Topic name <span class="req">*</span></label>
-        <input id="nt-name" class="btn" style="width:100%;text-align:left;cursor:text" placeholder="e.g. Water Budgeting"></div>
+        <input id="nt-name" class="btn" style="width:100%;text-align:left;cursor:text" value="${editing?_esc(t.name):''}" placeholder="e.g. Water Budgeting"></div>
       <div><label class="wf-note">Short description</label>
-        <textarea id="nt-desc" class="btn" style="width:100%;min-height:80px;text-align:left;cursor:text;resize:vertical" placeholder="One line describing this topic"></textarea></div>
+        <textarea id="nt-desc" class="btn" style="width:100%;min-height:80px;text-align:left;cursor:text;resize:vertical" placeholder="One line describing this topic">${editing?(t.desc||""):""}</textarea></div>
       <div><label class="wf-note">Topic image</label>
-        <div class="dropzone" onclick="toast('Upload topic image (placeholder)')" style="cursor:pointer">Drag &amp; drop an image, or click to upload</div></div>
-      <div class="row" style="justify-content:flex-end"><a class="btn" onclick="closeAddTopic()">Cancel</a><a class="btn primary" onclick="adminAddTopic('${sysId}','${group||""}')">Save</a></div>
+        <div class="dropzone" onclick="toast('Upload topic image (placeholder)')" style="cursor:pointer">${editing?"Drag &amp; drop to replace the image, or click to upload":"Drag &amp; drop an image, or click to upload"}</div></div>
+      <div class="row" style="justify-content:flex-end"><a class="btn" onclick="closeAddTopic()">Cancel</a><a class="btn primary" onclick="adminAddTopic('${sysId}','${group||""}','${editId||""}')">Save</a></div>
     </div>`;
   document.getElementById('topic-overlay').classList.add('open');
   setTimeout(()=>{const i=document.getElementById('nt-name');if(i)i.focus();},30);
 }
 function closeAddTopic(){ const o=document.getElementById('topic-overlay'); if(o) o.classList.remove('open'); }
-function adminAddTopic(sysId, group){
+function adminAddTopic(sysId, group, editId){
   if(!isAdmin()) return;
   const name=(document.getElementById('nt-name')||{}).value||"";
   const desc=(document.getElementById('nt-desc')||{}).value||"";
   if(!name.trim()){ toast("Enter a topic name"); return; }
+  if(editId){
+    const t=topicById(editId);
+    if(t){ t.name=name.trim(); t.desc=desc.trim()||t.desc; }
+    closeAddTopic(); toast("Topic updated: "+name.trim());
+    go('#/modular/'+sysId+(group?('?g='+group):''));
+    return;
+  }
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('topic-'+(TOPICS.length+1));
   if(TOPICS.some(t=>t.id===id)){ toast("A topic with a similar name already exists"); return; }
   TOPICS.push({id:id, name:name.trim(), desc:desc.trim()||"New topic (added by admin).", count:0, custom:true});
@@ -940,6 +948,15 @@ function adminAddTopic(sysId, group){
   toast("Topic added: "+name.trim()+" — now add subtopics and files");
   // open the new topic straight away so the admin can build it
   go('#/modular/'+sysId+'?'+(group?('g='+group+'&'):'')+'topic='+id);
+}
+function adminDeleteTopic(id, sysId, group){
+  if(!isAdmin()) return;
+  const t=topicById(id); if(!t) return;
+  if(typeof confirm==="function" && !confirm('Delete topic "'+t.name+'"? This removes its subtopics and files.')) return;
+  const i=TOPICS.findIndex(x=>x.id===id); if(i>=0) TOPICS.splice(i,1);
+  delete SUBSTORE[id];
+  toast("Topic deleted: "+t.name);
+  go('#/modular/'+sysId+(group?('?g='+group):''));
 }
 function adminAddSubtopic(topicId){
   if(!isAdmin()) return;
@@ -1945,6 +1962,7 @@ screens.modular = (params) => {
               <p>${t.desc}</p>
               <div class="wf-note">${t.count} resource${t.count!==1?'s':''}</div>
               <div class="cta"><a class="btn sm primary">View resources →</a></div>
+              ${isAdmin()?`<div class="row mt8" style="gap:8px"><a class="btn sm" onclick="event.stopPropagation();openAddTopic('${params.id}','${group||""}','${t.id}')">Edit</a><a class="btn sm" onclick="event.stopPropagation();adminDeleteTopic('${t.id}','${params.id}','${group||""}')">Delete</a></div>`:""}
             </div>`).join(""):`<div class="panel muted">No topics yet for this selection.</div>`}
           </div>
         </div>

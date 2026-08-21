@@ -1917,13 +1917,7 @@ screens.modular = (params) => {
   if(ld) crumbItems.push({label:ld.name,href:`#/modular/${params.id}?g=${ld.id}`});
   crumbItems.push({label: topic?topic.name:"Topics"});
 
-  const banner = `
-    <section class="section">
-      <div class="banner">
-        <div><div class="wf-note">Commoning of</div><h2>${label}${topic?` <span style="font-size:14px;font-weight:400;color:var(--ink-3)">· ${topic.name}</span>`:""}</h2></div>
-        <div class="sys-badge">${label}</div>
-      </div>
-    </section>`;
+  const banner = "";
 
   /* -------- TOPIC LIST (no topic chosen) -------- */
   if(!topic){

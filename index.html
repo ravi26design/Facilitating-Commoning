@@ -532,7 +532,7 @@ function roleLabel(){return ROLE_LABEL[currentRole];}
 function isAdmin(){return currentRole==="admin";}
 function isRegistered(){return currentRole==="registered"||currentRole==="admin";}
 function canDownload(){return currentRole!=="visitor";}
-function setRole(role, dest){ currentRole=role; saveRole(); toast("Signed in as "+ROLE_LABEL[role]); go(dest||(role==="admin"?"#/admin":"#/home")); }
+function setRole(role, dest){ currentRole=role; saveRole(); toast("Signed in as "+ROLE_LABEL[role]); go(dest||"#/home"); }
 function signOut(){ currentRole="visitor"; saveRole(); toast("Signed out"); go("#/home"); }
 function download(title){ if(canDownload()){ toast("Download (placeholder): "+title); } else { toast("Sign in to download — opening sign in…"); go("#/login"); } }
 
@@ -2144,7 +2144,7 @@ function deleteCourse(id){
   const idx=COURSES.findIndex(function(c){return c.id===id;});
   if(idx<0){ toast("Course not found"); return; }
   const name=COURSES[idx].title; COURSES.splice(idx,1); toast("Course deleted: "+name);
-  go(isAdmin()?"#/admin":"#/courses");
+  go("#/courses");
 }
 function publishCourse(){ ensureCourseDraft();
   if(!courseDraft.title.trim()){ toast("Course name is required"); draftToStep1(); return; }
@@ -2949,7 +2949,9 @@ screens["my-learning"] = () => {
 };
 
 /* ---- ADMIN DASHBOARD (super admin only) ---- */
-screens.admin = () => {
+/* Admin Dashboard page removed for now — redirect to home */
+screens.admin = () => screens.home();
+screens._adminHidden = () => {
   if(!isAdmin()) return gateScreen("Admin Dashboard","Sign in as the Platform Super Admin to manage the repository.");
   const metaFields = ["Resource title","1-line purpose","Resource system or Theme","Commoning stage (systems only)","Intended stakeholder / user","Learning design (Modular / LDHF / Both)","Resource type","Language","Version / date","Attribution to Contributor (non-FES)","File (View / Download)"];
   return shell(null,

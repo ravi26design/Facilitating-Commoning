@@ -1803,7 +1803,7 @@ screens.system = (params) => {
       <p class="sub">The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.</p>
       <div class="ld-grid">
         ${OPTIONS.map(o=>`<div class="ld-card" onclick="go('#/modular/${params.id}?g=${o.g}')">
-          ${o.g==='modular'?`<div class="ph-img ld-diagram" style="min-height:150px">Modular training design diagram — placeholder</div>`:""}
+          <div class="ph-img ld-diagram" style="min-height:150px">${o.g==='atomized'?'LDHF learning materials image':o.g==='modular'?'Modular training design diagram':'Supporting resources image'} — placeholder</div>
           <div class="badge">${o.g==='atomized'?'LDHF':o.g==='modular'?'Modular':'Support'}</div>
           <h3 style="margin:6px 0 0">${o.name}</h3>
           <p class="muted" style="margin:0">${o.desc}</p>

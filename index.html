@@ -1434,7 +1434,7 @@ screens.home = () => shell("#/home", null, `
       <a class="btn sm" onclick="go('#/library')">Browse all resources →</a>
     </div>
     <p class="sub">Hand-picked resources to get you started.</p>
-    <div class="grid g2 mt8">
+    <div class="grid g3 mt8">
       ${["facilitator-guide","cfr-course"].map(id=>resById(id)).filter(Boolean).slice(0,2).map((r,i)=>libraryFileCard(r,i)).join("")}
     </div>
   </section>

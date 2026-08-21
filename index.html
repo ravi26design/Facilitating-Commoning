@@ -2706,7 +2706,7 @@ screens.resource = (params) => {
           <h2 class="mb0">${r.title}</h2>
           <p class="sub" style="margin:6px 0 0">${r.purpose}</p>
         </div>
-        <div class="row" style="flex:0 0 auto"><a class="btn" onclick="toast('Open ${r.type} viewer (placeholder)')">View</a><a class="btn primary" onclick="download('${r.title}')">Download</a>
+        <div class="row" style="flex:0 0 auto"><a class="btn primary" onclick="download('${r.title}')">Download</a>
         ${isAdmin()?`<a class="btn" onclick="openUploadDoc('${r.id}')">Edit</a>`:""}
         ${isRegistered()?`<a class="btn" onclick="toast('Saved to My Learning (placeholder)')">Save</a>`:""}</div>
       </div>

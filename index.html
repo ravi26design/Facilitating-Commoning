@@ -124,6 +124,19 @@ header.site{
 .pm-head strong{font-size:13px}
 .pm-head .pm-sub{font-size:11px;color:var(--ink-3)}
 .pm-div{border-top:1px solid var(--line-2);margin:6px 0}
+/* App launcher (waffle) */
+.app-launcher{position:relative;display:inline-flex}
+.apps-ico{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:16px;height:16px;align-items:center;justify-items:center}
+.apps-ico i{width:3.5px;height:3.5px;border-radius:50%;background:var(--ink-2);display:block}
+.apps-menu{position:absolute;right:0;top:calc(100% + 8px);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.16);padding:18px 20px;display:none;z-index:46;width:360px}
+.apps-menu.open{display:block}
+.apps-head{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 6px}
+.app-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 6px;border-radius:10px;cursor:pointer;text-align:center}
+.app-tile:hover{background:var(--fill)}
+.app-ico{width:46px;height:46px;border-radius:10px;background:var(--fill-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:22px}
+.app-name{font-size:12.5px;color:var(--ink);font-weight:500}
+@media(max-width:520px){ .apps-menu{width:300px} }
 
 /* Breadcrumbs */
 .crumbs{padding:14px 0;font-size:13px;color:var(--ink-2);display:flex;flex-wrap:wrap;align-items:center}
@@ -1099,6 +1112,12 @@ function courseById(id){return COURSES.find(c=>c.id===id);}
 /* ============================================================
    COMPONENTS
    ============================================================ */
+// App-launcher (waffle) products — external tools, placeholders in this wireframe
+const APPS = [
+  {name:"Commons", ico:"👥"}, {name:"VI Mapping", ico:"🗺️"}, {name:"Form Builder", ico:"📋"},
+  {name:"GEET", ico:"⚡"}, {name:"CLART", ico:"🎓"}, {name:"CLM", ico:"📄"},
+  {name:"CWB", ico:"📈"}, {name:"GWMT", ico:"💧"}, {name:"Data Platform", ico:"🗄️"}
+];
 const NAV = [
   {id:"#/learning-approach", label:"Learning Approach"},
   {id:"#/commoning", label:"Commoning of Commons"},
@@ -1130,7 +1149,19 @@ function header(active){
     <ul>
       ${NAV.map(n=>`<li><a class="navlink ${active===n.id?'active':''}" onclick="go('${n.id}')">${n.label}</a></li>`).join("")}
     </ul>
-    <div class="acct"><a class="btn sm icon-btn" onclick="openSearch()" title="Search" aria-label="Search">🔍</a>${acct}</div>
+    <div class="acct">
+      <a class="btn sm icon-btn" onclick="openSearch()" title="Search" aria-label="Search">🔍</a>
+      <div class="app-launcher" id="app-launcher">
+        <a class="btn sm icon-btn" onclick="toggleApps(event)" title="Apps" aria-label="Apps"><span class="apps-ico">${Array.from({length:9}).map(()=>"<i></i>").join("")}</span></a>
+        <div class="apps-menu" id="apps-menu">
+          <div class="apps-head"><span>Products</span><span>Quick Access</span></div>
+          <div class="apps-grid">
+            ${APPS.map(a=>`<a class="app-tile" onclick="toast('Open ${a.name} (placeholder)')"><span class="app-ico">${a.ico}</span><span class="app-name">${a.name}</span></a>`).join("")}
+          </div>
+        </div>
+      </div>
+      ${acct}
+    </div>
   </nav></div></header>`;
 }
 
@@ -1515,7 +1546,6 @@ screens.about = () => shell("#/about",
 screens.commoning = () => shell("#/commoning",
   [{label:"Home",href:"#/home"},{label:"Commoning of Commons"}], `
   <section class="section">
-    <div class="eyebrow">Concept + Approach</div>
     <h2>Commoning of Commons</h2>
   </section>
 
@@ -1588,7 +1618,6 @@ screens.commoning = () => shell("#/commoning",
 screens["learning-approach"] = () => shell("#/learning-approach",
   [{label:"Home",href:"#/home"},{label:"Learning Approach"}], `
   <section class="section">
-    <div class="eyebrow">Approach</div>
     <h2>Learning Approach - from information to action</h2>
   </section>
 
@@ -2778,7 +2807,6 @@ screens.resource = (params) => {
 screens.help = () => shell("#/help",
   [{label:"Home",href:"#/home"},{label:"Help"}], `
   <section class="section">
-    <div class="eyebrow">Support</div>
     <h2>Help</h2>
     <p class="sub">Guidance on using the repository, finding resources and understanding the Commoning approach. Each topic opens its own page.</p>
     <div class="grid g3">
@@ -3189,6 +3217,7 @@ window.addEventListener("hashchange",function(e){
    ============================================================ */
 function toggleReveal(id){const el=document.getElementById(id);if(el)el.classList.toggle("hidden");}
 function toggleProfile(e){ if(e){e.stopPropagation();} const m=document.getElementById("profile-menu"); if(m) m.classList.toggle("open"); }
+function toggleApps(e){ if(e){e.stopPropagation();} const m=document.getElementById("apps-menu"); if(m) m.classList.toggle("open"); }
 function applyFilterFlash(){ /* wireframe: filter state is illustrative */ }
 let toastTimer;
 function toast(msg){
@@ -3207,6 +3236,7 @@ document.getElementById("doc-overlay").addEventListener("click",e=>{if(e.target.
 document.getElementById("pwd-overlay").addEventListener("click",e=>{if(e.target.id==="pwd-overlay")closeChangePassword();});
 document.getElementById("theme-overlay").addEventListener("click",e=>{if(e.target.id==="theme-overlay")closeAddTheme();});
 document.addEventListener("click",e=>{const p=document.getElementById("profile");const m=document.getElementById("profile-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
+document.addEventListener("click",e=>{const p=document.getElementById("app-launcher");const m=document.getElementById("apps-menu");if(m&&m.classList.contains("open")&&p&&!p.contains(e.target))m.classList.remove("open");});
 
 /* boot */
 loadRole();                     // restore signed-in role across refresh

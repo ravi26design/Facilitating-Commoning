@@ -325,6 +325,10 @@ footer .bar{border-top:1px solid var(--line-2);padding:14px 0;font-size:12px;col
 
 /* result rows */
 .result-row{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.result-row.click{cursor:pointer;transition:box-shadow .12s,border-color .12s}
+.result-row.click:hover{box-shadow:var(--shadow-sm);border-color:var(--line-2)}
+.rr-icon{flex:0 0 34px;width:34px;height:34px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+.view-toggle .seg-btn{padding:5px 11px;font-size:12px}
 .result-row .rr-main{flex:1}
 .result-row h4{margin:0 0 3px;font-size:15px}
 
@@ -1282,6 +1286,37 @@ function libraryFileCard(r, idx){
     </div>
     ${editing}
   </div>`;
+}
+
+/* ---- Resource view mode (card / list) — shared by Library and Search ---- */
+let libView = "card";
+function loadLibView(){ try{ const v=localStorage.getItem('libView'); if(v==='card'||v==='list') libView=v; }catch(e){} }
+function setLibView(v){ libView=v; try{ localStorage.setItem('libView', v); }catch(e){} render(); }
+function resTags(r){ return [r.system,r.type,r.stage,r.lang,r.design].concat(r.tags||[]).filter(function(x){return x&&x!==""&&x!=="All Stages";}); }
+function resourceViewToggle(){
+  return `<div class="seg view-toggle">
+    <a class="seg-btn ${libView==='card'?'on':''}" onclick="setLibView('card')" title="Card view">▦ Cards</a>
+    <a class="seg-btn ${libView==='list'?'on':''}" onclick="setLibView('list')" title="List view">☰ List</a>
+  </div>`;
+}
+function resourceListRow(r){
+  return `<div class="result-row click" onclick="go('#/resource/${r.id}')">
+    <div class="rr-icon">${libGlyph(r.type)}</div>
+    <div class="rr-main">
+      <h4>${r.title}</h4>
+      <p class="purpose">${r.purpose}</p>
+      <div class="meta-tags mt8">${resTags(r).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+    </div>
+    <div class="stack" style="gap:8px;flex:0 0 auto">
+      <a class="btn sm primary" onclick="event.stopPropagation();go('#/resource/${r.id}')">View</a>
+      <a class="btn sm" onclick="event.stopPropagation();download('${r.title}')">Download</a>
+    </div>
+  </div>`;
+}
+function renderResources(rows, emptyMsg){
+  if(!rows.length) return `<div class="panel muted">${emptyMsg}</div>`;
+  if(libView==='list') return `<div class="stack mt16">${rows.map(resourceListRow).join("")}</div>`;
+  return `<div class="file-grid">${rows.map((r,i)=>libraryFileCard(r,i)).join("")}</div>`;
 }
 
 function systemCard(id, s, size){
@@ -2640,15 +2675,14 @@ screens.library = (params) => {
       <div>
         <div class="between">
           <div class="wf-note">${rows.length} resource${rows.length!==1?'s':''}${sys?"":" · placeholder set"}</div>
-          <div class="row" style="align-items:center">
+          <div class="row" style="align-items:center;gap:12px">
+            ${resourceViewToggle()}
             <span class="muted" style="font-size:12px">Sort:</span>
             <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently Added</option></select>
           </div>
         </div>
         ${sys?`<div class="active-filter mt8"><span>Theme: <strong>${sys}</strong></span><a class="af-clear" onclick="go('#/library')">Clear ✕</a></div>`:""}
-        <div class="file-grid">
-          ${rows.length?rows.map((r,i)=>libraryFileCard(r,i)).join(""):`<div class="panel muted">No resources for this theme yet.</div>`}
-        </div>
+        ${renderResources(rows, "No resources for this theme yet.")}
       </div>
     </div>
   </section>
@@ -2681,24 +2715,13 @@ screens.search = (params) => {
         <div>
           <div class="between">
             <div class="wf-note">${rows.length} results${q?` for “${q}”`:""}${filtered?` · filters applied`:""}</div>
-            <div class="row" style="align-items:center">
+            <div class="row" style="align-items:center;gap:12px">
+              ${resourceViewToggle()}
               <span class="muted" style="font-size:12px">Sort:</span>
               <select class="btn sm" style="padding:6px"><option>Recommended</option><option>A–Z</option><option>Recently Added</option></select>
             </div>
           </div>
-          <div class="stack mt16">
-            ${rows.map(r=>`<div class="result-row">
-              <div class="rr-main">
-                <h4>${r.title}</h4>
-                <p class="purpose">${r.purpose}</p>
-                <div class="meta-tags mt8">${tagsFor(r).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
-              </div>
-              <div class="stack" style="gap:8px">
-                <a class="btn sm primary" onclick="go('#/resource/${r.id}')">View</a>
-                <a class="btn sm" onclick="download('${r.title}')">Download</a>
-              </div>
-            </div>`).join("") || `<div class="panel muted">No results. Try a different keyword or clear filters.</div>`}
-          </div>
+          ${renderResources(rows, "No results. Try a different keyword or clear filters.")}
         </div>
       </div>
     </section>
@@ -3246,6 +3269,7 @@ document.addEventListener("click",e=>{const p=document.getElementById("app-launc
 
 /* boot */
 loadRole();                     // restore signed-in role across refresh
+loadLibView();                  // restore card/list view preference
 if(STATIC_MODE){
   document.body.classList.add("static-mode");
   const hint=document.getElementById("proto-hint");

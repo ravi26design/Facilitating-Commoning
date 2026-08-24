@@ -2630,7 +2630,7 @@ screens.library = (params) => {
     <p class="sub">Experienced users can bypass the guided journey. Search or filter to find a specific resource.</p>
     <div class="searchfield" onclick="go('#/search')">
       <span class="icon-box">🔍</span>
-      <input placeholder="Search by topic, process, tool or keyword…" onfocus="go('#/search')">
+      <input placeholder="Search by topic, process, tool, tag or keyword…" onfocus="go('#/search')">
       <a class="btn sm primary" onclick="go('#/search')">Search</a>
     </div>
   </section>
@@ -2659,7 +2659,7 @@ screens.library = (params) => {
 screens.search = (params) => {
   const q = params.q ? decodeURIComponent(params.q) : "";
   const filtered = params.filtered;
-  const tagsFor=(r)=>[r.system,r.stage,r.type,r.design,r.lang].filter(x=>x&&x!==""&&x!=="All Stages");
+  const tagsFor=(r)=>[r.system,r.stage,r.type,r.design,r.lang].concat(r.tags||[]).filter(x=>x&&x!==""&&x!=="All Stages");
   const rows = RES.filter(r=>{
     if(!q) return true;
     const hay=(r.title+" "+r.purpose+" "+tagsFor(r).join(" ")).toLowerCase();
@@ -2670,7 +2670,7 @@ screens.search = (params) => {
     <section class="section">
       <div class="searchfield">
         <span class="icon-box">🔍</span>
-        <input id="results-search" placeholder="Search by topic, process, tool or keyword…" value="${q.replace(/"/g,'&quot;')}"
+        <input id="results-search" placeholder="Search by topic, process, tool, tag or keyword…" value="${q.replace(/"/g,'&quot;')}"
           onkeydown="if(event.key==='Enter'){go('#/search?q='+encodeURIComponent(this.value))}">
         <a class="btn sm primary" onclick="go('#/search?q='+encodeURIComponent(document.getElementById('results-search').value))">Search</a>
       </div>
@@ -2857,7 +2857,7 @@ screens.helptopic = (params) => {
   else if(h.id==="how-to-find"){
     body=`<p class="muted">Find a specific resource in three ways:</p>
     <div class="grid g3 mt8">
-      <div class="card"><h3 style="font-size:14px">1 · Search</h3><p>Search by topic, process, tool or keyword.</p><a class="btn sm" onclick="openSearch()">Open Search</a></div>
+      <div class="card"><h3 style="font-size:14px">1 · Search</h3><p>Search by topic, process, tool, tag or keyword.</p><a class="btn sm" onclick="openSearch()">Open Search</a></div>
       <div class="card"><h3 style="font-size:14px">2 · Filter</h3><p>Filter by system, stage, stakeholder, learning design, type and language.</p><a class="btn sm" onclick="go('#/library')">Open Library</a></div>
       <div class="card"><h3 style="font-size:14px">3 · Browse by stage</h3><p>Open a resource system and pick a stage to see its resources.</p><a class="btn sm" onclick="go('#/resource-systems')">Resource Systems</a></div>
     </div>`;
@@ -3126,7 +3126,7 @@ function gateScreen(title, msg){
 function searchOverlayHTML(){
   const suggestions=["Secure Tenure","Facilitator Guide","Forest rights","Restoration protocol","Water access","LDHF"];
   return `<div class="between"><h3>What are you looking for?</h3><a class="btn sm" onclick="closeSearch()">Close ✕</a></div>
-    <p class="muted" style="margin:2px 0 0">Search by topic, process, tool, resource or keyword.</p>
+    <p class="muted" style="margin:2px 0 0">Search by topic, process, tool, resource, tag or keyword.</p>
     <div class="searchfield mt12">
       <span class="icon-box">🔍</span>
       <input id="overlay-input" placeholder="Type to search…" onkeydown="if(event.key==='Enter'){runSearch(this.value)}">

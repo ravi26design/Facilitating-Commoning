@@ -2,16 +2,114 @@
 
 High-fidelity UI design of the Facilitating Commoning web repository.
 
-- **Content & structure** come from the approved low-fidelity wireframe
-  (`../index.html`) — same screens, same data, same navigation model.
-- **Visual language** comes from the FES Organization Onboarding Platform
-  (`../../Onboarding Process/landing.html`) — same palette, type scale,
-  card system, button system, motion and icon set.
+There are two designs in this folder, both built from the same approved
+wireframe but following different visual references. They are independent —
+neither imports from the other.
 
-## Running it
+| Design | Files | Visual reference |
+|---|---|---|
+| **A · Editorial** | `index.html` + `styles.css` + `app.js` | FES Organization Onboarding Platform (DM Serif Display + Lato, editorial) |
+| **B · Platform** | `design.html` (single self-contained file) | Understanding Commons platform (`../../../Anshul Work/Understanding Commons/UC Webapp UI Design/index.html`) |
 
-Open `index.html` in a browser. Everything is relative and self-contained —
-no build step and no server required.
+Both take **content & structure** from the approved low-fidelity wireframe
+(`../index.html`) — same screens, same data, same navigation model.
+
+## Running them
+
+Open either `index.html` or `design.html` in a browser. Everything is
+relative and self-contained — no build step and no server required.
+
+---
+
+# Design B — `design.html`
+
+A single self-contained file (page shell, full design system and all screens
+inline) that mirrors the structure of the Understanding Commons reference.
+
+## Visual language carried over from the reference
+
+Inter (400–800) · navy ink `#2B3674` · blue CTAs `#1F4397` · green accent
+`#39A248` · square-cornered panels with soft navy shadows · 90rem content
+frame · 5rem sticky header · Lucide icon set (self-hosted, offline).
+
+Components reused verbatim from the reference: sticky header with app
+launcher / language / profile menus, `.ehero` editorial hero over a
+viewport-pinned photograph, `.pagehead` band, `.card` / `.imgcard`,
+`.doccard` file cards with mini previews, `.docview` document viewer,
+`.filterbox` faceted sidebar, `.gateway` navy CTA band, `.callout`,
+`.chapter` full-bleed editorial rows, `.pullquote`, `.wf-tl` timeline,
+`.tabbar`, `.stat` tiles, split login, overlay modals, toast.
+
+New components built in the same language:
+
+- **Commoning pathway** — six-stage stepper; completed stages take a soft
+  green fill, the active stage becomes an ink→blue gradient card
+- **System / theme cards** — photo top, accent ribbon, process chain, accent
+  top-rule that wipes in on hover
+- **Learning-design cards**, **topic cards**, **two-pane curriculum**,
+  **course wizard** (two steps, sticky action bar), **segmented card/list
+  toggle**, **applied-filter chips**, **equation strip** for the commoning
+  approach, **admin tables**
+
+Resource systems and themes each carry a restrained accent: Forests
+`#2E8540` · Pastureland `#B26A00` · Water `#1565C0` · Multi-Actor Platforms
+`#1F4397` · Local Economic Opportunities `#0E9488` · Sustainable Agriculture
+`#7C3AED`.
+
+## Page heads
+
+Every page — home and internal alike — uses the reference's editorial hero:
+title left with a green `<em>` accent word, standfirst and any actions right,
+on white. There is no eyebrow label and no breadcrumb on the top-level nav
+pages (Home, Commoning, Learning Approach, Resource Systems, Library, Help,
+About, Courses); breadcrumbs remain on nested pages, where they aid
+navigation. Home and Commoning of Commons additionally pin a photograph to
+the viewport that the page scrolls across (`heroBackdrop` + `.ehero-window`).
+
+## Infographics
+
+Three supplied infographics sit in `assets/img/`, framed by `.infographic`:
+
+| File | Used on |
+|---|---|
+| `modular-training-design.png` | Learning Approach · Modular card, and `#/la/modular` |
+| `ldhf-capacity-building.png` | Learning Approach · LDHF card, and `#/la/ldhf` |
+| `outcome-based-capacity-building.png` | Learning Approach · closing panel, and `#/la/outcome` |
+
+`#/la/modular` pairs the infographic with five module cards that carry the
+wireframe's per-module *trainee field action* — detail the infographic itself
+does not show.
+
+## Screens (51 routes)
+
+Home · About · Commoning of Commons · Learning Approach (+ 3 diagram pages)
+· Resource Systems & Themes · Resource system / theme page · Stage detail
+(×6) · Atomized Course Curriculum · Learning-design topic list · Topic
+detail (subtopics + files) · Document detail · Courses · Course viewer ·
+File view · Resource Library · Search results (+ empty state) · Resource
+detail · Field stories · Help index + 6 help topics · Sign In · My Learning
+· Admin Dashboard · Create/Edit Course wizard · Restricted-access gate.
+
+Overlays: search (⌘K / Ctrl-K), contact & support, take-a-tour, add theme,
+add/edit topic, upload/edit document, change password.
+
+## Roles
+
+Three mock roles, switchable from Sign In and the header profile menu:
+
+- **Visitor** — reads everything; downloading prompts sign in
+- **Registered User** — downloads, Save, My Learning
+- **Platform Super Admin** — admin dashboard, upload, edit modes, course
+  and topic management
+
+## Responsive
+
+Breakpoints at 1400 / 1220 / 1080 / 980 / 900 / 820 / 700 / 560px. Nav links
+collapse to a menu button below 980px, sidebars and two-panes unstack, the
+pathway reflows, and the hero splits into a single column. Verified to have
+no horizontal page overflow at 375px or 1440px across all 51 routes; wide
+admin tables scroll inside their own container. The header takes its shadow
+only once the page is scrolled.
 
 ## Files
 

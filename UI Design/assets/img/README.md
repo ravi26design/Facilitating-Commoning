@@ -14,6 +14,13 @@ and replace them with FES's own field photography when you have it.
 |---|---|
 | `hero-commoning.jpg` | Home-page hero photograph (16:9, at least 1920×1080) |
 | `about-commons.jpg` | About band on the home page (wide ~2.9:1, at least 1800×630) |
+| `la-training.jpg` | Learning Approach — Modular Training Design (~1.7:1) |
+| `la-ldhf.jpg` | Learning Approach — LDHF (~1.7:1) |
+| `commons-restoration.jpg` | Commoning of Commons — Restoration pillar (~1.7:1) |
+| `commons-landscape.jpg` | Resource Systems & Themes banner (wide ~2.6:1, at least 1800×692) |
+| `theme-map.jpg` | Theme — Multi-Actor Platforms (~1.7:1) |
+| `theme-leo.jpg` | Theme — Local Economic Opportunities (~1.7:1) |
+| `theme-agri.jpg` | Theme — Sustainable Agriculture Practices (~1.7:1) |
 | `pastureland.jpg` | Pastureland resource-system card + cover |
 | `forests.jpg` | Forests resource-system card + cover |
 | `water.jpg` | Water resource-system card + cover |

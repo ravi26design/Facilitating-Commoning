@@ -2737,6 +2737,59 @@ function seedResourceTags(){
     r.tags = [topic && topic.name, ld && ld.badge].filter(Boolean);
   });
 }
+/* A published resource carries its own history so every tab has something real
+   to show — who commented, which versions exist, and what happened when. */
+function seedResourceHistory(){
+  const HIST = [
+    {comments:[
+       {by:"Meera Nair", date:"2026-05-26", at:"11:20 AM",
+        text:"We used this with the Bharuch committee last month. The pre-session checklist saved us a whole visit."},
+       {by:"Krishnan Iyer", date:"2026-05-27", at:"09:05 AM",
+        text:"Glad it helped. If you have photographs from that session, send them across and we can add them as an annexe."},
+       {by:"Anil Kumar", date:"2026-05-28", at:"04:40 PM",
+        text:"One request — could we get the Hindi version before the June round of trainings?"}],
+     versions:[
+       {v:"v1.2", what:"current &middot; added the pre-session checklist", when:"2026-05-24", who:"Krishnan Iyer"},
+       {v:"v1.1", what:"reworked the facilitator notes", when:"2026-04-18", who:"Krishnan Iyer"},
+       {v:"v1.0", what:"first published version", when:"2026-03-02", who:"Krishnan Iyer"}],
+     activity:[
+       {who:"Anil Kumar", what:"commented on this resource", when:"2026-05-28", at:"04:40 PM"},
+       {who:"Krishnan Iyer", what:"uploaded v1.2", when:"2026-05-24", at:"02:15 PM"},
+       {who:"Content Reviewer", what:"approved v1.2", when:"2026-05-24", at:"03:00 PM"},
+       {who:"Meera Nair", what:"downloaded the file", when:"2026-05-20", at:"10:10 AM"},
+       {who:"Krishnan Iyer", what:"published the first version", when:"2026-03-02", at:"09:30 AM"}]},
+
+    {comments:[
+       {by:"Sunita Rao", date:"2026-05-19", at:"03:10 PM",
+        text:"The worksheet works well in the field, but the last column needs more room for handwriting."},
+       {by:"Meera Nair", date:"2026-05-21", at:"10:45 AM",
+        text:"Noted — I will widen it in the next version."}],
+     versions:[
+       {v:"v1.1", what:"current &middot; wider fields for field use", when:"2026-05-23", who:"Meera Nair"},
+       {v:"v1.0", what:"first published version", when:"2026-04-05", who:"Meera Nair"}],
+     activity:[
+       {who:"Meera Nair", what:"uploaded v1.1", when:"2026-05-23", at:"01:05 PM"},
+       {who:"Sunita Rao", what:"commented on this resource", when:"2026-05-19", at:"03:10 PM"},
+       {who:"Meera Nair", what:"published the first version", when:"2026-04-05", at:"11:00 AM"}]},
+
+    {comments:[
+       {by:"Manish Patel", date:"2026-05-15", at:"12:30 PM",
+        text:"Used the first two sessions with a new committee. The sequencing is right, but session three assumes people can already read a map."}],
+     versions:[
+       {v:"v1.0", what:"current &middot; first published version", when:"2026-05-22", who:"Anil Kumar"}],
+     activity:[
+       {who:"Manish Patel", what:"commented on this resource", when:"2026-05-15", at:"12:30 PM"},
+       {who:"Content Reviewer", what:"approved and published", when:"2026-05-22", at:"02:20 PM"},
+       {who:"Anil Kumar", what:"submitted the document", when:"2026-05-21", at:"10:45 AM"}]}
+  ];
+  RES.forEach((r, i) => {
+    if(r.comments) return;
+    const h = HIST[i % HIST.length];
+    r.comments = h.comments.slice();
+    r.versions = h.versions.slice();
+    r.activity = h.activity.slice();
+  });
+}
 function resTags(r){
   const all = [r.system, r.type, r.stage, r.lang, r.design].concat(r.tags||[])
     .filter(x=>x && x!=="" && x!=="All Stages");
@@ -3964,15 +4017,15 @@ screens.resource = (params) => {
       activityBlock({
         tab: tab, href: t => `#/resource/${r.id}?tab=${t}`, postId: 'rc-comment',
         onPost: `addResComment('${r.id}')`,
-        trail: [
-          {cls:"done", icon:"check", who:"Content Reviewer", did:"approved and published", meta:resDate(idx)},
-          {cls:"done", icon:"file-plus-2", who:who, did:"submitted the document", meta:resDate(idx+1)}
-        ],
-        versions: [{v:r.version?r.version.split(" ")[0]:"v1.0", what:"current version",
-                    when:resDate(idx), who:who}],
-        log: [{who:"Content Reviewer", what:"published to the Resource Library", when:resDate(idx), at:"02:20 PM"},
-              {who:who, what:"document submitted", when:resDate(idx+1), at:"10:45 AM"},
-              {who:who, what:"document uploaded", when:resDate(idx+1), at:"09:30 AM"}],
+        trail: ((r.versions||[]).length>1
+          ? (r.versions||[]).slice(0,-1).map(v=>({cls:"done", icon:"upload",
+              who:v.who, did:"published "+v.v, meta:v.when})) : [])
+          .concat([
+            {cls:"done", icon:"check", who:"Content Reviewer", did:"approved and published", meta:resDate(idx)},
+            {cls:"done", icon:"file-plus-2", who:who, did:"submitted the document", meta:resDate(idx+1)}
+          ]),
+        versions: r.versions || [{v:"v1.0", what:"current version", when:resDate(idx), who:who}],
+        log: r.activity || [{who:"Content Reviewer", what:"published to the Resource Library", when:resDate(idx), at:"02:20 PM"}],
         thread: r.comments || []
       }))
   );
@@ -4538,12 +4591,12 @@ screens.submission = (params) => {
   const hist = activityBlock({
     tab: tab, href: href, trail: trail, postId: 'sd-comment',
     onPost: "addSubComment('"+sub.id+"')",
-    versions: [{v:"v1.0", what:"original upload &middot; current", when:sub.date,
+    versions: sub.versions || [{v:"v1.0", what:"original upload &middot; current", when:sub.date,
                 who: sub.by===USER.name ? "You ("+sub.by+")" : sub.by}],
     log: (sub.log||[]).map(e=>({who:e.by, what:e.what.toLowerCase(), when:e.date, at:"04:15 PM"}))
-      .concat(decision ? [{who:decision.who, what:decision.did, when:sub.date, at:"02:20 PM"}] : [])
-      .concat([{who:sub.by, what:"document submitted", when:sub.date, at:"10:45 AM"},
-               {who:sub.by, what:"document uploaded", when:sub.date, at:"09:30 AM"}]),
+      .concat(sub.activity || (decision ? [{who:decision.who, what:decision.did, when:sub.date, at:"02:20 PM"}] : [])
+        .concat([{who:sub.by, what:"document submitted", when:sub.date, at:"10:45 AM"},
+                 {who:sub.by, what:"document uploaded", when:sub.date, at:"09:30 AM"}])),
     thread: (sub.comment ? [{by:"Content Reviewer", date:sub.date, at:decision?decision.did:"", text:sub.comment}] : [])
       .concat(sub.comments || [])
   });
@@ -5331,7 +5384,20 @@ let subSeq = 0;
   {title:"Water budgeting exercise — facilitator notes",
    purpose:"Notes from running a first water budget with a watershed committee.",
    system:"Water", stage:"Manage Resources", stake:"Facilitator", design:"LDHF",
-   type:"Facilitators' Guide", lang:"English", tags:["water budget"], status:"pending", date:"2026-08-21"},
+   type:"Facilitators' Guide", lang:"English", tags:["water budget"], status:"pending", date:"2026-08-21",
+   thread:[
+     {by:"Priya Sharma", date:"2026-08-21", at:"10:50 AM",
+      text:"Sending this in ahead of the September watershed round — happy to redo the worksheet if the format is wrong."},
+     {by:"Sunita Rao", date:"2026-08-22", at:"09:15 AM",
+      text:"Reading it now. The exercise itself is clear; I may come back on the units used on page 2."}],
+   versions:[
+     {v:"v1.1", what:"current &middot; added the blank worksheet", when:"2026-08-21", who:"You (Priya Sharma)"},
+     {v:"v1.0", what:"first upload", when:"2026-08-18", who:"You (Priya Sharma)"}],
+   activity:[
+     {who:"Sunita Rao", what:"opened the file for review", when:"2026-08-22", at:"09:10 AM"},
+     {who:"Priya Sharma", what:"uploaded v1.1", when:"2026-08-21", at:"10:45 AM"},
+     {who:"Priya Sharma", what:"document submitted", when:"2026-08-18", at:"04:20 PM"},
+     {who:"Priya Sharma", what:"document uploaded", when:"2026-08-18", at:"03:55 PM"}]},
   {title:"Village institution register — blank template",
    purpose:"A register a new committee can use to record membership and meetings.",
    system:"All Systems", stage:"Build Institutions", stake:"Community Member", design:"Both",
@@ -5344,7 +5410,19 @@ let subSeq = 0;
    purpose:"A completed sample claim to show a committee what a good one looks like.",
    system:"Forests", stage:"Secure Tenure", stake:"Community Member", design:"Both",
    type:"Format", lang:"Hindi", tags:["forest rights","claim"], status:"approved", date:"2026-08-11",
-   comment:"Clear and reusable — published to the Resource Library."},
+   comment:"Clear and reusable — published to the Resource Library.",
+   thread:[
+     {by:"Arjun Kumar", date:"2026-08-12", at:"08:30 AM",
+      text:"This is already in use in two blocks. Could we add a Gondi translation of the covering note?"},
+     {by:"Priya Sharma", date:"2026-08-12", at:"05:15 PM",
+      text:"Yes — I will ask the field team and send it as a second file rather than change this one."}],
+   versions:[
+     {v:"v1.0", what:"current &middot; published to the library", when:"2026-08-11", who:"You (Priya Sharma)"}],
+   activity:[
+     {who:"Priya Sharma", what:"replied to a comment", when:"2026-08-12", at:"05:15 PM"},
+     {who:"Content Reviewer", what:"approved and published", when:"2026-08-11", at:"03:05 PM"},
+     {who:"Priya Sharma", what:"document submitted", when:"2026-08-09", at:"10:45 AM"},
+     {who:"Priya Sharma", what:"document uploaded", when:"2026-08-09", at:"09:30 AM"}]},
   {title:"Facilitator handbook — Understanding Context",
    purpose:"A handbook for the first stage of a commoning process.",
    system:"All Systems", stage:"Understand Context", stake:"Facilitator", design:"Modular",
@@ -5359,7 +5437,19 @@ let subSeq = 0;
    purpose:"A worked land use plan drawn up with a village committee.",
    system:"Pastureland", stage:"Manage Resources", stake:"Facilitator", design:"Modular",
    type:"PDF", lang:"English", tags:["land use","plan"], status:"changes", date:"2026-07-22",
-   comment:"Please remove the household names on pages 4-6 before this can be published, and add the year the plan was drawn."},
+   comment:"Please remove the household names on pages 4-6 before this can be published, and add the year the plan was drawn.",
+   thread:[
+     {by:"Priya Sharma", date:"2026-07-23", at:"11:05 AM",
+      text:"Understood. I have the anonymised copy from the committee — I will swap those pages and re-upload this week."},
+     {by:"Manish Patel", date:"2026-07-24", at:"02:40 PM",
+      text:"Worth adding the survey numbers as well, otherwise the plan is hard to place on the ground."}],
+   versions:[
+     {v:"v1.0", what:"current &middot; awaiting the anonymised pages", when:"2026-07-22", who:"You (Priya Sharma)"}],
+   activity:[
+     {who:"Manish Patel", what:"commented on this file", when:"2026-07-24", at:"02:40 PM"},
+     {who:"Priya Sharma", what:"replied to the reviewer", when:"2026-07-23", at:"11:05 AM"},
+     {who:"Content Reviewer", what:"requested changes", when:"2026-07-22", at:"02:20 PM"},
+     {who:"Priya Sharma", what:"document submitted", when:"2026-07-21", at:"10:45 AM"}]},
   {title:"MOU with the State Irrigation Department",
    purpose:"A sample agreement between a committee and a line department.",
    system:"Water", stage:"Secure Tenure", stake:"Mentor", design:"Both",
@@ -5391,9 +5481,10 @@ let subSeq = 0;
    comment:"Superseded by the published handbook. No need to keep a draft in the library."}
 ].forEach(s => {
   subSeq += 1;
-  const {status, date, comment, by} = s;
+  const {status, date, comment, by, thread, versions, activity} = s;
   SUBMISSIONS.push({id:"sub-"+subSeq, fields:s, by: by || USER.name, date,
-    status, comment: comment || "", size: s.size || "2.4 MB"});
+    status, comment: comment || "", size: s.size || "2.4 MB",
+    comments: thread || [], versions: versions, activity: activity});
 });
 const SUB_STATUS = {
   pending: {label:"Approval Pending",  cls:"pending", icon:"clock"},
@@ -5606,6 +5697,7 @@ window.addEventListener("hashchange", e=>{
 loadRole();
 loadLang();
 seedResourceTags();
+seedResourceHistory();
 document.documentElement.setAttribute('lang', lang);
 loadLibView();
 if(!location.hash) location.hash="#/home";

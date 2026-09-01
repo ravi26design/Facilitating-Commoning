@@ -441,13 +441,10 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .filmrow .ft{flex:1;font-weight:600}
 .filmrow .fd{font-size:.76rem;color:var(--muted-2)}
 
-/* gateway CTA (navy gradient) */
+/* gateway CTA — solid green */
 .gateway{position:relative;overflow:hidden;border-radius:0;padding:3.6rem 2rem 3.4rem;text-align:center;color:#fff;
-  background:
-    radial-gradient(circle at 84% 8%,rgba(78,124,89,.42),transparent 52%),
-    radial-gradient(circle at 10% 92%,rgba(51,96,214,.5),transparent 55%),
-    linear-gradient(135deg,#3b3531 0%,#4a423e 55%,#3f6549 100%);
-  box-shadow:0 24px 60px -28px rgba(20,30,80,.5)}
+  background:var(--blue);
+  box-shadow:0 24px 60px -28px rgba(74,66,62,.45)}
 /* a fine dot grid gives the band some texture, faded out at the edges */
 .gateway::before{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);
@@ -595,7 +592,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .chaplead{display:grid;grid-template-columns:17rem 1fr;gap:1.5rem;align-items:stretch}
 @media(max-width:820px){.chaplead{grid-template-columns:1fr}}
 .chapcount{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
-  padding:1.75rem;color:#fff;background:linear-gradient(140deg,#22326f 0%,#2b3674 60%,#1f4397 100%)}
+  padding:1.75rem;color:#fff;background:var(--blue)}
 .chapcount::before{content:'';position:absolute;right:-70px;top:-70px;width:210px;height:210px;
   background:radial-gradient(circle,rgba(78,124,89,.42),transparent 70%);pointer-events:none}
 .chapcount>*{position:relative;z-index:1}

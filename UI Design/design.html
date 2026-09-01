@@ -99,7 +99,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   font-size:.9rem;font-weight:700;display:inline-flex;align-items:center;gap:.45rem;transition:.15s}
 .signin-btn:hover{background:var(--blue-h)}
 .signin-btn i,.signin-btn svg.lucide{width:1rem;height:1rem}
-.navtoggle{display:none;width:2.4rem;height:2.4rem;border-radius:.65rem;border:1px solid var(--line-2);
+.navtoggle{display:none;width:2.4rem;height:2.4rem;border-radius:0;border:1px solid var(--line-2);
   background:#fff;color:var(--ink);place-items:center}
 .navtoggle i,.navtoggle svg.lucide{width:1.2rem;height:1.2rem}
 @media(max-width:1400px){nav.top .links{gap:1.5rem}nav.top .links a{font-size:.88rem}}
@@ -143,7 +143,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .pw-head .pw-av{color:#fff}
 .pw-div{height:1px;background:var(--line);margin:.35rem 0}
 .pw-item{display:flex;align-items:center;gap:.65rem;width:100%;background:none;border:0;padding:.6rem .7rem;
-  border-radius:.55rem;font:inherit;font-size:.9rem;font-weight:600;color:var(--ink);text-align:left}
+  border-radius:0;font:inherit;font-size:.9rem;font-weight:600;color:var(--ink);text-align:left}
 .pw-item:hover{background:var(--bg-soft)}
 .pw-item i,.pw-item svg.lucide{width:1rem;height:1rem;color:var(--faint)}
 .pw-item.danger{color:var(--red)}
@@ -505,15 +505,15 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 /* search + form fields */
 .searchwrap{position:relative;display:flex;align-items:center}
 .searchwrap input{width:100%;padding:.95rem 7.5rem .95rem 3.1rem;font-size:1rem;border:1px solid var(--line-2);
-  border-radius:.85rem;outline:none;font-family:inherit;color:var(--ink);
+  border-radius:0;outline:none;font-family:inherit;color:var(--ink);
   box-shadow:0 12px 38px -18px rgba(43,54,116,.24)}
 .searchwrap input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.14),0 12px 38px -18px rgba(43,54,116,.24)}
 .searchwrap .ico{position:absolute;left:1.1rem;width:1.2rem;height:1.2rem;color:var(--faint)}
 .searchgo{position:absolute;right:.45rem;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:.9rem;
-  padding:.62rem 1.25rem;border-radius:.6rem;transition:background .15s}
+  padding:.62rem 1.25rem;border-radius:0;transition:background .15s}
 .searchgo:hover{background:var(--blue-h)}
 .tsearch{position:relative;flex:1;max-width:30rem;display:flex;align-items:center}
-.tsearch input{width:100%;padding:.6rem 1rem .6rem 2.5rem;border:1px solid var(--line-2);border-radius:.6rem;
+.tsearch input{width:100%;padding:.6rem 1rem .6rem 2.5rem;border:1px solid var(--line-2);border-radius:0;
   font-size:.88rem;outline:none;font-family:inherit;background:#fff}
 .tsearch input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
 .tsearch .ico{position:absolute;left:.85rem;width:1rem;height:1rem;color:var(--faint)}
@@ -522,7 +522,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .field label{display:block;font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:.4rem}
 .field label .req{color:var(--red)}
 .field input,.field textarea,.field select{width:100%;padding:.65rem .9rem;border:1px solid var(--line-2);
-  border-radius:.6rem;font-size:.92rem;outline:none;font-family:inherit;background:#fff;color:var(--ink)}
+  border-radius:0;font-size:.92rem;outline:none;font-family:inherit;background:#fff;color:var(--ink)}
 .field textarea{resize:vertical;min-height:6rem}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
 .field .hint{font-size:.76rem;color:var(--faint);margin-top:.35rem}
@@ -532,13 +532,13 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .selw{position:relative}
 .selw select{appearance:none;-webkit-appearance:none;padding-right:2.3rem;cursor:pointer;font-weight:600}
 .selw .cv{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);width:1rem;height:1rem;color:var(--faint);pointer-events:none}
-.selw select{width:100%;padding:.65rem 2.3rem .65rem .9rem;border:1px solid var(--line-2);border-radius:.6rem;
+.selw select{width:100%;padding:.65rem 2.3rem .65rem .9rem;border:1px solid var(--line-2);border-radius:0;
   font-size:.92rem;font-weight:600;font-family:inherit;color:var(--ink);background:#fff;outline:none}
 .selw select:hover{border-color:var(--blue)}
 .selw select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
 .toolbar .selw select{padding:.55rem 2.3rem .55rem .9rem;font-size:.85rem}
 .dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;width:100%;
-  border:1.5px dashed var(--line-2);border-radius:.7rem;background:var(--bg-soft);padding:1.85rem 1.25rem;
+  border:1.5px dashed var(--line-2);border-radius:0;background:var(--bg-soft);padding:1.85rem 1.25rem;
   text-align:center;font:inherit;color:var(--muted-2);cursor:pointer;transition:.15s}
 .dropzone:hover{border-color:var(--blue);background:var(--blue-soft)}
 .dz-ic{display:grid;place-items:center;width:2.7rem;height:2.7rem;border-radius:50%;background:#fff;
@@ -772,7 +772,7 @@ button.dd-btn.lg-input{justify-content:space-between;font-weight:600;text-align:
 /* custom role dropdown */
 .dd{position:relative}
 .dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:#fff;
-  border:1px solid var(--line-2);border-radius:.6rem;padding:.65rem .9rem;font:inherit;font-size:.92rem;
+  border:1px solid var(--line-2);border-radius:0;padding:.65rem .9rem;font:inherit;font-size:.92rem;
   font-weight:600;color:var(--ink);transition:.15s}
 .dd-btn:hover{border-color:var(--blue)}
 .dd.open .dd-btn{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
@@ -781,9 +781,9 @@ button.dd-btn.lg-input{justify-content:space-between;font-weight:600;text-align:
 .dd-cv{width:1rem;height:1rem;color:var(--faint);transition:transform .15s;flex:none}
 .dd.open .dd-cv{transform:rotate(180deg)}
 .dd-menu{position:absolute;left:0;right:0;top:calc(100% + .35rem);background:#fff;border:1px solid var(--line);
-  border-radius:.65rem;box-shadow:var(--shadow-float);padding:.3rem;display:none;z-index:50;max-height:17rem;overflow:auto}
+  border-radius:0;box-shadow:var(--shadow-float);padding:.3rem;display:none;z-index:50;max-height:17rem;overflow:auto}
 .dd.open .dd-menu{display:block}
-.dd-opt{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.55rem .65rem;border-radius:.45rem;
+.dd-opt{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.55rem .65rem;border-radius:0;
   font:inherit;font-size:.88rem;font-weight:600;color:var(--ink)}
 .dd-opt:hover{background:var(--bg-soft)}
 .dd-opt small{display:block;font-weight:500;font-size:.74rem;color:var(--muted-2);margin-top:.1rem}
@@ -921,7 +921,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .appsw-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:.85rem}
 .app-grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem}
 .app-grid1{display:grid;grid-template-columns:1fr;gap:.35rem}
-.app-tile{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.7rem .35rem;border-radius:.7rem;
+.app-tile{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.7rem .35rem;border-radius:0;
   cursor:pointer;text-align:center;border:1px solid transparent;background:none;transition:.15s}
 .app-tile:hover{background:var(--bg-soft);border-color:var(--line)}
 .app-grid1 .app-tile{flex-direction:row;gap:.65rem;text-align:left;padding:.55rem .6rem}
@@ -982,7 +982,7 @@ main{min-height:60vh;animation:fade .3s ease}
   padding:0 .8rem .5rem;margin-top:1.5rem}
 .acct-nav>.acct-h:first-child{margin-top:0}
 .acct-item{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;padding:.7rem .8rem;
-  margin-bottom:.3rem;border-radius:.55rem;font:inherit;font-size:.92rem;font-weight:600;color:var(--muted);
+  margin-bottom:.3rem;border-radius:0;font:inherit;font-size:.92rem;font-weight:600;color:var(--muted);
   cursor:pointer;background:none;border:1px solid transparent;transition:.15s}
 .acct-item:hover{background:var(--bg-soft);color:var(--ink)}
 .acct-item.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 8px 18px -10px rgba(31,67,151,.6)}
@@ -1149,7 +1149,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .filterlist{display:flex;flex-direction:column;gap:.4rem}
 .fgrouplabel{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:.2rem 0 .35rem}
 .fbtn{display:flex;align-items:center;gap:.65rem;width:100%;text-align:left;border:1px solid var(--line-2);background:#fff;
-  border-radius:.6rem;padding:.65rem .8rem;font:inherit;font-size:.87rem;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s}
+  border-radius:0;padding:.65rem .8rem;font:inherit;font-size:.87rem;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s}
 .fbtn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
 .fbtn .sw{width:.85rem;height:.85rem;border-radius:.25rem;background:var(--line);border:1px solid var(--line-2);flex:none}
 .fbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 10px 20px -12px rgba(31,67,151,.7)}
@@ -1199,7 +1199,7 @@ main{min-height:60vh;animation:fade .3s ease}
   align-items:center;justify-content:center;padding:1.5rem}
 .modal-card{background:#fff;border-radius:0;box-shadow:0 30px 70px -20px rgba(20,30,80,.55);width:min(31rem,100%);
   padding:2.5rem 2.25rem 2rem;text-align:center;position:relative}
-.modal-x{position:absolute;top:.85rem;right:.85rem;width:2rem;height:2rem;border-radius:.55rem;border:1px solid var(--line-2);
+.modal-x{position:absolute;top:.85rem;right:.85rem;width:2rem;height:2rem;border-radius:0;border:1px solid var(--line-2);
   background:#fff;color:var(--muted);display:grid;place-items:center}
 .modal-x:hover{background:var(--bg-soft);color:var(--ink)}
 .modal-x i,.modal-x svg.lucide{width:1rem;height:1rem}
@@ -1767,7 +1767,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .cm-grow{flex:1;min-width:0}
 /* the composer sits outside .field, so it needs the field styling of its own */
 .cm-box textarea{width:100%;min-height:5.5rem;resize:vertical;padding:.75rem .95rem;
-  border:1px solid var(--line-2);border-radius:.6rem;background:#fff;color:var(--ink);
+  border:1px solid var(--line-2);border-radius:0;background:#fff;color:var(--ink);
   font:inherit;font-size:.92rem;line-height:1.6;outline:none;transition:.15s}
 .cm-box textarea::placeholder{color:var(--faint)}
 .cm-box textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
@@ -1934,7 +1934,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .hidden{display:none!important}
 .numtile{display:grid;place-items:center;width:2.2rem;height:2.2rem;flex:none;background:var(--blue-soft);
   color:var(--blue);font-family:var(--mono);font-size:.82rem;font-weight:800}
-.tagbox{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;border:1px solid var(--line-2);border-radius:.6rem;
+.tagbox{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;border:1px solid var(--line-2);border-radius:0;
   padding:.45rem .6rem;background:#fff;min-height:2.9rem;cursor:text}
 .tagbox:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
 .tagbox input{flex:1;min-width:8rem;border:0;outline:0;font:inherit;font-size:.88rem;color:var(--ink);background:none;padding:.15rem}
@@ -2071,6 +2071,28 @@ const SYSTEMS = {
 const STATES = ["Rajasthan","Andhra Pradesh","Karnataka"];
 /* the state and language a topic belongs to — the topic list filters on these */
 const TOPIC_STATES = ["All States"].concat(STATES);
+/* the topic list filter — radios build a draft, Apply commits it */
+let TDRAFT  = {state:"All States", lang:"All Languages"};
+let TFILTER = {state:"All States", lang:"All Languages"};
+function setTDraft(k,v){ TDRAFT[k]=v; }
+function applyTopicFilter(){ TFILTER = Object.assign({}, TDRAFT); render(); }
+function resetTopicFilter(){
+  TDRAFT  = {state:"All States", lang:"All Languages"};
+  TFILTER = Object.assign({}, TDRAFT); render();
+}
+function topicFilterOn(){ return TFILTER.state!=="All States" || TFILTER.lang!=="All Languages"; }
+function topicMatches(t){
+  const okS = TFILTER.state==="All States" || t.state===TFILTER.state || t.state==="All States";
+  const okL = TFILTER.lang==="All Languages" || t.lang===TFILTER.lang || t.lang==="All Languages";
+  return okS && okL;
+}
+/* every topic carries a state and a language so the filter has something to match */
+function seedTopicMeta(){
+  TOPICS.forEach((t,i)=>{
+    if(!t.state) t.state = STATES[i % STATES.length];
+    if(!t.lang)  t.lang  = (i % 3 === 2) ? "Hindi" : "English";
+  });
+}
 const TOPIC_LANGS  = ["All Languages","English","Hindi"];
 
 const THEMES = {
@@ -3499,6 +3521,7 @@ screens.modular = (params) => {
     const mapped = s ? topicsForGroup(s.name, group) : [];
     const counts = {}; mapped.forEach(t=>counts[t.id]=t.count);
     const topics = TOPICS.map(t=>Object.assign({},t,{count: counts[t.id]!=null?counts[t.id]:t.count}));
+    const shown = topics.filter(topicMatches);
     return shell("#/resource-systems", crumbItems,
       pagehead(ld?ld.badge:"Topics", "Topics under "+label, null,
         isAdmin()?`<button class="btn btn-primary" onclick="openAddTopic('${params.id}','${group||""}')">${ic('plus')} Add a Course</button>`:'') +
@@ -3506,15 +3529,21 @@ screens.modular = (params) => {
         <aside class="filterbox">
           <div class="fhead"><h2>${ic('sliders-horizontal')} Filter</h2></div>
           <div class="fgroup"><h3>Select state</h3>
-            ${TOPIC_STATES.map((x,i)=>`<label><input type="radio" name="st" ${i===0?'checked':''}> ${x}</label>`).join("")}</div>
+            ${TOPIC_STATES.map(x=>`<label><input type="radio" name="st" ${TDRAFT.state===x?'checked':''}
+              onchange="setTDraft('state','${esc(x)}')"> ${x}</label>`).join("")}</div>
           <div class="fgroup"><h3>Select language</h3>
-            ${TOPIC_LANGS.map((x,i)=>`<label><input type="radio" name="lg" ${i===0?'checked':''}> ${x}</label>`).join("")}</div>
+            ${TOPIC_LANGS.map(x=>`<label><input type="radio" name="lg" ${TDRAFT.lang===x?'checked':''}
+              onchange="setTDraft('lang','${esc(x)}')"> ${x}</label>`).join("")}</div>
           <div class="row" style="margin-top:1.1rem">
-            <button class="btn btn-primary sm" onclick="toast('Filters applied (placeholder)')">Apply</button>
-            <button class="btn btn-outline sm" onclick="toast('Filters reset (placeholder)')">Reset</button></div>
+            <button class="btn btn-primary sm" onclick="applyTopicFilter()">Apply</button>
+            <button class="btn btn-outline sm" onclick="resetTopicFilter()">Reset</button></div>
         </aside>
-        <div class="gridauto">
-          ${topics.length?topics.map(t=>`<article class="topiccard" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
+        <div>
+          ${topicFilterOn()?`<div class="toolbar" style="margin-bottom:1rem">
+            <span class="kicker">${shown.length} topic${shown.length!==1?'s':''} · filtered</span>
+            <button class="btn btn-ghost sm" onclick="resetTopicFilter()">${ic('x')} Clear filter</button></div>`:''}
+          <div class="gridauto">
+          ${shown.length?shown.map(t=>`<article class="topiccard" onclick="go('#/modular/${params.id}?${gq}topic=${t.id}')">
             <div class="tp-cover"><img src="${topicCover(t)}" alt="" loading="lazy"
               onerror="phFallback(this,'${esc(t.name)}')"></div>
             <div class="tp-top"><h3>${t.name}</h3></div>
@@ -3527,7 +3556,15 @@ screens.modular = (params) => {
               <button class="btn btn-outline sm" onclick="event.stopPropagation();openAddTopic('${params.id}','${group||""}','${t.id}')">${ic('pencil')} Edit</button>
               <button class="btn btn-ghost sm" onclick="event.stopPropagation();adminDeleteTopic('${t.id}','${params.id}','${group||""}')">${ic('trash-2')} Delete</button>
             </div>`:''}
-          </article>`).join(""):`<div class="panel"><p class="muted">No topics yet for this selection.</p></div>`}
+          </article>`).join(""):`<div class="emptypane">
+            ${tile('sliders-horizontal','blue','lg')}
+            <h3>Nothing matches that filter</h3>
+            <p>${topicFilterOn()?"No topic here is filed under "+TFILTER.state+" in "+TFILTER.lang+". Try widening the filter."
+                               :"There are no topics for this selection yet."}</p>
+            ${topicFilterOn()?`<button class="btn btn-primary arrow" style="margin-top:1.5rem"
+              onclick="resetTopicFilter()">${ic('x')} Clear the filter</button>`:''}
+          </div>`}
+          </div>
         </div>
       </div>`, "tight"));
   }
@@ -4889,7 +4926,7 @@ screens["course-new"] = () => {
       <div>
         ${d.topics.length?`
           <div class="toolbar">
-            <input style="flex:1;max-width:26rem;padding:.65rem .9rem;border:1px solid var(--line-2);border-radius:.6rem;font:inherit;font-weight:700;color:var(--ink)"
+            <input style="flex:1;max-width:26rem;padding:.65rem .9rem;border:1px solid var(--line-2);border-radius:0;font:inherit;font-weight:700;color:var(--ink)"
               value="${esc(active.name)}" oninput="draftSetTopicName(${sel},this.value)" placeholder="Topic name">
             <button class="btn btn-ghost sm" onclick="draftRemoveTopic(${sel})">${ic('trash-2')} Remove topic</button>
           </div>
@@ -5697,6 +5734,7 @@ window.addEventListener("hashchange", e=>{
 loadRole();
 loadLang();
 seedResourceTags();
+seedTopicMeta();
 seedResourceHistory();
 document.documentElement.setAttribute('lang', lang);
 loadLibView();

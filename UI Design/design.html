@@ -1616,7 +1616,6 @@ main{min-height:60vh;animation:fade .3s ease}
   font-size:.76rem;font-weight:800;line-height:1.35;color:var(--ink)}
 .cidx-h b{display:block;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.08em;
   color:var(--ck,var(--muted-2));margin-bottom:.15rem}
-.cidx-h em{display:block;font-style:normal;font-size:.68rem;font-weight:600;color:var(--faint);margin-top:.2rem}
 /* the hover label naming the subtopic behind a number */
 .cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
   padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}
@@ -5984,7 +5983,6 @@ function openCourseIndex(topicId){
              <div class="cidx-row" style="${indexTint(gi)}">
                <div class="cidx-h">
                  <b>${indexSeries(g)}</b>${indexLabel(g.mod, topic)}
-                 <em>${g.items.length} subtopic${g.items.length!==1?'s':''}</em>
                </div>
                <div class="cidx-cells">${g.items.map(it=>`
                  <button class="cidx-cell" onmouseenter="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onmouseleave="cidxTip(null)" onfocus="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onblur="cidxTip(null)"

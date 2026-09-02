@@ -2012,19 +2012,23 @@ main{min-height:60vh;animation:fade .3s ease}
 /* the file a review dialog is about */
 /* the state list inside the process-documents dialog */
 .statelist{display:grid;border:1px solid var(--line-2)}
-.state-row{display:flex;align-items:center;gap:.9rem;padding:.95rem 1rem;cursor:pointer;
+.state-row{display:flex;align-items:center;gap:.85rem;padding:.8rem .95rem;cursor:pointer;
   border-top:1px solid var(--line);transition:background .15s}
 .state-row:first-child{border-top:0}
-.state-row:hover{background:var(--bg-soft)}
-.state-ic{flex:none;width:2.2rem;height:2.2rem;display:grid;place-items:center;border-radius:999px;
-  background:var(--green-soft);color:var(--green-d)}
-.state-ic i,.state-ic svg.lucide{width:1rem;height:1rem}
+.state-row:hover{background:var(--green-soft)}
+.state-ic{flex:none;width:1.9rem;height:1.9rem;display:grid;place-items:center;
+  background:var(--green-soft);color:var(--green-d);transition:.15s}
+.state-row:hover .state-ic{background:var(--green);color:#fff}
+.state-ic i,.state-ic svg.lucide{width:.9rem;height:.9rem}
 .state-tx{flex:1;min-width:0}
-.state-tx b{display:block;font-size:.95rem;color:var(--ink)}
-.state-tx span{display:block;font-size:.8rem;color:var(--muted)}
+.state-tx b{display:block;font-size:.94rem;color:var(--ink);line-height:1.35}
+.state-row:hover .state-tx b{color:var(--green-d)}
+.state-tx span{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem}
+.state-pdf{flex:none;font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.06em;
+  color:var(--muted-2);background:var(--chip);border:1px solid var(--line-2);padding:.12rem .35rem}
 .state-go{flex:none;color:var(--faint);transition:color .15s,transform .15s}
-.state-go i,.state-go svg.lucide{width:1rem;height:1rem}
-.state-row:hover .state-go{color:var(--green-d);transform:translateX(2px)}
+.state-go i,.state-go svg.lucide{width:.95rem;height:.95rem}
+.state-row:hover .state-go{color:var(--green-d);transform:translateX(3px)}
 
 .ap-file{display:flex;align-items:center;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line);
   padding:1rem 1.1rem;margin-top:.35rem}
@@ -5876,9 +5880,11 @@ function openProcessDocs(sysId){
        <a class="state-row" href="assets/docs/process-${sysId}-${stateSlug(st)}.pdf"
           target="_blank" rel="noopener" onclick="closeProcessDocs()">
          <span class="state-ic">${ic('map-pin')}</span>
-         <span class="state-tx"><b>${st}</b><span>${s.name} · six-stage process document</span></span>
-         <span class="state-go">${ic('external-link')}</span>
-       </a>`).join("")}</div>`;
+         <span class="state-tx"><b>${st}</b><span>Six stages · steps, roles and local formats</span></span>
+         <span class="state-pdf">PDF</span>
+         <span class="state-go">${ic('arrow-right')}</span>
+       </a>`).join("")}</div>
+     <p class="hint" style="margin-top:.9rem">${ic('external-link')} Each document opens in a new tab.</p>`;
   openOverlay('ov-docs');
 }
 function closeProcessDocs(){ closeOverlay('ov-docs'); }

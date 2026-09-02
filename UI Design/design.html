@@ -93,8 +93,6 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   font-size:.9rem;font-weight:600;color:var(--ink)}
 .lang-opt:hover{background:var(--bg-soft)}
 .lang-opt.on{color:var(--green-d)}
-.lang-note{padding:.6rem .7rem 0;margin-top:.35rem;border-top:1px solid var(--line);
-  font-size:.72rem;line-height:1.5;color:var(--faint)}
 @media(max-width:980px){.navdiv,.langw{display:none}}
 .iconbtn{width:2.4rem;height:2.4rem;border-radius:0;border:1px solid var(--line-2);background:#fff;
   display:grid;place-items:center;color:var(--muted);transition:.15s}
@@ -200,6 +198,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .section.tight{padding:44px 0}
 @media(max-width:700px){.section{padding:56px 0}.section.tight{padding:40px 0}}
 .band{background:var(--bg-soft)}
+/* two bands in a row share one modest gap rather than stacking their padding */
+.section.band + .section.band{padding-top:0}
+.section.band:has(+ .section.band){padding-bottom:3rem}
 /* a band that runs straight into whatever follows it */
 .section.band.flush{padding-bottom:0}
 /* extra room under a band before the next one starts */
@@ -1410,9 +1411,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .mc-tot i,.mc-tot svg.lucide{width:.95rem;height:.95rem;color:var(--mc,var(--blue));flex:none;margin-top:.15rem}
 
 /* ---- resource-system introduction panel ---- */
-.introcell h5{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--faint);margin:0 0 .45rem}
-.introcell p{font-size:.9rem;color:var(--muted);line-height:1.65;margin:0}
 
 /* ---- dummy document previews in the listing ---- */
 .pv-page{background:#fff;border:1px solid var(--line-2);border-radius:.2rem;padding:.7rem .75rem;
@@ -2161,17 +2159,20 @@ function stageById(id){ return STAGES.find(s=>s.id===id); }
 
 const SYSTEMS = {
   forests:{id:"forests", kind:"system", name:"Forests", icon:"trees", accent:"forests", img:"assets/img/forests.jpg",
-    desc:"Community rights, institutions, collective governance, conservation and sustainable management.",
+    blurb:"Community rights, institutions, collective governance, conservation and sustainable management.",
+    desc:"Forest commons are held and used collectively, so the work begins with rights — helping a community understand what the law recognises and prepare the claims that secure it. From there the focus turns to institutions: a Gram Sabha or forest rights committee that can hold decisions, keep records and speak for the village. With rights and governance in place, communities plan how the forest is used and restored — which patches to protect, which to harvest, and how to monitor what changes over the seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on forest commons.",
     outcome:"Secure community forest rights, functioning institutions, and restored, sustainably managed forests.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
   pastureland:{id:"pastureland", kind:"system", name:"Pastureland", icon:"wheat", accent:"pastureland", img:"assets/img/pastureland.jpg",
-    desc:"Community institutions, tenure/recognition, collective rules, restoration and sustainable use.",
+    blurb:"Community institutions, tenure/recognition, collective rules, restoration and sustainable use.",
+    desc:"Pasturelands are shared grazing grounds, and they hold up only when a community agrees how to use them. The work starts by mapping who grazes where and what the land can carry, then builds the institution that can hold those decisions and secure recognition of tenure. Once rules on grazing, rotation and fodder are set collectively, the same group plans restoration, tracks how the ground recovers, and adapts the rules as the commons changes.",
     users:"Facilitators, field practitioners, learners and community institutions working on pasturelands.",
     outcome:"Recognised tenure, functioning institutions, and restored, sustainably managed grazing commons.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
   water:{id:"water", kind:"system", name:"Water", icon:"droplets", accent:"water", img:"assets/img/water.jpg",
-    desc:"Collective institutions, equitable access, planning, management and stewardship.",
+    blurb:"Collective institutions, equitable access, planning, management and stewardship.",
+    desc:"Water is the commons where a decision upstream is felt downstream, so equitable access is the first question. The work begins by reading the watershed with the community — springs, tanks, recharge and draw — and forming the institution that can hold those decisions across hamlets. From there the group plans allocation and use, maintains the structures it depends on, and monitors the resource so stewardship carries on between seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on water commons.",
     outcome:"Equitable access, functioning institutions, and sustainably managed and stewarded water systems.",
     process:["Understand","Institutions","Access","Plan","Manage","Monitor"]}
@@ -2714,7 +2715,6 @@ function header(active){
         <button class="langbtn" onclick="toggleLang(event)">${(LANGS.find(l=>l.code===lang)||LANGS[0]).short} ${ic('chevron-down')}</button>
         <div class="lang-menu">
           ${LANGS.map(l=>`<button class="lang-opt ${l.code===lang?'on':''}" onclick="setLang('${l.code}')">${l.label}</button>`).join("")}
-          <div class="lang-note">${tr('lang.note')}</div>
         </div>
       </div>
       <button class="navtoggle" onclick="toggleMobNav(event)" aria-label="${tr('nav.menu')}">${ic('menu')}</button>
@@ -2839,7 +2839,7 @@ function systemCard(e){
     </div>
     <div class="sc-body">
       <h3>${e.name}</h3>
-      <p>${e.desc}</p>
+      <p>${e.blurb || e.desc}</p>
       <span class="sc-go">Begin your learning journey ${ic('arrow-right')}</span>
     </div>
   </article>`;
@@ -3480,15 +3480,6 @@ screens.system = (params) => {
   return shell("#/resource-systems",
     [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"},{label:s.name}],
     pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s)) +
-
-    section(`<div class="panel">
-      <h3 style="font-size:1.08rem;margin-bottom:1.15rem">${s.name} - ${isTheme?"Theme introduction":"Resource-system introduction"}</h3>
-      <div class="grid g3">
-        <div class="introcell"><h5>${isTheme?"Purpose &amp; relevance to Commons":"Introduction"}</h5><p>${s.desc}</p></div>
-        <div class="introcell"><h5>Intended users</h5><p>${s.users}</p></div>
-        <div class="introcell"><h5>Expected outcome</h5><p>${s.outcome}</p></div>
-      </div>
-    </div>`, "tight") +
 
     (isTheme ? "" : section(sechead(null,"Commoning pathway / process",
         "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +

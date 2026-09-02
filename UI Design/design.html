@@ -508,7 +508,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 
 /* filters */
 .layout-side{display:grid;grid-template-columns:17rem 1fr;gap:2rem;align-items:start}
-.filterbox{background:var(--card);border:1px solid var(--line);border-radius:0;padding:1.35rem;position:sticky;top:5.5rem;
+.filterbox{background:#fff;border:1px solid var(--line-2);border-radius:0;padding:1.35rem;position:sticky;top:5.5rem;
   box-shadow:var(--shadow-card);max-height:calc(100vh - 7rem);overflow-y:auto;scrollbar-width:thin}
 .filterbox::-webkit-scrollbar{width:8px}
 .filterbox::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:999px;border:2px solid #fff}
@@ -522,7 +522,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .fgroup label:hover{color:var(--ink)}
 .fgroup input[type=checkbox]{width:1rem;height:1rem;accent-color:var(--blue);cursor:pointer}
 @media(max-width:980px){.layout-side{grid-template-columns:1fr}.filterbox{position:static;max-height:none}}
-.layout-wide{display:grid;grid-template-columns:1fr 21rem;gap:2rem;align-items:start}
+/* the viewer and the details card end on the same line */
+.layout-wide{display:grid;grid-template-columns:1fr 21rem;gap:2rem;align-items:stretch}
+.layout-wide > .panel{align-self:stretch}
 @media(max-width:1080px){.layout-wide{grid-template-columns:1fr}}
 
 /* search + form fields */
@@ -1085,7 +1087,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .pv-fill i,.pv-fill svg.lucide{width:1.4rem;height:1.4rem;color:var(--blue)}
 
 /* ---- document viewer (resource detail) ---- */
-.docview{min-height:34rem;display:flex;flex-direction:column;padding:1.1rem}
+.docview{min-height:30rem;display:flex;flex-direction:column;padding:1.1rem}
 .docview-body{flex:1;display:grid;place-items:center;padding:1.5rem;background:var(--bg-soft);border-radius:.7rem;
   border:1px solid var(--line);overflow:auto}
 .dpage{background:#fff;border:1px solid var(--line-2);border-radius:.35rem;box-shadow:0 14px 40px -20px rgba(74,66,62,.45);
@@ -1809,6 +1811,48 @@ main{min-height:60vh;animation:fade .3s ease}
   font-variant-numeric:tabular-nums}
 .tl-meta.live{background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber-d);
   font-weight:800;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .55rem}
+
+/* the comment thread */
+.cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line-2);padding:1.25rem}
+.cm-grow{flex:1;min-width:0}
+/* the composer sits outside .field, so it needs the field styling of its own */
+.cm-box textarea{width:100%;min-height:5.5rem;resize:vertical;padding:.75rem .95rem;
+  border:1px solid var(--line-2);border-radius:0;background:#fff;color:var(--ink);
+  font:inherit;font-size:.92rem;line-height:1.6;outline:none;transition:.15s}
+.cm-box textarea::placeholder{color:var(--faint)}
+.cm-box textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(78,124,89,.12)}
+.cm-list{margin-top:1.25rem}
+.cm-item{display:flex;gap:.9rem;padding:1.15rem .25rem;border-bottom:1px solid var(--line)}
+.cm-item:last-child{border-bottom:0;padding-bottom:.25rem}
+.cm-h{font-size:.83rem;color:var(--muted);margin-bottom:.3rem}
+.cm-h b{color:var(--ink);font-weight:800}
+.cm-t{font-size:.9rem;line-height:1.65;color:var(--ink-2)}
+
+/* version history — the release and what changed in it */
+.vl{list-style:none;display:grid}
+.vl-row{display:flex;align-items:center;gap:1rem;padding:.95rem .25rem;border-top:1px solid var(--line)}
+.vl-row:first-child{border-top:0}
+.vl-v{flex:none;min-width:3.4rem;text-align:center;font-family:var(--mono);font-size:.78rem;font-weight:700;
+  color:var(--ink);background:var(--chip);border:1px solid var(--line-2);padding:.28rem .5rem}
+.vl-row.now .vl-v{background:var(--green-soft);border-color:var(--green-line);color:var(--green-d)}
+.vl-tx{flex:1;min-width:0}
+.vl-t{font-size:.92rem;color:var(--ink);display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.vl-tag{font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--green);color:#fff;padding:.12rem .42rem}
+.vl-s{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.vl-when{flex:none;font-size:.82rem;color:var(--muted-2);font-variant-numeric:tabular-nums}
+
+/* activity log — one line per event, time to the right */
+.al{list-style:none;display:grid}
+.al-row{display:flex;align-items:center;gap:.9rem;padding:.9rem .25rem;border-top:1px solid var(--line)}
+.al-row:first-child{border-top:0}
+.al-ic{flex:none;width:1.9rem;height:1.9rem;display:grid;place-items:center;border-radius:999px;
+  background:var(--bg-soft);border:1px solid var(--line-2);color:var(--muted-2)}
+.al-ic i,.al-ic svg.lucide{width:.85rem;height:.85rem}
+.al-t{flex:1;min-width:0;font-size:.92rem;color:var(--muted);line-height:1.5}
+.al-t b{color:var(--ink);font-weight:800}
+.al-when{flex:none;text-align:right;font-size:.82rem;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.al-when i{display:block;font-style:normal;font-size:.76rem;color:var(--faint);margin-top:.1rem}
 
 /* the comment thread */
 .cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line-2);padding:1.25rem}
@@ -2831,7 +2875,7 @@ function seedResourceHistory(){
        {by:"Anil Kumar", date:"2026-05-28", at:"04:40 PM",
         text:"One request — could we get the Hindi version before the June round of trainings?"}],
      versions:[
-       {v:"v1.2", what:"current &middot; added the pre-session checklist", when:"2026-05-24", who:"Krishnan Iyer"},
+       {v:"v1.2", what:"added the pre-session checklist", when:"2026-05-24", who:"Krishnan Iyer"},
        {v:"v1.1", what:"reworked the facilitator notes", when:"2026-04-18", who:"Krishnan Iyer"},
        {v:"v1.0", what:"first published version", when:"2026-03-02", who:"Krishnan Iyer"}],
      activity:[
@@ -2847,7 +2891,7 @@ function seedResourceHistory(){
        {by:"Meera Nair", date:"2026-05-21", at:"10:45 AM",
         text:"Noted — I will widen it in the next version."}],
      versions:[
-       {v:"v1.1", what:"current &middot; wider fields for field use", when:"2026-05-23", who:"Meera Nair"},
+       {v:"v1.1", what:"wider fields for field use", when:"2026-05-23", who:"Meera Nair"},
        {v:"v1.0", what:"first published version", when:"2026-04-05", who:"Meera Nair"}],
      activity:[
        {who:"Meera Nair", what:"uploaded v1.1", when:"2026-05-23", at:"01:05 PM"},
@@ -2858,7 +2902,7 @@ function seedResourceHistory(){
        {by:"Manish Patel", date:"2026-05-15", at:"12:30 PM",
         text:"Used the first two sessions with a new committee. The sequencing is right, but session three assumes people can already read a map."}],
      versions:[
-       {v:"v1.0", what:"current &middot; first published version", when:"2026-05-22", who:"Anil Kumar"}],
+       {v:"v1.0", what:"first published version", when:"2026-05-22", who:"Anil Kumar"}],
      activity:[
        {who:"Manish Patel", what:"commented on this resource", when:"2026-05-15", at:"12:30 PM"},
        {who:"Content Reviewer", what:"approved and published", when:"2026-05-22", at:"02:20 PM"},
@@ -4119,7 +4163,7 @@ screens.resource = (params) => {
             {cls:"done", icon:"check", who:"Content Reviewer", did:"approved and published", meta:resDate(idx)},
             {cls:"done", icon:"file-plus-2", who:who, did:"submitted the document", meta:resDate(idx+1)}
           ]),
-        versions: r.versions || [{v:"v1.0", what:"current version", when:resDate(idx), who:who}],
+        versions: r.versions || [{v:"v1.0", what:"first upload", when:resDate(idx), who:who}],
         log: r.activity || [{who:"Content Reviewer", what:"published to the Resource Library", when:resDate(idx), at:"02:20 PM"}],
         thread: r.comments || []
       }))
@@ -4618,15 +4662,24 @@ function activityBlock(o){
   const tb = (k,label) => `<button class="seg-tab ${o.tab===k?'on':''}" onclick="go('${o.href(k)}')">${label}</button>`;
   let body;
   if(o.tab==="versions"){
-    body = `<ul class="tl-list">${o.versions.map(v=>
-      `<li class="tl-item"><span class="tl-bullet"></span>
-        <div><p class="tl-t"><b>${v.v}</b> ${v.what}</p>
-          <p class="tl-s">${v.when} &middot; ${v.who}</p></div></li>`).join("")}</ul>`;
+    body = `<ul class="vl">${o.versions.map((v,i)=>
+      `<li class="vl-row${i===0?' now':''}">
+        <span class="vl-v">${v.v}</span>
+        <div class="vl-tx"><p class="vl-t">${v.what}${i===0?'<span class="vl-tag">Current</span>':''}</p>
+          <p class="vl-s">${v.who}</p></div>
+        <span class="vl-when">${v.when}</span></li>`).join("")}</ul>`;
   } else if(o.tab==="activity"){
-    body = `<ul class="tl-list rules">${o.log.map(e=>
-      `<li class="tl-item"><span class="tl-bullet"></span>
-        <div><p class="tl-t"><b>${e.who}</b> ${e.what}</p>
-          <p class="tl-s">${e.when} &middot; ${e.at}</p></div></li>`).join("")}</ul>`;
+    const mark = w => /upload|publish|version/i.test(w) ? 'upload'
+      : /comment|repl/i.test(w) ? 'message-square'
+      : /approve/i.test(w) ? 'check'
+      : /reject|not accept/i.test(w) ? 'x'
+      : /change/i.test(w) ? 'pencil'
+      : /download/i.test(w) ? 'download' : 'file-text';
+    body = `<ul class="al">${o.log.map(e=>
+      `<li class="al-row">
+        <span class="al-ic">${ic(mark(e.what))}</span>
+        <p class="al-t"><b>${e.who}</b> ${e.what}</p>
+        <span class="al-when">${e.when}<i>${e.at}</i></span></li>`).join("")}</ul>`;
   } else if(o.tab==="workflow"){
     body = `<ul class="tl-flow">${o.trail.map(e=>
       `<li class="tl-step ${e.cls}"><span class="tl-dot ${e.cls}">${ic(e.icon)}</span>
@@ -4683,7 +4736,7 @@ screens.submission = (params) => {
   const hist = activityBlock({
     tab: tab, href: href, trail: trail, postId: 'sd-comment',
     onPost: "addSubComment('"+sub.id+"')",
-    versions: sub.versions || [{v:"v1.0", what:"original upload &middot; current", when:sub.date,
+    versions: sub.versions || [{v:"v1.0", what:"original upload", when:sub.date,
                 who: sub.by===USER.name ? "You ("+sub.by+")" : sub.by}],
     log: (sub.log||[]).map(e=>({who:e.by, what:e.what.toLowerCase(), when:e.date, at:"04:15 PM"}))
       .concat(sub.activity || (decision ? [{who:decision.who, what:decision.did, when:sub.date, at:"02:20 PM"}] : [])
@@ -4715,44 +4768,31 @@ screens.submission = (params) => {
           onclick="openUploadDoc('${sub.id}')">${ic('pencil')} Edit and resend</button>`:''}
       </div>`:''}
 
-      <div class="sd-grid">
-        <div class="sd-pv" style="--pvc:${NAME_ACCENT[f.system]?`var(--s-${NAME_ACCENT[f.system]})`:'var(--blue)'}">
-          <div class="sd-pv-h">${ic('eye')} ${m.label} preview
-            <button class="iconbtn" title="Open full screen" onclick="toast('Full screen preview (placeholder)')">${ic('maximize-2')}</button></div>
-          <div class="sd-pv-b"><div class="sd-paper">${docPreview(f)}</div></div>
-        </div>
-
-        <aside class="sd-side">
-          <div class="sd-side-h">
-            <h3>File details</h3>
-            <div class="sd-id">
-              <div class="sd-id-tx">
-                <b>${f.title}</b>
-                ${f.purpose?`<p>${f.purpose}</p>`:''}
-                <div class="sd-facts">${statusPill(sub.status)}
-                  <span>${m.label} &middot; ${subSize(sub)} &middot; Sent ${sub.date}</span></div>
-              </div>
-            </div>
+      <div class="layout-wide">
+        ${docViewer(f.title, f.type)}
+        <aside class="panel">
+          <h3 style="font-size:1.05rem;margin-bottom:1rem">File details</h3>
+          <div class="detail-blk" style="margin:0 0 .9rem">
+            ${statusPill(sub.status)}
           </div>
-
-          <p class="sd-grp">How it is classified</p>
-          <div class="sd-rows">${META.map(mm => row(mm.label, f[mm.key])).join("")}</div>
-
-          <p class="sd-grp">About the file</p>
-          <div class="sd-rows">
-            ${row("Visibility", sub.status==="approved" ? "Public"
-                : (own ? "Only you and the reviewers" : "Only the contributor and reviewers"))}
-            ${row("File size", subSize(sub))}
-            <div class="sd-row"><span class="sd-k">Version</span><span class="sd-v mono">v1.0</span></div>
-            ${row("Submitted on", sub.date)}
+          ${META.map(mm => mm.label && f[mm.key]
+            ? metaRow(mm.label, mm.key==="type" ? `<span class="tag blue">${f[mm.key]}</span>` : f[mm.key])
+            : "").join("")}
+          ${metaRow("Visibility", sub.status==="approved" ? "Public"
+              : (own ? "Only you and the reviewers" : "Only the contributor and reviewers"))}
+          ${metaRow("File size", subSize(sub))}
+          ${metaRow("Version / Date", `<code style="font-family:var(--mono);font-size:.8rem">v1.0 &middot; ${sub.date}</code>`)}
+          <div class="detail-blk" style="margin-top:.9rem">
+            <div class="k">Uploaded by</div>
+            <div class="row" style="gap:.65rem;align-items:center;margin-top:.35rem">
+              <span class="pw-av">${initials(sub.by)}</span>
+              <div><div style="font-weight:700;font-size:.9rem">${sub.by}</div>
+                <div class="muted" style="font-size:.78rem">${sub.date}</div></div></div>
           </div>
-
-          <p class="sd-grp">Uploaded by</p>
-          <div class="sd-who"><span class="pw-av">${initials(sub.by)}</span>
-            <div><b>${sub.by}</b><span>${sub.date}</span></div></div>
-
-          ${(f.tags||[]).length ? `<p class="sd-grp">Tags</p>
-            <div class="tags">${f.tags.map(t=>`<span class="mtag">${ic('tag')}${t}</span>`).join("")}</div>` : ''}
+          ${(f.tags||[]).length ? `<div class="detail-blk">
+            <div class="k">Tags</div>
+            <div class="tags" style="margin-top:.5rem">${f.tags.map(metaTag).join("")}</div>
+          </div>` : ''}
         </aside>
       </div>
 
@@ -5483,7 +5523,7 @@ let subSeq = 0;
      {by:"Sunita Rao", date:"2026-08-22", at:"09:15 AM",
       text:"Reading it now. The exercise itself is clear; I may come back on the units used on page 2."}],
    versions:[
-     {v:"v1.1", what:"current &middot; added the blank worksheet", when:"2026-08-21", who:"You (Priya Sharma)"},
+     {v:"v1.1", what:"added the blank worksheet", when:"2026-08-21", who:"You (Priya Sharma)"},
      {v:"v1.0", what:"first upload", when:"2026-08-18", who:"You (Priya Sharma)"}],
    activity:[
      {who:"Sunita Rao", what:"opened the file for review", when:"2026-08-22", at:"09:10 AM"},
@@ -5509,7 +5549,7 @@ let subSeq = 0;
      {by:"Priya Sharma", date:"2026-08-12", at:"05:15 PM",
       text:"Yes — I will ask the field team and send it as a second file rather than change this one."}],
    versions:[
-     {v:"v1.0", what:"current &middot; published to the library", when:"2026-08-11", who:"You (Priya Sharma)"}],
+     {v:"v1.0", what:"published to the library", when:"2026-08-11", who:"You (Priya Sharma)"}],
    activity:[
      {who:"Priya Sharma", what:"replied to a comment", when:"2026-08-12", at:"05:15 PM"},
      {who:"Content Reviewer", what:"approved and published", when:"2026-08-11", at:"03:05 PM"},
@@ -5536,7 +5576,7 @@ let subSeq = 0;
      {by:"Manish Patel", date:"2026-07-24", at:"02:40 PM",
       text:"Worth adding the survey numbers as well, otherwise the plan is hard to place on the ground."}],
    versions:[
-     {v:"v1.0", what:"current &middot; awaiting the anonymised pages", when:"2026-07-22", who:"You (Priya Sharma)"}],
+     {v:"v1.0", what:"awaiting the anonymised pages", when:"2026-07-22", who:"You (Priya Sharma)"}],
    activity:[
      {who:"Manish Patel", what:"commented on this file", when:"2026-07-24", at:"02:40 PM"},
      {who:"Priya Sharma", what:"replied to the reviewer", when:"2026-07-23", at:"11:05 AM"},

@@ -1604,6 +1604,9 @@ main{min-height:60vh;animation:fade .3s ease}
 /* the course index: a row of numbers per topic, the topic named on the right */
 .cidx{--cell:2.9rem;--cw:3.6rem;display:grid;gap:.85rem;overflow-x:auto;padding:1rem 0 .4rem}
 .cidx-row{display:grid;grid-template-columns:minmax(10rem,14rem) max-content;gap:1.75rem;align-items:center}
+.cidx-head{padding-bottom:.6rem;border-bottom:1px solid var(--line);margin-bottom:.15rem}
+.cidx-hh{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.cidx-hh.lbl{padding-left:calc(.7rem + 3px)}
 .cidx-cells{display:grid;grid-template-columns:repeat(var(--n,1),var(--cw));gap:4px}
 .cidx-gap{height:var(--cell);background:var(--bg-soft)}
 .cidx-cell{position:relative;display:grid;place-items:center;height:var(--cell);
@@ -5978,6 +5981,9 @@ function openCourseIndex(topicId){
       "closeCourseIndex()") +
     (groups.length
       ? `<div class="cidx" style="--n:${maxRow}">
+           <div class="cidx-row cidx-head">
+             <span class="cidx-hh lbl">Topic</span><span class="cidx-hh">Subtopics</span>
+           </div>
            ${groups.map((g,gi)=>`
              <div class="cidx-row" style="${indexTint(gi)}">
                <div class="cidx-h">

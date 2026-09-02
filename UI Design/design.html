@@ -1633,7 +1633,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .outlinepanel{padding:1.5rem 1.75rem 1.75rem}
 .outline-h h2{font-size:1.15rem;letter-spacing:-.01em;margin:0}
 .outline-h p{margin:.35rem 0 0;font-size:.9rem;color:var(--muted)}
-.outline-go{display:flex;justify-content:center;margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
 /* the hover label naming the subtopic behind a number */
 .cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
   padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}
@@ -3794,9 +3793,6 @@ screens.outline = (params) => {
         <p>${indexBlurb(topic)} Open any number to go straight to its files.</p>
       </div>
       ${courseIndexGrid(topic, code => `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${code}`, false)}
-      <div class="outline-go">
-        <button class="btn btn-primary arrow lg" onclick="go('${startHref}')">Let's start learning ${ic('arrow-right')}</button>
-      </div>
     </div>`)
   );
 };

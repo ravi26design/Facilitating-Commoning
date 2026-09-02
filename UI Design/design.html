@@ -1606,12 +1606,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .emptypane .ic-tile{margin:0 auto 1.25rem}
 .emptypane h3{font-size:1.25rem;margin-bottom:.6rem}
 .emptypane p{color:var(--muted);line-height:1.7;max-width:32rem;margin:0 auto}
-/* the Topics pane header carries the index link */
-.pane-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.7rem}
-.pane-index{display:inline-flex;align-items:center;gap:.35rem;border:0;background:none;padding:0;
-  font:inherit;font-size:.74rem;font-weight:800;color:var(--cta);cursor:pointer;white-space:nowrap}
-.pane-index:hover{color:var(--green-d)}
-.pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
 
 /* the course index: a row of numbers per topic, the topic named on the right */
 .cidx{--cell:2.9rem;--cw:3.6rem;display:grid;gap:.85rem;overflow-x:auto;padding:1rem 0 .4rem}
@@ -2221,7 +2215,6 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
-<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:max-content;min-width:min(26rem,100%);max-width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -3800,7 +3793,7 @@ screens.outline = (params) => {
         <h2>Course index</h2>
         <p>${indexBlurb(topic)} Open any number to go straight to its files.</p>
       </div>
-      ${courseIndexGrid(topic, code => `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${code}`, false)}
+      ${courseIndexGrid(topic, code => `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${code}`)}
     </div>`)
   );
 };
@@ -3819,7 +3812,8 @@ screens.modular = (params) => {
   if(ld) crumbItems.push(topic
     ? {label:ld.name, href:`#/modular/${params.id}?g=${ld.id}`}
     : {label:ld.name});
-  if(topic) crumbItems.push({label: topic.name});
+  if(topic) crumbItems.push({label: topic.name + " Index",
+    href:`#/outline/${params.id}?${gq}topic=${topic.id}`});
 
   /* ---- Modular Learning and Supporting Resources list their documents
          directly; there is no topic layer between you and the files ---- */
@@ -3909,16 +3903,14 @@ screens.modular = (params) => {
   const groups = subtopicsFor(topic);
   const subs = allSubtopics(topic);
   const activeSub = subs.find(x=>x.code===params.sub) || subs[0];
+  if(activeSub) crumbItems.push({label:`${activeSub.code} · ${activeSub.name}`});
   const canEdit = isAdmin() && editMode;
   return shell("#/resource-systems", crumbItems,
     pagehead(ld?ld.name:"Topic", topic.name, topic.desc,
       isAdmin()?`<button class="btn ${editMode?'btn-green':'btn-outline'}" onclick="toggleEdit()">${editMode?ic('check')+' Done':ic('pencil')+' Edit'}</button>`:'') +
     section(`<div class="twopane">
       <aside class="pane-side">
-        <div class="pane-top">
-          <p class="pane-h">Topics</p>
-          <button class="pane-index" onclick="openCourseIndex('${topic.id}')">${ic('table-2')} See all index</button>
-        </div>
+        <p class="pane-h">Topics</p>
         ${groups.length?groups.map((g,gi)=>{
           const holdsActive = !!(activeSub && g.items.some(it=>it.code===activeSub.code));
           const shut = isGroupShut(topic.id, gi, holdsActive);
@@ -6033,7 +6025,7 @@ const INDEX_TINTS = [
 function indexTint(i){ const t=INDEX_TINTS[i % INDEX_TINTS.length];
   return `--ct:${t.bg};--ci:${t.ink};--ck:${t.key}`; }
 /* the matrix itself — shared by the modal and the course outline page */
-function courseIndexGrid(topic, cellHref, closeFirst){
+function courseIndexGrid(topic, cellHref){
   const groups = subtopicsFor(topic).filter(g=>g.items.length);
   if(!groups.length) return `<p class="tl-s">This course has no topics yet.</p>`;
   const maxRow = groups.reduce((m,g)=>Math.max(m,g.items.length),0);
@@ -6048,7 +6040,7 @@ function courseIndexGrid(topic, cellHref, closeFirst){
           </div>
           <div class="cidx-cells">${g.items.map(it=>`
             <button class="cidx-cell" onmouseenter="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onmouseleave="cidxTip(null)" onfocus="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onblur="cidxTip(null)"
-              onclick="${closeFirst?'closeCourseIndex();':''}go('${cellHref(it.code)}')">${it.code}</button>`).join("")}${
+              onclick="go('${cellHref(it.code)}')">${it.code}</button>`).join("")}${
             Array.from({length: Math.max(0, maxRow - g.items.length)}, ()=>`<span class="cidx-gap"></span>`).join("")}</div>
         </div>`).join("")}
     </div>
@@ -6059,17 +6051,6 @@ function indexBlurb(topic){
   const total = groups.reduce((n,g)=>n+g.items.length,0);
   return `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}.`;
 }
-function openCourseIndex(topicId){
-  const topic = topicById(topicId); if(!topic) return;
-  document.getElementById('pn-index').innerHTML =
-    modalHead(topic.name + " - course index",
-      indexBlurb(topic) + " Open any number to see its files.",
-      "closeCourseIndex()") +
-    courseIndexGrid(topic,
-      code => `#/modular/${topicSystem(topic)}?${indexQuery()}topic=${topic.id}&sub=${code}`, true);
-  openOverlay('ov-index');
-}
-function closeCourseIndex(){ cidxTip(null); closeOverlay('ov-index'); }
 /* the floating label for a hovered index number */
 function cidxTip(el, code, name){
   const t=document.getElementById('cidx-tip'); if(!t) return;
@@ -6093,13 +6074,6 @@ function indexLabel(mod, topic){
 function indexSeries(g){
   const c = (g.items[0]||{}).code || "";
   return c.length>2 ? c.slice(0,c.length-2)+"00" : "";
-}
-// keep the learning-design group when jumping from the index
-function indexQuery(){ const g=parseHash().params.g; return g ? "g="+encodeURIComponent(g)+"&" : ""; }
-/* which resource system a topic is being viewed under */
-function topicSystem(topic){
-  const {params}=parseHash();
-  return (parseHash().parts[1]) || "pastureland";
 }
 function openTour(){
   document.getElementById('pn-tour').innerHTML =

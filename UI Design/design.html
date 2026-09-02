@@ -3783,7 +3783,7 @@ screens.outline = (params) => {
   const crumbItems = [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"}];
   if(sys) crumbItems.push({label:sys.name,href:"#/system/"+params.id});
   if(ld) crumbItems.push({label:ld.name, href:`#/modular/${params.id}?g=${ld.id}`});
-  crumbItems.push({label: topic.name});
+  crumbItems.push({label: topic.name + " Index"});
   return shell("#/resource-systems", crumbItems,
     pagehead(ld?ld.name:"Course", topic.name, topic.desc,
       `<button class="btn btn-primary arrow" onclick="go('${startHref}')">Let's start learning ${ic('arrow-right')}</button>`) +

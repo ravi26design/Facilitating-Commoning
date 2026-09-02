@@ -356,21 +356,17 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .card{background:var(--card);border:0;border-radius:0;padding:1.35rem;display:flex;
   flex-direction:column;gap:.7rem;box-shadow:none;transition:transform .15s,background .15s}
 .card.click{cursor:pointer}
-.card.click:hover{transform:translateY(-2px)}
 .card h3{font-size:1.02rem;line-height:1.35}
 .card p{color:var(--muted);font-size:.9rem}
 .card .cta{margin-top:auto;padding-top:.35rem}
+/* hover changes colour only — nothing moves, so the layout never shifts */
 .card.click:hover h3{color:var(--cta)}
-.card.click:hover /* the card's two links share a row */
+/* the card's two links share a row */
 .ic-cta{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin-top:auto;padding-top:1.1rem}
 .ic-cta .f-cta{margin-top:0;padding-top:0}
 .f-cta.vid{border:0;background:none;padding:0;font:inherit;font-size:.87rem;font-weight:700;
   color:var(--green-d);cursor:pointer}
-.card.click:hover .f-cta.vid{color:var(--green-d)}
 .f-cta.vid:hover{color:var(--green)}
-
-.f-cta{color:var(--cta)}
-.card.click:hover .f-cta i,.card.click:hover .f-cta svg.lucide{transform:translateX(3px)}
 
 /* report panel (Our Commons publication) */
 .reportcard{position:relative;display:grid;grid-template-columns:1.5fr .8fr;gap:2.5rem;align-items:center;

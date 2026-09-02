@@ -36,8 +36,9 @@
   --t-cultural:#c46a4a; --t-cultural-s:#fbeee9;
   --sans:'Inter','Helvetica Neue',Helvetica,'Segoe UI',Roboto,system-ui,Arial,sans-serif;
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
-  --shadow-card:0 1px 2px rgba(74,66,62,.04),0 14px 34px -22px rgba(74,66,62,.20);
-  --shadow-lift:0 22px 46px -22px rgba(74,66,62,.28);
+  /* cards sit flat — only floating menus keep a shadow */
+  --shadow-card:none;
+  --shadow-lift:none;
   --shadow-float:0 16px 36px -12px rgba(74,66,62,.24);
   --r:.9rem; --r-sm:.6rem; --r-lg:1.1rem;
 }
@@ -173,8 +174,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .btn-outline.danger i,.btn-outline.danger svg.lucide{color:currentColor}
 .btn-ghost{background:transparent;color:var(--muted);padding:.55rem .8rem}
 .btn-ghost:hover{color:var(--ink);background:var(--chip)}
-.btn-white{background:#fff;color:var(--blue);font-weight:700;border:none}
-.btn-white:hover{background:#edf3ee;color:var(--blue-h)}
+.btn-white{background:var(--cta);color:var(--cta-ink);font-weight:700;border:none}
+.btn-white:hover{background:var(--cta-h);color:var(--cta-ink)}
 .btn.sm{padding:.45rem .9rem;font-size:.82rem;border-radius:0}
 .btn.block{width:100%}
 .btn.arrow svg,.btn.arrow i{transition:transform .15s}
@@ -198,7 +199,19 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .section{padding:76px 0}
 .section.tight{padding:44px 0}
 @media(max-width:700px){.section{padding:56px 0}.section.tight{padding:40px 0}}
-.band{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.band{background:var(--bg-soft)}
+/* a band that runs straight into whatever follows it */
+.section.band.flush{padding-bottom:0}
+/* extra room under a band before the next one starts */
+.section.band.roomy{padding-bottom:5.5rem}
+/* a section whose content spans the viewport, keeping its vertical rhythm */
+/* full-bleed content sections sit flush against one another */
+.section.wide{padding:0}
+.section.wide > .mx{max-width:none;padding:0}
+.section.wide .artrow{border-left:0;border-right:0;border-top:0}
+.section.wide + .section.wide .artrow{border-top:0}
+.chapter{margin-bottom:0}
+.chapter + .chapter{border-top:0}
 .section.cream{background:#f2e9dc}
 /* a band that runs the full width of the page */
 .section.bleed{padding:0}
@@ -620,13 +633,16 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 
 /* chapters (commoning) — illustration bleeds to the page edge and dissolves into the text */
 .chapsec{padding:0;background:var(--card)}
-.chapter{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center}
+.chapter{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;
+  max-width:90rem;margin:0 auto 1.5rem;background:var(--card);border:1px solid var(--line);
+  box-shadow:none;overflow:hidden}
+
 .chapshot{position:relative;margin:0;padding:0;aspect-ratio:3/2;overflow:hidden;border:0;border-radius:0;
   box-shadow:none;background:transparent}
 .chapshot img{width:100%;height:100%;object-fit:cover;display:block}
 .chapter.flip .chapshot{order:2}
-.chaptext{padding:3rem max(2rem,calc((100vw - 90rem)/2 + 2rem)) 3rem 1rem}
-.chapter.flip .chaptext{padding:3rem 1rem 3rem max(2rem,calc((100vw - 90rem)/2 + 2rem))}
+.chaptext{padding:2.5rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
+.chapter.flip .chaptext{padding:2.5rem 2.5rem}
 @media(max-width:820px){
   .chapter,.chapter.flip{grid-template-columns:1fr}
   .chapter.flip .chapshot{order:0}
@@ -1310,6 +1326,9 @@ main{min-height:60vh;animation:fade .3s ease}
 /* two sections in a row (e.g. search then results) sit closer together */
 .section + .section{padding-top:2.75rem}
 .section.tight + .section{padding-top:2.5rem}
+.section.wide,.section + .section.wide,.section.tight + .section.wide,
+.section.bleed,.section + .section.bleed,.section.tight + .section.bleed{padding:0}
+.chapsec .chapter{margin-bottom:0}
 .ehero .kicker{display:block;margin-bottom:.85rem;color:var(--green-d)}
 .ehero .kicker.accent{color:var(--tc,var(--green-d))}
 .ehero .stand .row{margin-top:1.5rem}
@@ -1329,7 +1348,7 @@ main{min-height:60vh;animation:fade .3s ease}
 @media(max-width:900px){.ehero .stand>.row:first-child{justify-content:flex-start}}
 
 /* an illustrated chapter image is shown whole rather than cropped */
-.chapshot.art{aspect-ratio:auto;background:#fff;display:grid;place-items:center;padding:1rem}
+.chapshot.art{aspect-ratio:auto;background:#fff;display:grid;place-items:center;padding:0}
 .chapshot.art img{width:100%;height:auto;object-fit:contain}
 
 /* ---- confirmation dialog ---- */
@@ -1440,9 +1459,9 @@ main{min-height:60vh;animation:fade .3s ease}
 
 /* ---- system / theme photo card ---- */
 .syscard{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);
-  overflow:hidden;cursor:pointer;box-shadow:var(--shadow-card);
-  transition:transform .18s ease,box-shadow .2s ease,border-color .15s}
-.syscard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--tc)}
+  overflow:hidden;cursor:pointer;box-shadow:none;
+  transition:transform .18s ease,border-color .15s}
+.syscard:hover{transform:translateY(-3px);border-color:var(--tc)}
 .syscard::after{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:var(--tc);z-index:3;
   transform:scaleX(0);transform-origin:left;transition:transform .28s ease}
 .syscard:hover::after{transform:scaleX(1)}
@@ -1494,9 +1513,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .pane-side::-webkit-scrollbar{width:8px}
 .pane-side::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:999px;border:2px solid #fff}
 @media(max-width:980px){.pane-side{position:static;max-height:none}}
-.drag-hint{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--amber-d);
-  background:var(--amber-soft);border:1px solid var(--amber-line);padding:.3rem .6rem;margin:.45rem 0 .5rem}
-.drag-hint i,.drag-hint svg.lucide{width:.9rem;height:.9rem;color:var(--amber)}
 .renamable{cursor:text}
 .renaming{outline:2px solid var(--blue);outline-offset:2px;background:#fff;color:var(--ink);
   border-radius:.15rem;cursor:text}
@@ -1596,18 +1612,21 @@ main{min-height:60vh;animation:fade .3s ease}
 .mtag.lang{background:#fff;color:var(--muted)}
 
 /* ---- artwork with its explanation beside it ---- */
-.artrow{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.artrow{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;
+  background:var(--card);border:1px solid var(--line);box-shadow:none;overflow:hidden}
+.artrow .cfig{background:#fff;display:grid;place-items:center}
+.artrow .arttext{padding:2.5rem;display:flex;flex-direction:column;justify-content:center}
 .artrow.flip .cfig{order:2}
 /* a wide piece of artwork takes the whole row, with its text beneath at a
    readable measure — squeezed into a column its captions cannot be read */
-.artrow.wide{grid-template-columns:1fr;gap:2rem;justify-items:center}
+.artrow.wide{grid-template-columns:1fr;gap:0;justify-items:stretch}
 .artrow.wide .cfig{width:100%}
 .artrow.wide .arttext{max-width:56rem;text-align:center}
 .artrow.wide .arttext p{margin-left:auto;margin-right:auto}
 /* text that introduces the artwork below it */
 .artrow.wide .arttext.lead-in{margin-bottom:.25rem}
 .artrow.wide .cfig img{margin-left:auto;margin-right:auto}
-@media(max-width:900px){.artrow{grid-template-columns:1fr;gap:1.75rem}.artrow.flip .cfig{order:0}}
+@media(max-width:900px){.artrow{grid-template-columns:1fr;gap:0}.artrow.flip .cfig{order:0}}
 .cfig{margin:0}
 .cfig img{width:100%;height:auto;max-height:70vh;object-fit:contain;display:block}
 .cfig[onclick]{cursor:zoom-in}
@@ -3246,7 +3265,7 @@ screens.commoning = () => shell("#/commoning", null,
       <p>Three things done together produce two outcomes: communities secure their land rights, act collectively to manage and govern the resource, and reach the finance needed to restore it. What follows is ecological health and resilient livelihoods.</p>
       <p>The pathway for Commoning of all resource types is broadly the same. Variation in processes is based on the type of resource, and on the legal provisions and instruments in place for that resource type.</p>
     </div>
-  </div>`, "band") +
+  </div>`, "band wide") +
 
   section(`<div class="artrow ${COMMONING_ART.agency.wide?'wide':'flip'}">
     <div class="arttext lead-in">
@@ -3255,7 +3274,7 @@ screens.commoning = () => shell("#/commoning", null,
       <p>It is also why capacity building matters — the agency, knowledge and capacity it builds are what keep the cycle turning.</p>
     </div>
     ${commonsArt('agency')}
-  </div>`) +
+  </div>`, "wide") +
 
   section(gateway("layers","Continue","Choose the resource system or theme you are working with, and follow the pathway built for it.",
     `<button class="btn btn-white arrow" onclick="go('#/resource-systems')">Resource Systems &amp; Themes ${ic('arrow-right')}</button>`), "bleed") +
@@ -3374,7 +3393,7 @@ screens["resource-systems"] = () => shell("#/resource-systems", null,
     `<div class="grid g3">${["pastureland","forests","water"].map(k=>systemCard(SYSTEMS[k])).join("")}</div>`) +
   section(sechead(null,"Cross-cutting themes","Themes that cut across every resource system.",
     isAdmin()?`<button class="btn btn-primary sm" onclick="openAddTheme()">${ic('plus')} Add theme</button>`:'') +
-    `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band") +
+    `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band roomy") +
   section(gateway("map","Not sure where to start?",
     "Follow the five-step orientation, or go straight to the Resource Library and filter your way to what you need.",
     `<button class="btn btn-white" onclick="openTour()">${ic('compass')} Take a tour</button>
@@ -3664,7 +3683,6 @@ screens.modular = (params) => {
         </div>`
         :`<div class="toolbar">
             <div><h2 style="font-size:1.25rem">${activeSub.code} · ${activeSub.name}</h2>
-              ${canEdit&&activeSub.files.length>1?`<p class="drag-hint">${ic('grip-vertical')} Drag a file by its handle to change the order.</p>`:''}
               <p class="muted" style="font-size:.87rem">${activeSub.files.length} file${activeSub.files.length!==1?'s':''} — open or download.</p></div>
             ${canEdit?`<button class="btn btn-primary sm" onclick="openUploadFile('${topic.id}','${activeSub.code}','${esc(activeSub.name)}')">${ic('upload')} Upload file</button>`:''}
           </div>

@@ -813,8 +813,6 @@ button.dd-btn.lg-input{justify-content:space-between;font-weight:600;text-align:
 .lg-forgot{margin:.15rem 0 1.35rem}
 .lg-btn{padding:.95rem;font-size:1rem;font-weight:700}
 .lg-foot{text-align:center;font-size:.9rem;color:var(--muted);margin-top:1.25rem}
-.lg-back{text-align:center;margin-top:1rem}
-.lg-back .linkbtn{color:var(--faint);font-weight:600}
 
 /* ---- login: showcase panel ---- */
 .lg-close{position:absolute;top:1.25rem;right:1.25rem;z-index:3;width:2.5rem;height:2.5rem;
@@ -2781,6 +2779,8 @@ function header(active){
     <div class="links">${NAV.map(n=>`<a class="${active===n.id?'active':''}" onclick="go('${n.id}')">${tr(n.key)}</a>`).join("")}</div>
     <div class="navright">
       <span class="navdiv"></span>
+      ${appsMenu()}
+      ${authArea}
       <div class="navsearch" id="navsearch">
         <button class="nav-ic" onclick="openNavSearch()" aria-label="${tr('nav.search')}" title="${tr('nav.search')}">${ic('search')}</button>
         <div class="ns-field">
@@ -2792,8 +2792,6 @@ function header(active){
         </div>
         <button class="ns-x" title="Close" onclick="closeNavSearch()">${ic('x')}</button>
       </div>
-      ${appsMenu()}
-      ${authArea}
       <span class="navdiv"></span>
       <div class="langw" id="langw">
         <button class="langbtn" onclick="toggleLang(event)">${(LANGS.find(l=>l.code===lang)||LANGS[0]).short} ${ic('chevron-down')}</button>
@@ -3265,7 +3263,7 @@ function introCard(c){
       <p>${c.d}</p>
       <div class="ic-cta">
         <span class="f-cta">Read more ${ic('chevron-right')}</span>
-        ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('circle-play')} Watch video</button>`:''}
+        ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`:''}
       </div>
     </div>
   </article>`;
@@ -4414,7 +4412,6 @@ screens.login = () => `<main class="login-full">
       <button class="linkbtn lg-forgot" onclick="toast('Forgot password (placeholder)')">Forgot Password?</button>
       <button class="btn btn-primary block lg-btn" onclick="loginSubmit()">Sign In</button>
       <p class="lg-foot">No account? <button class="linkbtn" onclick="toast('Request access (placeholder)')">Request access</button></p>
-      <p class="lg-back"><button class="linkbtn" onclick="go('#/home')">${ic('arrow-left')} Back to the repository</button></p>
     </div></div>
 
     <div class="lg-panel">

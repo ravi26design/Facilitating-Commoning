@@ -200,6 +200,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 @media(max-width:700px){.section{padding:56px 0}.section.tight{padding:40px 0}}
 .band{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .section.cream{background:#f2e9dc}
+/* a band that runs the full width of the page */
+.section.bleed{padding:0}
+.section.bleed > .mx{max-width:none;padding:0}
 .sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .sechead h2{font-size:1.55rem}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:0;padding:1.6rem;box-shadow:var(--shadow-card)}
@@ -827,23 +830,38 @@ button.dd-btn.lg-input{justify-content:space-between;font-weight:600;text-align:
 .toast i,.toast svg.lucide{width:1rem;height:1rem;color:#a8cbb0;flex:none}
 
 /* footer */
-footer.site{position:relative;z-index:1;background:var(--ink);color:#d9d2c8;margin-top:0}
-footer.site .cols{max-width:90rem;margin:0 auto;padding:3rem 2rem 2rem;display:grid;
-  grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2.5rem}
+/* footer — light cream, dark text, brand left and link columns beside it */
+footer.site{position:relative;z-index:1;background:var(--bg-soft);color:var(--muted);
+  border-top:1px solid var(--line);margin-top:0}
+footer.site .cols{max-width:90rem;margin:0 auto;padding:3.75rem 2rem 2.5rem;display:grid;
+  grid-template-columns:minmax(0,1.1fr) repeat(3,minmax(0,1fr));gap:2.5rem}
 footer.site .fbrand{display:inline-flex;align-items:center;gap:10px}
-footer.site .fbrand .mk{width:34px;height:34px;border-radius:10px;background:var(--green);display:grid;place-items:center;color:#fff}
+footer.site .fbrand .mk{width:34px;height:34px;border-radius:10px;background:var(--green);
+  display:grid;place-items:center;color:#fff}
 footer.site .fbrand .mk i,footer.site .fbrand .mk svg.lucide{width:18px;height:18px}
-footer.site .fbrand .bt{font-size:1rem;font-weight:800;color:#fff;line-height:1.05}
-footer.site .fbrand .bt em{display:block;font-size:.6rem;font-weight:700;letter-spacing:.14em;color:#c9bfae;text-transform:uppercase;margin-top:2px}
-footer.site p{font-size:.87rem;color:#cfc8bf;max-width:19rem;margin-top:.9rem;line-height:1.65}
-footer.site h5{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#c9bfae;margin:0 0 .85rem}
+footer.site .fbrand .bt{font-size:1rem;font-weight:800;color:var(--ink);line-height:1.05}
+footer.site .fbrand .bt em{display:block;font-size:.6rem;font-weight:700;letter-spacing:.14em;
+  color:var(--muted-2);text-transform:uppercase;margin-top:2px}
+footer.site p{font-size:.87rem;color:var(--muted);max-width:19rem;margin-top:1rem;line-height:1.7}
+footer.site h5{font-size:.95rem;font-weight:800;letter-spacing:0;text-transform:none;
+  color:var(--ink);margin:0 0 1rem}
 footer.site ul{list-style:none;margin:0;padding:0}
-footer.site li{padding:.3rem 0;font-size:.88rem;color:#d9d2c8;cursor:pointer;transition:color .15s}
-footer.site li:hover{color:#fff}
-footer.site .bar{max-width:90rem;margin:0 auto;padding:1.15rem 2rem;border-top:1px solid rgba(255,255,255,.12);
-  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:#c9bfae}
+footer.site li{padding:.42rem 0;font-size:.92rem;color:var(--muted);cursor:pointer;transition:color .15s}
+footer.site li:hover{color:var(--cta)}
+footer.site .bar{max-width:90rem;margin:0 auto;padding:1.35rem 2rem 2rem;
+  border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--muted-2)}
+footer.site .bar .legal{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+footer.site .bar .legal a{cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .15s}
+footer.site .bar .legal a:hover{color:var(--cta)}
+footer.site .social{display:flex;align-items:center;gap:1.1rem}
+footer.site .social button{border:0;background:none;padding:0;color:var(--ink);cursor:pointer;
+  display:grid;place-items:center;transition:color .15s}
+footer.site .social button:hover{color:var(--cta)}
+footer.site .social i,footer.site .social svg.lucide{width:1.3rem;height:1.3rem}
 @media(max-width:900px){footer.site .cols{grid-template-columns:1fr 1fr;gap:2rem}}
-@media(max-width:560px){footer.site .cols{grid-template-columns:1fr;padding:2rem 1.15rem 1.5rem}footer.site .bar{padding:1.15rem}}
+@media(max-width:560px){footer.site .cols{grid-template-columns:1fr;padding:2.5rem 1.15rem 1.5rem}
+  footer.site .bar{padding:1.15rem}}
 
 /* collapse inline-styled multi-column grids on small screens */
 @media(max-width:820px){
@@ -2657,8 +2675,16 @@ function footer(){
         <li onclick="go('#/system/water')">Water</li>
         ${THEME_LIST.map(t=>`<li onclick="go('#/system/${t.id}')">${t.name}</li>`).join("")}</ul></div>
     </div>
-    <div class="bar"><span>© 2026 Facilitating Commoning — Web Repository · Foundation for Ecological Security</span>
-      <span>Prakriti Karyashala · capacity building for the Commons</span></div>
+    <div class="bar">
+      <div class="legal"><span>© 2026 Facilitating Commoning — Foundation for Ecological Security. All rights reserved.</span>
+        <a onclick="toast('Privacy policy (placeholder)')">Privacy Policy</a>
+        <a onclick="toast('Terms of service (placeholder)')">Terms of Service</a></div>
+      <div class="social">
+        <button title="Facebook" aria-label="Facebook" onclick="toast('Facebook (placeholder)')">${ic('facebook')}</button>
+        <button title="Instagram" aria-label="Instagram" onclick="toast('Instagram (placeholder)')">${ic('instagram')}</button>
+        <button title="X" aria-label="X" onclick="toast('X (placeholder)')">${ic('twitter')}</button>
+        <button title="LinkedIn" aria-label="LinkedIn" onclick="toast('LinkedIn (placeholder)')">${ic('linkedin')}</button>
+      </div></div>
   </footer>`;
 }
 function shell(active, crumbItems, body){
@@ -3107,7 +3133,7 @@ screens.home = () => shell("#/home", null, `
   ${section(gateway("compass","Ready to begin?",
     "Understand what Commoning means, learn how capacity building works, then choose the resource system or theme you are working with.",
     `<button class="btn btn-white arrow" onclick="go('#/commoning')">Start learning ${ic('arrow-right')}</button>
-     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Go to the Resource Library</button>`))}
+     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Go to the Resource Library</button>`), "bleed")}
   </div>
 `);
 
@@ -3160,7 +3186,7 @@ screens.about = () => shell(null, null,
     </div>`, "band") +
   section(gateway("rocket","Ready to begin?","Understand the idea first, then choose the resource system you are working with.",
     `<button class="btn btn-white arrow" onclick="go('#/commoning')">Start learning ${ic('arrow-right')}</button>
-     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`))
+     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`), "bleed")
 );
 
 /* ---------- COMMONING OF COMMONS ---------- */
@@ -3232,7 +3258,7 @@ screens.commoning = () => shell("#/commoning", null,
   </div>`) +
 
   section(gateway("layers","Continue","Choose the resource system or theme you are working with, and follow the pathway built for it.",
-    `<button class="btn btn-white arrow" onclick="go('#/resource-systems')">Resource Systems &amp; Themes ${ic('arrow-right')}</button>`)) +
+    `<button class="btn btn-white arrow" onclick="go('#/resource-systems')">Resource Systems &amp; Themes ${ic('arrow-right')}</button>`), "bleed") +
   `</div>`
 );
 
@@ -3286,7 +3312,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
 
   section(gateway("lightbulb","Understand what Commoning is",
     "Learn the concept and approach behind the Commoning of Commons before choosing your resource system.",
-    `<button class="btn btn-white arrow" onclick="go('#/commoning')">Commoning of Commons ${ic('arrow-right')}</button>`))
+    `<button class="btn btn-white arrow" onclick="go('#/commoning')">Commoning of Commons ${ic('arrow-right')}</button>`), "bleed")
 );
 
 /* ---- modular training design — the five-module wheel ---- */
@@ -3352,7 +3378,7 @@ screens["resource-systems"] = () => shell("#/resource-systems", null,
   section(gateway("map","Not sure where to start?",
     "Follow the five-step orientation, or go straight to the Resource Library and filter your way to what you need.",
     `<button class="btn btn-white" onclick="openTour()">${ic('compass')} Take a tour</button>
-     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`))
+     <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`), "bleed")
 );
 
 /* ---------- RESOURCE-SYSTEM / THEME INFORMATION PAGE ---------- */
@@ -4086,7 +4112,7 @@ screens.help = () => shell("#/help", null,
   </article>`).join("")}</div>`) +
   section(gateway("life-buoy","Still stuck?",
     "Reach the Karyashala team or a mentor for guided support on your current Commoning stage.",
-    `<button class="btn btn-white arrow" onclick="openContact()">Get support ${ic('arrow-right')}</button>`))
+    `<button class="btn btn-white arrow" onclick="openContact()">Get support ${ic('arrow-right')}</button>`), "bleed")
 );
 
 screens.helptopic = (params) => {

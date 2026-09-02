@@ -927,9 +927,9 @@ footer.site .bar .legal{display:flex;align-items:center;gap:1.5rem;flex-wrap:wra
 footer.site .bar .legal a{cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .15s}
 footer.site .bar .legal a:hover{color:var(--cta)}
 footer.site .social{display:flex;align-items:center;gap:1.1rem}
-footer.site .social button{border:0;background:none;padding:0;color:var(--ink);cursor:pointer;
-  display:grid;place-items:center;transition:color .15s}
-footer.site .social button:hover{color:var(--cta)}
+footer.site .social a,footer.site .social button{border:0;background:none;padding:0;color:var(--ink);cursor:pointer;
+  display:grid;place-items:center;text-decoration:none;transition:color .15s}
+footer.site .social a:hover,footer.site .social button:hover{color:var(--cta)}
 footer.site .social i,footer.site .social svg.lucide{width:1.3rem;height:1.3rem}
 @media(max-width:900px){footer.site .cols{grid-template-columns:1fr 1fr;gap:2rem}}
 @media(max-width:560px){footer.site .cols{grid-template-columns:1fr;padding:2.5rem 1.15rem 1.5rem}
@@ -2917,6 +2917,13 @@ function crumbs(items, right){
       :`<a onclick="go('${it.href}')">${i===0?ic('house'):''}${it.label}</a><span class="sep">/</span>`;
   }).join("")}${right?`<div class="crumb-act">${right}</div>`:''}</div></div></div>`;
 }
+/* the same handles the Commons Stories site links to */
+const SOCIAL = [
+  {name:"Facebook", icon:"facebook",  href:"https://www.facebook.com/share/19Xt5o8wvc/"},
+  {name:"Instagram",icon:"instagram", href:"https://www.instagram.com/fesforcommons"},
+  {name:"X",        icon:"twitter",   href:"https://x.com/fesforcommons"},
+  {name:"LinkedIn", icon:"linkedin",  href:"https://www.linkedin.com/company/fesforcommons/"}
+];
 function footer(){
   return `<footer class="site">
     <div class="cols">
@@ -2943,14 +2950,10 @@ function footer(){
         ${THEME_LIST.map(t=>`<li onclick="go('#/system/${t.id}')">${t.name}</li>`).join("")}</ul></div>
     </div>
     <div class="bar">
-      <div class="legal"><span>© 2026 Facilitating Commoning — Foundation for Ecological Security. All rights reserved.</span>
-        <a onclick="toast('Privacy policy (placeholder)')">Privacy Policy</a>
-        <a onclick="toast('Terms of service (placeholder)')">Terms of Service</a></div>
+      <div class="legal"><span>© 2026 Facilitating Commoning - CC-BY 4.0 License 2026 All rights reserved.</span></div>
       <div class="social">
-        <button title="Facebook" aria-label="Facebook" onclick="toast('Facebook (placeholder)')">${ic('facebook')}</button>
-        <button title="Instagram" aria-label="Instagram" onclick="toast('Instagram (placeholder)')">${ic('instagram')}</button>
-        <button title="X" aria-label="X" onclick="toast('X (placeholder)')">${ic('twitter')}</button>
-        <button title="LinkedIn" aria-label="LinkedIn" onclick="toast('LinkedIn (placeholder)')">${ic('linkedin')}</button>
+        ${SOCIAL.map(x=>`<a href="${x.href}" target="_blank" rel="noopener noreferrer"
+          title="${x.name}" aria-label="${x.name}">${ic(x.icon)}</a>`).join("")}
       </div></div>
   </footer>`;
 }

@@ -1602,21 +1602,25 @@ main{min-height:60vh;animation:fade .3s ease}
 .pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
 
 /* the course index: numbered cells stacked into a column per topic heading */
-.cidx{display:grid;justify-content:center;overflow-x:auto;padding-bottom:.25rem}
-.cidx-row{display:grid;grid-template-columns:repeat(var(--n,1),7.5rem);gap:.45rem;justify-content:center}
-.cidx-bars{align-items:end;border-bottom:1px solid var(--line-2)}
+.cidx{--cell:2.15rem;--pitch:calc(var(--cell) + 2px);display:grid;justify-content:center;
+  overflow-x:auto;padding:.4rem 0 .25rem}
+.cidx-row{display:grid;grid-template-columns:repeat(var(--n,1),8rem);gap:.5rem;justify-content:center}
+.cidx-bars{align-items:end;border-bottom:1px solid var(--line-2);
+  background-image:repeating-linear-gradient(to top,var(--line) 0 1px,transparent 1px var(--pitch));
+  background-position:left bottom}
 .cidx-cells{display:flex;flex-direction:column-reverse;gap:2px}
-.cidx-cell{position:relative;display:block;width:100%;border:1px solid rgba(59,53,49,.12);
-  background:var(--ct,var(--green));color:var(--ci,#fff);
+.cidx-cell{position:relative;display:grid;place-items:center;height:var(--cell);width:100%;
+  border:1px solid rgba(59,53,49,.12);background:var(--ct,var(--green));color:var(--ci,#fff);
   font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.03em;
-  padding:.46rem .3rem;text-align:center;cursor:pointer;transition:filter .12s}
+  padding:0 .3rem;text-align:center;cursor:pointer;transition:filter .12s}
 .cidx-cell:hover{filter:brightness(.95);outline:2px solid var(--ink-3);outline-offset:-2px}
-.cidx-h{border-top:3px solid var(--ck,var(--line-2));padding:.55rem .2rem 0;text-align:center;
-  font-size:.71rem;font-weight:800;line-height:1.35;color:var(--ink)}
+.cidx-h{display:flex;flex-direction:column;border-top:3px solid var(--ck,var(--line-2));
+  padding:.55rem .2rem 0;text-align:center;font-size:.71rem;font-weight:800;line-height:1.35;color:var(--ink)}
 .cidx-h b{display:block;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.08em;
   color:var(--ck,var(--muted-2));margin-bottom:.22rem}
-.cidx-h em{display:block;font-style:normal;font-size:.66rem;font-weight:600;color:var(--faint);margin-top:.3rem}
-.cidx-foot{margin-top:1.1rem}
+.cidx-h span{flex:1}
+.cidx-h em{display:block;font-style:normal;font-size:.66rem;font-weight:600;color:var(--faint);margin-top:.4rem}
+
 /* the hover label naming the subtopic behind a number */
 .cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
   padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}
@@ -5974,7 +5978,7 @@ function openCourseIndex(topicId){
   const groups = subtopicsFor(topic).filter(g=>g.items.length);
   const total = groups.reduce((n,g)=>n+g.items.length,0);
   document.getElementById('pn-index').innerHTML =
-    modalHead(topic.name + " \u2014 course index",
+    modalHead(topic.name + " - course index",
       `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}. Open any number to see its files.`,
       "closeCourseIndex()") +
     (groups.length
@@ -5987,12 +5991,11 @@ function openCourseIndex(topicId){
              </div>`).join("")}</div>
            <div class="cidx-row cidx-heads">${groups.map((g,gi)=>`
              <div class="cidx-h" style="${indexTint(gi)}">
-               <b>${indexSeries(g)}</b>${indexLabel(g.mod, topic)}
+               <b>${indexSeries(g)}</b><span>${indexLabel(g.mod, topic)}</span>
                <em>${g.items.length} subtopic${g.items.length!==1?'s':''}</em>
              </div>`).join("")}</div>
          </div>
-         <div class="cidx-tip" id="cidx-tip" hidden></div>
-         <p class="hint cidx-foot">${ic('info')} Hover a number to see its subtopic; click to open it.</p>`
+         <div class="cidx-tip" id="cidx-tip" hidden></div>`
       : `<p class="tl-s">This course has no topics yet.</p>`);
   openOverlay('ov-index');
 }

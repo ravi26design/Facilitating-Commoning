@@ -1790,23 +1790,25 @@ main{min-height:60vh;animation:fade .3s ease}
 .seg-tab.on{background:var(--green);color:#fff;border-color:var(--green)}
 .seg-tab.on:hover{background:var(--green-d);border-color:var(--green-d);color:#fff}
 
-/* the workflow trail */
-.tl-flow{list-style:none;display:grid}
-.tl-step{display:flex;align-items:center;gap:.85rem;padding-bottom:1.55rem;position:relative;min-width:0}
-.tl-step:last-child{padding-bottom:0}
-.tl-step:not(:last-child):before{content:"";position:absolute;left:1.3rem;top:2.85rem;bottom:.15rem;
-  width:2px;background:var(--line)}
-.tl-dot{width:2.6rem;height:2.6rem;flex:none;border-radius:999px;display:grid;place-items:center;
+/* the workflow trail — one marker per step, joined by a continuous line */
+.tl-flow{list-style:none;display:grid;padding:.25rem 0}
+.tl-step{display:flex;align-items:center;gap:1rem;padding:.9rem 0;position:relative;min-width:0}
+.tl-step:not(:last-child):before{content:"";position:absolute;left:1.15rem;top:3.1rem;bottom:-.35rem;
+  width:2px;background:var(--line-2)}
+.tl-dot{width:2.3rem;height:2.3rem;flex:none;border-radius:999px;display:grid;place-items:center;
   background:#fff;border:2px solid var(--line-2);color:var(--muted-2);position:relative;z-index:1}
-.tl-dot i,.tl-dot svg.lucide{width:1rem;height:1rem}
-.tl-dot.now{border-style:dashed}
-.tl-dot.done{background:var(--blue);border-color:var(--blue);color:#fff}
+.tl-dot i,.tl-dot svg.lucide{width:.95rem;height:.95rem}
+.tl-dot.now{border-style:dashed;border-color:var(--amber-line);color:var(--amber-d);background:var(--amber-soft)}
+.tl-dot.done{background:var(--green);border-color:var(--green);color:#fff}
 .tl-dot.changes{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber-d)}
-.tl-dot.stop{background:var(--red-soft);border-color:#e8c4b6;color:var(--red)}
-.pw-av.sm{width:1.85rem;height:1.85rem;font-size:.62rem;flex:none}
-.tl-t{font-size:.92rem;color:var(--muted);min-width:0}
+.tl-dot.stop{background:var(--red-soft);border-color:#f2c2ce;color:var(--red)}
+.tl-body{flex:1;min-width:0}
+.tl-t{font-size:.95rem;color:var(--muted);line-height:1.5}
 .tl-t b{color:var(--ink);font-weight:800}
-.tl-meta{margin-left:auto;padding-left:1rem;font-size:.84rem;color:var(--muted);flex:none}
+.tl-meta{margin-left:auto;padding-left:1rem;font-size:.82rem;color:var(--muted-2);flex:none;
+  font-variant-numeric:tabular-nums}
+.tl-meta.live{background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber-d);
+  font-weight:800;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .55rem}
 
 /* the comment thread */
 .cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line-2);padding:1.25rem}
@@ -4627,10 +4629,9 @@ function activityBlock(o){
           <p class="tl-s">${e.when} &middot; ${e.at}</p></div></li>`).join("")}</ul>`;
   } else if(o.tab==="workflow"){
     body = `<ul class="tl-flow">${o.trail.map(e=>
-      `<li class="tl-step"><span class="tl-dot ${e.cls}">${ic(e.icon)}</span>
-        <span class="pw-av sm">${initials(e.who)}</span>
-        <p class="tl-t"><b>${e.who}</b> ${e.did}</p>
-        <span class="tl-meta">${e.meta}</span></li>`).join("")}</ul>`;
+      `<li class="tl-step ${e.cls}"><span class="tl-dot ${e.cls}">${ic(e.icon)}</span>
+        <div class="tl-body"><p class="tl-t"><b>${e.who}</b> ${e.did}</p></div>
+        <span class="tl-meta ${e.cls==='now'?'live':''}">${e.meta}</span></li>`).join("")}</ul>`;
   } else {
     body = `<div class="cm-box">
         <span class="pw-av sm">${initials(USER.name)}</span>
@@ -5748,9 +5749,12 @@ function parseHash(){
   if(queryPart){ queryPart.split("&").forEach(kv=>{ const[k,v]=kv.split("="); params[k]=v; }); }
   return {parts,params};
 }
+/* the last page we rendered — switching a tab within a page must not scroll away */
+let _lastPath = null;
 function render(){
   const {parts,params}=parseHash();
   const name=parts[0]||"home";
+  const path=parts.join("/");
   let html;
   if(name==="system"||name==="theme"){ params.id=parts[1]; html=screens.system(params); }
   else if(name==="curriculum"){ params.id=parts[1]; html=screens.curriculum(params); }
@@ -5768,7 +5772,8 @@ function render(){
   document.getElementById("app").innerHTML=html;
   icons();
   closeMobNav();
-  window.scrollTo(0,0);
+  /* only jump to the top on a genuine page change, not on a tab or filter switch */
+  if(path!==_lastPath){ window.scrollTo(0,0); _lastPath=path; }
   syncNavShadow();
 }
 function go(hash){ if(location.hash===hash){ render(); } else { location.hash=hash; } }

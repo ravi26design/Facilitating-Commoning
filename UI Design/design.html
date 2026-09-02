@@ -2010,6 +2010,22 @@ main{min-height:60vh;animation:fade .3s ease}
 #pn-reason{padding:0}
 
 /* the file a review dialog is about */
+/* the state list inside the process-documents dialog */
+.statelist{display:grid;border:1px solid var(--line-2)}
+.state-row{display:flex;align-items:center;gap:.9rem;padding:.95rem 1rem;cursor:pointer;
+  border-top:1px solid var(--line);transition:background .15s}
+.state-row:first-child{border-top:0}
+.state-row:hover{background:var(--bg-soft)}
+.state-ic{flex:none;width:2.2rem;height:2.2rem;display:grid;place-items:center;border-radius:999px;
+  background:var(--green-soft);color:var(--green-d)}
+.state-ic i,.state-ic svg.lucide{width:1rem;height:1rem}
+.state-tx{flex:1;min-width:0}
+.state-tx b{display:block;font-size:.95rem;color:var(--ink)}
+.state-tx span{display:block;font-size:.8rem;color:var(--muted)}
+.state-go{flex:none;color:var(--faint);transition:color .15s,transform .15s}
+.state-go i,.state-go svg.lucide{width:1rem;height:1rem}
+.state-row:hover .state-go{color:var(--green-d);transform:translateX(2px)}
+
 .ap-file{display:flex;align-items:center;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line);
   padding:1rem 1.1rem;margin-top:.35rem}
 .ap-file .doc-fi{width:2.6rem;height:2.6rem;flex:none}
@@ -2149,6 +2165,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-file"><div class="modal" id="pn-file" style="width:min(34rem,100%)"></div></div>
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
+<div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -3565,8 +3582,8 @@ screens.system = (params) => {
         "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +
       pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`}) +
       `<div class="row" style="margin-top:1.75rem">
-        <a class="btn btn-outline sm" href="assets/docs/process-documents-${s.id}.pdf" target="_blank" rel="noopener"
-          title="Process documents for ${STATES.join(', ')}">${ic('file-text')} Process documents ${ic('external-link')}</a>
+        <button class="btn btn-outline sm" onclick="openProcessDocs('${s.id}')"
+          title="Process documents for ${STATES.join(', ')}">${ic('file-text')} Process documents</button>
       </div>`, "tight band")) +
 
     section(sechead(null,"Choose how you want to learn",
@@ -5199,7 +5216,8 @@ screens.admin = () => {
    ADMIN MUTATIONS — themes, topics, subtopics, files, documents
    ============================================================ */
 function modalHead(title, sub, close){
-  return `<div class="between" style="align-items:flex-start;margin-bottom:1.35rem">
+  /* the close control stays on the title's row, however narrow the dialog is */
+  return `<div class="between" style="align-items:flex-start;flex-wrap:nowrap;gap:1rem;margin-bottom:1.35rem">
     <div><h3 style="font-size:1.15rem">${title}</h3>${sub?`<p class="muted" style="font-size:.87rem;margin-top:.25rem">${sub}</p>`:''}</div>
     <button class="modal-x" style="position:static" onclick="${close}">${ic('x')}</button></div>`;
 }
@@ -5846,6 +5864,24 @@ function openContact(){
 }
 function closeContact(){ closeOverlay('ov-contact'); }
 
+/* the process document is written per state, so the CTA asks which one first */
+function stateSlug(st){ return st.toLowerCase().replace(/\s+/g,"-"); }
+function openProcessDocs(sysId){
+  const s = SYSTEMS[sysId] || entityById(sysId); if(!s) return;
+  document.getElementById('pn-docs').innerHTML =
+    modalHead("Process documents",
+      `Choose a state to open the ${s.name} process document written for it.`, "closeProcessDocs()") +
+    `<p class="kicker" style="margin:.25rem 0 .8rem">States covered</p>
+     <div class="statelist">${STATES.map(st=>`
+       <a class="state-row" href="assets/docs/process-${sysId}-${stateSlug(st)}.pdf"
+          target="_blank" rel="noopener" onclick="closeProcessDocs()">
+         <span class="state-ic">${ic('map-pin')}</span>
+         <span class="state-tx"><b>${st}</b><span>${s.name} · six-stage process document</span></span>
+         <span class="state-go">${ic('external-link')}</span>
+       </a>`).join("")}</div>`;
+  openOverlay('ov-docs');
+}
+function closeProcessDocs(){ closeOverlay('ov-docs'); }
 function openTour(){
   document.getElementById('pn-tour').innerHTML =
     modalHead("Take a tour · get started","Five steps to find your way around the repository.","closeTour()") +

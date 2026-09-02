@@ -1635,26 +1635,31 @@ main{min-height:60vh;animation:fade .3s ease}
 .cidx-tip b{display:block;font-family:var(--mono);font-size:.68rem;font-weight:700;color:#e8dcc9}
 
 .pane-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:0 0 .7rem}
+/* one card per topic: its heading and, when open, its subtopics */
+.modgrp{background:#fff;border:1px solid var(--line);border-left:3px solid var(--line-2);
+  margin-bottom:.5rem;transition:border-color .15s}
+.modgrp.open{border-left-color:var(--green)}
+.modgrp:hover{border-color:var(--line-2)}
+.modgrp:hover.open{border-left-color:var(--green)}
 .modhead{display:flex;align-items:center;gap:.55rem;font-size:.78rem;font-weight:800;color:var(--ink);
-  background:#fff;border:1px solid var(--line);border-left:3px solid var(--line-2);
-  padding:.55rem .65rem;margin:.9rem 0 .3rem;cursor:pointer;transition:background .15s,border-color .15s}
-.modhead:hover{background:var(--bg-soft);border-color:var(--line-2);border-left-color:var(--green)}
-.modhead:not(.shut){border-left-color:var(--green)}
-.modhead:first-of-type{margin-top:0}
+  background:none;border:0;padding:.6rem .7rem;cursor:pointer;transition:background .15s}
+.modhead:hover{background:var(--bg-soft)}
+.units{border-top:1px solid var(--line);padding:.2rem 0}
 .mh-cv{display:grid;place-items:center;flex:none;color:var(--faint);transition:transform .15s}
 .mh-cv i,.mh-cv svg.lucide{width:.9rem;height:.9rem}
 .modhead.shut .mh-cv{transform:rotate(-90deg)}
 .mh-t{flex:1;min-width:0;line-height:1.4}
 .mh-n{flex:none;font-family:var(--mono);font-size:.66rem;font-weight:700;color:var(--muted-2);
   background:var(--chip);padding:.1rem .4rem}
-.unit{display:flex;align-items:flex-start;gap:.55rem;padding:.48rem .6rem;cursor:pointer;
-  border-left:3px solid transparent;transition:background .15s,border-color .15s}
-.unit:hover{background:#fff}
-.unit.active{background:var(--blue);border-left-color:var(--green-d);box-shadow:none}
+.unit{display:flex;align-items:flex-start;gap:.5rem;padding:.42rem .7rem;cursor:pointer;
+  transition:background .15s}
+.unit:hover{background:var(--bg-soft)}
+.unit.active{background:var(--blue);box-shadow:none}
+.unit.active:hover{background:var(--blue)}
 .unit.active .u-nm,.unit.active .u-code,.unit.active .u-sub{color:#fff}
 .unit.active .u-code{color:rgba(255,255,255,.72)}
 .u-code{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--faint);flex:none;padding-top:.12rem;min-width:1.9rem}
-.u-nm{font-size:.85rem;font-weight:600;color:var(--ink);line-height:1.4;flex:1}
+.u-nm{font-size:.84rem;font-weight:600;color:var(--ink);line-height:1.45;flex:1}
 .u-sub{font-size:.72rem;color:var(--muted-2);margin-top:.1rem}
 .u-del{flex:none;border:0;background:none;color:rgba(255,255,255,.7);padding:0 .2rem;font-size:.8rem}
 .unit:not(.active) .u-del{color:var(--faint)}
@@ -3875,7 +3880,8 @@ screens.modular = (params) => {
         ${groups.length?groups.map((g,gi)=>{
           const holdsActive = !!(activeSub && g.items.some(it=>it.code===activeSub.code));
           const shut = isGroupShut(topic.id, gi, holdsActive);
-          return `<div class="modhead ${shut?'shut':''}" onclick="toggleGroup('${topic.id}',${gi},${holdsActive})"
+          return `<div class="modgrp ${shut?'':'open'}">
+          <div class="modhead ${shut?'shut':''}" onclick="toggleGroup('${topic.id}',${gi},${holdsActive})"
             title="${shut?'Expand':'Collapse'} this topic">
             <span class="mh-cv">${ic('chevron-down')}</span>
             <span class="mh-t${canEdit?' renamable':''}"
@@ -3883,13 +3889,15 @@ screens.modular = (params) => {
                 ondblclick="event.stopPropagation();startLabelEdit(this,'${topic.id}','mod',${gi},'')"`:''}>${indexLabel(g.mod, topic)}</span>
             <span class="mh-n">${g.items.length}</span>
           </div>
+          ${shut?'':`<div class="units">`}
           ${shut?'':g.items.map(it=>`<div class="unit ${activeSub&&it.code===activeSub.code?'active':''}"
             onclick="go('#/modular/${params.id}?${gq}topic=${topic.id}&sub=${it.code}')">
             <span class="u-code">${it.code}</span><span class="u-nm${canEdit?' renamable':''}"
               ${canEdit?`title="Double-click to rename" onclick="event.stopPropagation()"
                 ondblclick="event.stopPropagation();startLabelEdit(this,'${topic.id}','sub',${gi},'${it.code}')"`:''}>${it.name}</span>
             ${canEdit?`<button class="u-del" title="Remove subtopic" onclick="event.stopPropagation();confirmSubtopicDelete('${topic.id}','${it.code}','${esc(it.name)}')">${ic('x')}</button>`:''}
-          </div>`).join("")}`;}).join("")
+          </div>`).join("")}${shut?'':`</div>`}
+          </div>`;}).join("")
          :`<p class="pane-empty">${ic('layers')} Nothing here yet${canEdit?" — add a topic below, then its subtopics.":"."}</p>`}
         ${canEdit?`<div class="pane-add">
           <button class="btn btn-outline sm block" onclick="toggleReveal('add-mod')">${ic('plus')} Add topic</button>

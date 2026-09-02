@@ -1602,20 +1602,19 @@ main{min-height:60vh;animation:fade .3s ease}
 .pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
 
 /* the course index: a row of numbers per topic, the topic named on the right */
-.cidx{--cell:2.9rem;--cw:3.4rem;--pitch:calc(var(--cw) + 2px);display:grid;gap:.6rem;
-  overflow-x:auto;padding:.3rem 0 .1rem}
-.cidx-row{display:grid;grid-template-columns:minmax(9rem,13rem) max-content;gap:1rem;align-items:center}
-.cidx-cells{display:grid;grid-template-columns:repeat(var(--n,1),var(--cw));gap:2px}
-.cidx-gap{height:var(--cell);border:1px solid var(--line)}
+.cidx{--cell:2.9rem;--cw:3.6rem;display:grid;gap:.85rem;overflow-x:auto;padding:1rem 0 .4rem}
+.cidx-row{display:grid;grid-template-columns:minmax(10rem,14rem) max-content;gap:1.75rem;align-items:center}
+.cidx-cells{display:grid;grid-template-columns:repeat(var(--n,1),var(--cw));gap:4px}
+.cidx-gap{height:var(--cell);background:var(--bg-soft)}
 .cidx-cell{position:relative;display:grid;place-items:center;height:var(--cell);
   border:1px solid rgba(59,53,49,.12);background:var(--ct,var(--green));color:var(--ci,#fff);
   font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.03em;
   padding:0 .2rem;text-align:center;cursor:pointer;transition:filter .12s}
 .cidx-cell:hover{filter:brightness(.95);outline:2px solid var(--ink-3);outline-offset:-2px}
-.cidx-h{border-left:3px solid var(--ck,var(--line-2));padding:.1rem 0 .1rem .6rem;
-  font-size:.76rem;font-weight:800;line-height:1.35;color:var(--ink)}
-.cidx-h b{display:block;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.08em;
-  color:var(--ck,var(--muted-2));margin-bottom:.15rem}
+.cidx-h{border-left:3px solid var(--ck,var(--line-2));padding:.15rem 0 .15rem .7rem;
+  font-size:.76rem;font-weight:800;line-height:1.4;color:var(--ink)}
+.cidx-h b{display:block;font-family:var(--mono);font-size:.64rem;font-weight:700;letter-spacing:.1em;
+  color:var(--ck,var(--muted-2));margin-bottom:.25rem}
 /* the hover label naming the subtopic behind a number */
 .cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
   padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}

@@ -1556,14 +1556,23 @@ main{min-height:60vh;animation:fade .3s ease}
 .u-del:hover{color:var(--red)}
 
 /* ---- resource list row (list view) ---- */
-.listcard{display:flex;align-items:flex-start;gap:1.1rem;background:var(--card);border:1px solid var(--line);
-  padding:1.15rem 1.25rem;box-shadow:var(--shadow-card);cursor:pointer;transition:.18s}
-.listcard:hover{box-shadow:var(--shadow-lift);border-color:var(--line-2);transform:translateY(-2px)}
-.listcard h4{font-size:1rem;margin:0 0 .25rem}
-.listcard .purpose{font-size:.87rem;color:var(--muted)}
+.listwrap{display:grid}
+.listcard{display:flex;align-items:center;gap:1.15rem;background:#fff;border:1px solid var(--line-2);
+  padding:1.15rem 1.25rem;cursor:pointer;transition:border-color .15s,background .15s}
+.listcard + .listcard{margin-top:-1px}
+.listcard:hover{border-color:var(--green);background:var(--bg-soft);z-index:1;position:relative}
+.lc-fi{width:2.6rem;height:2.6rem;flex:none;align-self:flex-start;margin-top:.15rem}
+.listcard h4{font-size:1rem;margin:0;line-height:1.35}
+.listcard:hover h4{color:var(--green-d)}
+.listcard .purpose{font-size:.88rem;color:var(--muted);margin-top:.2rem;line-height:1.55}
 .lc-main{flex:1;min-width:0}
-.lc-act{display:flex;flex-direction:column;gap:.5rem;flex:none}
-@media(max-width:700px){.listcard{flex-wrap:wrap}.lc-act{flex-direction:row;width:100%}}
+.lc-head{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap}
+.lc-kind{font-size:.76rem;font-weight:700;color:var(--faint);white-space:nowrap}
+.lc-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.7rem}
+.lc-foot .tags{gap:.35rem}
+.lc-by{display:inline-flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted-2);white-space:nowrap}
+.lc-act{display:flex;align-items:center;gap:.5rem;flex:none}
+@media(max-width:700px){.listcard{flex-wrap:wrap}.lc-act{width:100%;justify-content:flex-end}}
 
 /* ---- applied-filter chips ---- */
 .applied{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:0 0 1.15rem}
@@ -2975,16 +2984,23 @@ function docCard(r, idx){
 }
 function listCard(r, idx){
   const m = kindMeta(r.type);
+  const who = resWho(r, idx==null?0:idx);
   return `<article class="listcard" onclick="go('#/resource/${r.id}')">
-    <span class="doc-fi ${m.fi}" style="width:2.6rem;height:2.6rem">${ic(m.icon)}</span>
+    <span class="doc-fi ${m.fi} lc-fi">${ic(m.icon)}</span>
     <div class="lc-main">
-      <h4>${r.title}</h4>
+      <div class="lc-head">
+        <h4>${r.title}</h4>
+        <span class="lc-kind">${r.type} &middot; ${r.lang}</span>
+      </div>
       <p class="purpose">${r.purpose}</p>
-      <div class="tags" style="margin-top:.6rem">${resTags(r).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+      <div class="lc-foot">
+        <div class="tags">${resTags(r).slice(0,4).map(metaTag).join("")}</div>
+        <span class="lc-by"><span class="pw-av sm">${initials(who)}</span>${who} &middot; ${resDate(idx==null?0:idx)}</span>
+      </div>
     </div>
     <div class="lc-act">
       <button class="btn btn-primary sm" onclick="event.stopPropagation();go('#/resource/${r.id}')">${ic('eye')} View</button>
-      <button class="btn btn-outline sm" onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')} Download</button>
+      <button class="iconbtn" title="Download" onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')}</button>
     </div>
   </article>`;
 }
@@ -3017,7 +3033,7 @@ function viewToggle(ctx){
 }
 function renderResources(rows, emptyMsg, ctx){
   if(!rows.length) return `<div class="panel"><p class="muted">${emptyMsg}</p></div>`;
-  if(VIEW[ctx]==='list') return `<div class="stack">${rows.map(listCard).join("")}</div>`;
+  if(VIEW[ctx]==='list') return `<div class="listwrap">${rows.map(listCard).join("")}</div>`;
   return `<div class="docgrid">${rows.map(docCard).join("")}</div>`;
 }
 

@@ -191,6 +191,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .pw-head b{display:block;font-size:.92rem;color:var(--ink)}
 .pw-head>div>span{font-size:.75rem;color:var(--muted-2)}
 .pw-head .pw-av{color:#fff}
+/* the signed-in user wears the same mark as the header */
+.avself,.id-av.avself,.pw-av.avself{background:var(--ink);color:#fff}
+.avself i,.avself svg.lucide{width:58%;height:58%;stroke-width:2.2}
 .pw-div{height:1px;background:var(--line);margin:.35rem 0}
 .pw-item{display:flex;align-items:center;gap:.65rem;width:100%;background:none;border:0;padding:.6rem .7rem;
   border-radius:0;font:inherit;font-size:.9rem;font-weight:600;color:var(--ink);text-align:left}
@@ -1624,24 +1627,25 @@ main{min-height:60vh;animation:fade .3s ease}
 .cidx-tip b{display:block;font-family:var(--mono);font-size:.68rem;font-weight:700;color:#e8dcc9}
 
 .pane-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:0 0 .7rem}
-.modhead{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:800;color:var(--ink);
-  background:var(--bg-soft);border:1px solid var(--line);padding:.5rem .6rem;margin:.85rem 0 .35rem;
-  cursor:pointer;transition:.15s}
-.modhead:hover{border-color:var(--line-2);background:#f4efe6}
+.modhead{display:flex;align-items:center;gap:.55rem;font-size:.78rem;font-weight:800;color:var(--ink);
+  background:#fff;border:1px solid var(--line);border-left:3px solid var(--line-2);
+  padding:.55rem .65rem;margin:.9rem 0 .3rem;cursor:pointer;transition:background .15s,border-color .15s}
+.modhead:hover{background:var(--bg-soft);border-color:var(--line-2);border-left-color:var(--green)}
+.modhead:not(.shut){border-left-color:var(--green)}
 .modhead:first-of-type{margin-top:0}
 .mh-cv{display:grid;place-items:center;flex:none;color:var(--faint);transition:transform .15s}
 .mh-cv i,.mh-cv svg.lucide{width:.9rem;height:.9rem}
 .modhead.shut .mh-cv{transform:rotate(-90deg)}
 .mh-t{flex:1;min-width:0;line-height:1.4}
-.mh-n{flex:none;font-size:.68rem;font-weight:800;color:var(--muted-2);background:#fff;
-  border:1px solid var(--line-2);border-radius:999px;padding:.05rem .4rem}
-.unit{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem;cursor:pointer;border:1px solid transparent;
-  border-radius:.5rem;transition:.15s}
-.unit:hover{background:var(--bg-soft);border-color:var(--line)}
-.unit.active{background:var(--blue);border-color:var(--blue);box-shadow:0 8px 18px -10px rgba(78,124,89,.6)}
+.mh-n{flex:none;font-family:var(--mono);font-size:.66rem;font-weight:700;color:var(--muted-2);
+  background:var(--chip);padding:.1rem .4rem}
+.unit{display:flex;align-items:flex-start;gap:.55rem;padding:.48rem .6rem;cursor:pointer;
+  border-left:3px solid transparent;transition:background .15s,border-color .15s}
+.unit:hover{background:#fff}
+.unit.active{background:var(--blue);border-left-color:var(--green-d);box-shadow:none}
 .unit.active .u-nm,.unit.active .u-code,.unit.active .u-sub{color:#fff}
 .unit.active .u-code{color:rgba(255,255,255,.72)}
-.u-code{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--faint);flex:none;padding-top:.1rem;min-width:2rem}
+.u-code{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--faint);flex:none;padding-top:.12rem;min-width:1.9rem}
 .u-nm{font-size:.85rem;font-weight:600;color:var(--ink);line-height:1.4;flex:1}
 .u-sub{font-size:.72rem;color:var(--muted-2);margin-top:.1rem}
 .u-del{flex:none;border:0;background:none;color:rgba(255,255,255,.7);padding:0 .2rem;font-size:.8rem}
@@ -2843,7 +2847,7 @@ function header(active){
       <button class="profilew-btn" onclick="toggleProfile(event)" aria-label="${roleLabel()}" title="${roleLabel()}">
         <span class="nav-av">${ic('user-round')}</span></button>
       <div class="profilew-menu">
-        <div class="pw-head"><span class="pw-av lg">${ROLE_INIT[currentRole]}</span>
+        <div class="pw-head"><span class="pw-av lg avself">${ic('user-round')}</span>
           <div><b>${roleLabel()}</b><span>${tr('nav.signedin')}</span></div></div>
         <div class="pw-div"></div>
         <button class="pw-item" onclick="pwClose();go('#/profile')">${ic('user-round')} ${tr('nav.profile')}</button>
@@ -3868,7 +3872,7 @@ screens.modular = (params) => {
             <span class="mh-cv">${ic('chevron-down')}</span>
             <span class="mh-t${canEdit?' renamable':''}"
               ${canEdit?`title="Double-click to rename" onclick="event.stopPropagation()"
-                ondblclick="event.stopPropagation();startLabelEdit(this,'${topic.id}','mod',${gi},'')"`:''}>${g.mod}</span>
+                ondblclick="event.stopPropagation();startLabelEdit(this,'${topic.id}','mod',${gi},'')"`:''}>${indexLabel(g.mod, topic)}</span>
             <span class="mh-n">${g.items.length}</span>
           </div>
           ${shut?'':g.items.map(it=>`<div class="unit ${activeSub&&it.code===activeSub.code?'active':''}"
@@ -3913,7 +3917,7 @@ screens.modular = (params) => {
         </div>`
         :`<div class="toolbar">
             <div><h2 style="font-size:1.25rem">${activeSub.code} · ${activeSub.name}</h2>
-              <p class="muted" style="font-size:.87rem">${activeSub.files.length} file${activeSub.files.length!==1?'s':''} — open or download.</p></div>
+              <p class="muted" style="font-size:.87rem">${activeSub.files.length} file${activeSub.files.length!==1?'s':''} - open or download.</p></div>
             ${canEdit?`<button class="btn btn-primary sm" onclick="openUploadFile('${topic.id}','${activeSub.code}','${esc(activeSub.name)}')">${ic('upload')} Upload file</button>`:''}
           </div>
 
@@ -4047,7 +4051,7 @@ screens.course = (params) => {
       <div>
         <div class="toolbar">
           <div><h2 style="font-size:1.25rem">${active.name}</h2>
-            <p class="muted" style="font-size:.87rem">Files for this topic — open or download.</p></div>
+            <p class="muted" style="font-size:.87rem">Files for this topic - open or download.</p></div>
           <span class="kicker">${active.files.length} file${active.files.length!==1?'s':''}</span>
         </div>
         <div class="gridauto">${active.files.map((f,i)=>fileCard(f,c.id,active.id,i)).join("")}</div>
@@ -4864,7 +4868,7 @@ function activityBlock(o){
         <span class="tl-meta ${e.cls==='now'?'live':''}">${e.meta}</span></li>`).join("")}</ul>`;
   } else {
     body = `<div class="cm-box">
-        <span class="pw-av sm">${initials(USER.name)}</span>
+        <span class="pw-av sm avself">${ic('user-round')}</span>
         <div class="cm-grow">
           <textarea id="${o.postId}" placeholder="Add a comment…"></textarea>
           <div class="row" style="justify-content:flex-end;margin-top:.75rem">
@@ -5013,7 +5017,7 @@ screens.profile = () => {
     <p class="acct-sub">Your account details and preferences.</p>
 
     <div class="idcard">
-      <span class="id-av">${initials(USER.name)}</span>
+      <span class="id-av avself">${ic('user-round')}</span>
       <div class="id-main">
         <h2>${USER.name}</h2>
         <span class="id-role">${ic(currentRole==='admin'?'shield':'user-round')} ${roleLabel()}</span>

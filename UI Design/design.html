@@ -164,8 +164,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .btn i,.btn svg.lucide,.btn svg{width:1rem;height:1rem;flex:none}
 .btn-primary{background:var(--cta);color:var(--cta-ink);box-shadow:0 8px 18px -8px rgba(212,162,76,.55)}
 .btn-primary:hover{background:var(--cta-h);transform:translateY(-1px);box-shadow:0 12px 26px -8px rgba(212,162,76,.6)}
-.btn-green{background:var(--green);color:#fff;box-shadow:0 8px 18px -8px rgba(78,124,89,.55)}
-.btn-green:hover{background:var(--green-d);transform:translateY(-1px)}
+.btn-green{background:var(--cta);color:var(--cta-ink);box-shadow:0 8px 18px -8px rgba(212,162,76,.55)}
+.btn-green:hover{background:var(--cta-h);transform:translateY(-1px);box-shadow:0 12px 26px -8px rgba(212,162,76,.6)}
 .btn-outline{background:#fff;border-color:var(--line-2);color:var(--cta)}
 .btn-outline:hover{background:var(--cta);color:#fff;border-color:var(--cta)}
 .btn-outline.danger{color:var(--red);border-color:#e8c4b6}
@@ -199,6 +199,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .section.tight{padding:44px 0}
 @media(max-width:700px){.section{padding:56px 0}.section.tight{padding:40px 0}}
 .band{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section.cream{background:#f2e9dc}
 .sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .sechead h2{font-size:1.55rem}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:0;padding:1.6rem;box-shadow:var(--shadow-card)}
@@ -298,7 +299,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .card h3{font-size:1.02rem;line-height:1.35}
 .card p{color:var(--muted);font-size:.9rem}
 .card .cta{margin-top:auto;padding-top:.35rem}
-.card.click:hover h3{color:var(--blue)}
+.card.click:hover h3{color:var(--cta)}
+.card.click:hover .f-cta{color:var(--cta)}
+.card.click:hover .f-cta i,.card.click:hover .f-cta svg.lucide{transform:translateX(3px)}
 
 /* report panel (Our Commons publication) */
 .reportcard{position:relative;display:grid;grid-template-columns:1.5fr .8fr;gap:2.5rem;align-items:center;
@@ -997,7 +1000,7 @@ main{min-height:60vh;animation:fade .3s ease}
   .acct-h{display:none}.acct-item{border-color:var(--line-2);background:#fff}}
 
 /* ---- file / doc cards (Resources) ---- */
-.doccard{background:var(--card);border:1px solid var(--line);border-radius:0;padding:0;display:flex;
+.doccard{background:#fff;border:1px solid var(--line);border-radius:0;padding:0;display:flex;
   flex-direction:column;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-card);
   transition:transform .18s,box-shadow .2s,border-color .15s}
 .doccard:hover{box-shadow:var(--shadow-lift);border-color:var(--line-2);transform:translateY(-3px)}
@@ -3066,11 +3069,11 @@ function introCard(c){
 }
 /* All three home rows share one four-column track, so a card is the same
    size in every section however many that section holds. */
-function docRow(title, sub, ids, cols, note){
+function docRow(title, sub, ids, cols, note, cls){
   const rows = ids.map(id=>resById(id)).filter(Boolean);
   return section(
     sechead(null, title, sub)
-    + `<div class="grid g${cols||3}">${rows.map(docCard).join("")}${note||""}</div>`);
+    + `<div class="grid g${cols||3}">${rows.map(docCard).join("")}${note||""}</div>`, cls);
 }
 
 screens.home = () => shell("#/home", null, `
@@ -3097,7 +3100,7 @@ screens.home = () => shell("#/home", null, `
       <span class="rq-mark" aria-hidden="true">&ldquo;</span>
       <p>Start with these two and the rest of the library falls into place — one shows what facilitating Commoning asks of you, the other how a community secures its rights.</p>
       <footer class="rq-by">Where to begin</footer>
-    </blockquote>`)}
+    </blockquote>`, "cream")}
   ${docRow("What people are reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 

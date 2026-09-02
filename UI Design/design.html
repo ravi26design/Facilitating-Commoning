@@ -77,6 +77,53 @@ nav.top .links a:hover{color:var(--ink);background:none}
 nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .navright{display:flex;align-items:center;gap:1rem;flex:none}
 .navdiv{width:1px;height:1.6rem;background:var(--line-2);flex:none}
+/* header search — the icon expands into a field in place */
+.navsearch{display:flex;align-items:center;gap:.5rem}
+.ns-field{display:none;position:relative;align-items:center}
+.ns-field input{width:min(26rem,32vw);min-width:0;padding:.5rem 2.4rem .5rem .85rem;border:1px solid var(--line-2);
+  border-radius:0;background:#fff;font:inherit;font-size:.9rem;color:var(--ink);outline:none;transition:.15s}
+.ns-field input::placeholder{color:var(--faint)}
+.ns-field input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(78,124,89,.12)}
+/* the suggestion list hangs under the field */
+.ns-sug{position:absolute;top:calc(100% + .35rem);left:0;right:0;background:#fff;
+  border:1px solid var(--line-2);box-shadow:var(--shadow-float);z-index:80;display:none;
+  max-height:24rem;overflow-y:auto;padding:.3rem}
+.ns-sug.open{display:block}
+.ns-hit{display:flex;align-items:center;gap:.7rem;width:100%;border:0;background:none;
+  padding:.55rem .6rem;font:inherit;text-align:left;cursor:pointer;transition:background .12s}
+.ns-hit:hover{background:var(--bg-soft)}
+.ns-hit .doc-fi{width:1.9rem;height:1.9rem;flex:none}
+.ns-hit .doc-fi i,.ns-hit .doc-fi svg.lucide{width:.85rem;height:.85rem}
+.ns-hit-tx{min-width:0}
+.ns-hit-tx b{display:block;font-size:.88rem;font-weight:700;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ns-hit-tx span{display:block;font-size:.76rem;color:var(--muted-2)}
+.ns-sug mark{background:var(--amber-soft);color:var(--amber-d);padding:0 .1rem}
+.ns-all{display:flex;align-items:center;gap:.5rem;width:100%;border:0;border-top:1px solid var(--line);
+  background:none;padding:.65rem .6rem;margin-top:.3rem;font:inherit;font-size:.83rem;font-weight:700;
+  color:var(--green-d);cursor:pointer;text-align:left}
+.ns-all:hover{background:var(--bg-soft)}
+.ns-all i,.ns-all svg.lucide{width:.9rem;height:.9rem}
+.ns-none{padding:.85rem .6rem;font-size:.85rem;color:var(--muted)}
+
+.ns-go{position:absolute;right:.5rem;border:0;background:none;padding:0;display:grid;place-items:center;
+  color:var(--muted);cursor:pointer;transition:color .15s}
+.ns-go:hover{color:var(--green-d)}
+.ns-go i,.ns-go svg.lucide{width:1.1rem;height:1.1rem;stroke-width:2.4}
+.ns-x{display:none;border:0;background:none;padding:.25rem;color:var(--muted);cursor:pointer;transition:color .15s}
+.ns-x:hover{color:var(--ink)}
+.ns-x i,.ns-x svg.lucide{width:1.15rem;height:1.15rem;stroke-width:2.4}
+.navsearch.open .nav-ic{display:none}
+.navsearch.open .ns-field{display:flex}
+.navsearch.open .ns-x{display:grid;place-items:center}
+/* the nav links step aside while the field is open, so nothing is squeezed */
+.bar:has(.navsearch.open) .links{display:none}
+.bar:has(.navsearch.open) .navright{flex:1;min-width:0}
+.navsearch.open{flex:1;justify-content:flex-end}
+.navsearch.open .ns-field{flex:1;max-width:34rem}
+.ns-field input{width:100%}
+@media(max-width:900px){.navsearch.open .ns-field{max-width:none}}
+
 .nav-ic{border:0;background:none;padding:.25rem;color:var(--ink);display:grid;place-items:center;transition:color .15s}
 .nav-ic:hover{color:var(--green-d)}
 .nav-ic i,.nav-ic svg.lucide{width:1.25rem;height:1.25rem;stroke-width:2.4}
@@ -2707,7 +2754,17 @@ function header(active){
     <div class="links">${NAV.map(n=>`<a class="${active===n.id?'active':''}" onclick="go('${n.id}')">${tr(n.key)}</a>`).join("")}</div>
     <div class="navright">
       <span class="navdiv"></span>
-      <button class="nav-ic" onclick="openSearch()" aria-label="${tr('nav.search')}" title="${tr('nav.search')}">${ic('search')}</button>
+      <div class="navsearch" id="navsearch">
+        <button class="nav-ic" onclick="openNavSearch()" aria-label="${tr('nav.search')}" title="${tr('nav.search')}">${ic('search')}</button>
+        <div class="ns-field">
+          <input id="ns-input" placeholder="Search…" autocomplete="off"
+            oninput="navSuggest(this.value)"
+            onkeydown="if(event.key==='Enter'){runSearch(this.value)} if(event.key==='Escape'){closeNavSearch()}">
+          <div class="ns-sug" id="ns-sug"></div>
+          <button class="ns-go" title="${tr('nav.search')}" onclick="runSearch(document.getElementById('ns-input').value)">${ic('search')}</button>
+        </div>
+        <button class="ns-x" title="Close" onclick="closeNavSearch()">${ic('x')}</button>
+      </div>
       ${appsMenu()}
       ${authArea}
       <span class="navdiv"></span>
@@ -5698,6 +5755,41 @@ function submitChangePassword(){
 /* ============================================================
    OVERLAYS — search · contact · tour
    ============================================================ */
+/* live suggestions under the header field — matched the same way the results page matches */
+function searchMatches(q){
+  const t=(q||"").trim().toLowerCase();
+  if(!t) return [];
+  return RES.filter(r => (r.title+" "+r.purpose+" "+resTags(r).join(" ")).toLowerCase().includes(t)).slice(0,7);
+}
+function navSuggest(q){
+  const box=document.getElementById('ns-sug'); if(!box) return;
+  const t=(q||"").trim();
+  if(!t){ box.classList.remove('open'); box.innerHTML=""; return; }
+  const hits=searchMatches(t);
+  const mark = txt => txt.replace(new RegExp("("+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"),"<mark>$1</mark>");
+  box.innerHTML = hits.length
+    ? hits.map(r=>{const m=kindMeta(r.type);
+        return `<button class="ns-hit" onclick="closeNavSearch();go('#/resource/${r.id}')">
+          <span class="doc-fi ${m.fi}">${ic(m.icon)}</span>
+          <span class="ns-hit-tx"><b>${mark(r.title)}</b><span>${r.type} &middot; ${r.lang}</span></span></button>`;}).join("")
+      + `<button class="ns-all" onclick="runSearch(document.getElementById('ns-input').value)">
+          ${ic('search')} See all results for &ldquo;${esc(t)}&rdquo;</button>`
+    : `<p class="ns-none">Nothing matches &ldquo;${esc(t)}&rdquo; yet. Press Enter to search anyway.</p>`;
+  box.classList.add('open');
+  icons();
+}
+/* the header search opens in place rather than as an overlay */
+function openNavSearch(){
+  const w=document.getElementById('navsearch'); if(!w) return;
+  w.classList.add('open');
+  const i=document.getElementById('ns-input'); if(i){ i.focus(); i.select(); }
+}
+function closeNavSearch(){
+  const w=document.getElementById('navsearch'); if(!w) return;
+  w.classList.remove('open');
+  const i=document.getElementById('ns-input'); if(i) i.value="";
+  const b=document.getElementById('ns-sug'); if(b){ b.classList.remove('open'); b.innerHTML=""; }
+}
 function openSearch(){
   const suggestions=["Secure Tenure","Facilitator Guide","Forest rights","Restoration protocol","Water access","LDHF"];
   document.getElementById('pn-search').innerHTML =

@@ -1602,17 +1602,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
 
 /* the course index: numbered cells stacked into a column per topic heading */
-.cidx{display:grid;grid-auto-flow:column;grid-auto-columns:8.5rem;gap:.5rem;justify-content:center;
-  overflow-x:auto;padding-bottom:.35rem;align-items:stretch}
-.cidx-col{display:grid;grid-template-rows:1fr auto;align-items:end;min-width:0}
+.cidx{display:grid;justify-content:center;overflow-x:auto;padding-bottom:.25rem}
+.cidx-row{display:grid;grid-template-columns:repeat(var(--n,1),7.5rem);gap:.45rem;justify-content:center}
+.cidx-bars{align-items:end;border-bottom:1px solid var(--line-2)}
 .cidx-cells{display:flex;flex-direction:column-reverse;gap:2px}
 .cidx-cell{position:relative;display:block;width:100%;border:0;background:var(--ct,var(--green));color:#fff;
-  font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.02em;
-  padding:.52rem .4rem;text-align:center;cursor:pointer;transition:filter .12s}
-.cidx-cell:hover{filter:brightness(1.12);outline:2px solid var(--ink-3);outline-offset:-2px}
-.cidx-h{margin-top:.5rem;border-top:3px solid var(--ct,var(--line-2));padding:.55rem .3rem 0;
-  font-size:.72rem;font-weight:800;line-height:1.4;color:var(--ink);text-align:center}
-.cidx-foot{margin-top:.9rem}
+  font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.03em;
+  padding:.46rem .3rem;text-align:center;cursor:pointer;transition:filter .12s}
+.cidx-cell:hover{filter:brightness(1.14);outline:2px solid var(--ink-3);outline-offset:-2px}
+.cidx-h{border-top:3px solid var(--ct,var(--line-2));padding:.55rem .2rem 0;text-align:center;
+  font-size:.71rem;font-weight:800;line-height:1.35;color:var(--ink)}
+.cidx-h b{display:block;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.08em;
+  color:var(--ct,var(--muted-2));margin-bottom:.22rem}
+.cidx-h em{display:block;font-style:normal;font-size:.66rem;font-weight:600;color:var(--faint);margin-top:.3rem}
+.cidx-foot{margin-top:1.1rem}
 /* the hover label naming the subtopic behind a number */
 .cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
   padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}
@@ -2194,7 +2197,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
-<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:max-content;min-width:min(34rem,100%);max-width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
+<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:max-content;min-width:min(26rem,100%);max-width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -5929,13 +5932,19 @@ function openCourseIndex(topicId){
       `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}. Open any number to see its files.`,
       "closeCourseIndex()") +
     (groups.length
-      ? `<div class="cidx">${groups.map((g,gi)=>`
-          <div class="cidx-col" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]})">
-            <div class="cidx-cells">${g.items.map(it=>`
-              <button class="cidx-cell" onmouseenter="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onmouseleave="cidxTip(null)" onfocus="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onblur="cidxTip(null)"
-                onclick="closeCourseIndex();go('#/modular/${topicSystem(topic)}?${indexQuery()}topic=${topic.id}&sub=${it.code}')">${it.code}</button>`).join("")}</div>
-            <div class="cidx-h">${g.mod}</div>
-          </div>`).join("")}</div>
+      ? `<div class="cidx" style="--n:${groups.length}">
+           <div class="cidx-row cidx-bars">${groups.map((g,gi)=>`
+             <div class="cidx-col" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]})">
+               <div class="cidx-cells">${g.items.map(it=>`
+                 <button class="cidx-cell" onmouseenter="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onmouseleave="cidxTip(null)" onfocus="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onblur="cidxTip(null)"
+                   onclick="closeCourseIndex();go('#/modular/${topicSystem(topic)}?${indexQuery()}topic=${topic.id}&sub=${it.code}')">${it.code}</button>`).join("")}</div>
+             </div>`).join("")}</div>
+           <div class="cidx-row cidx-heads">${groups.map((g,gi)=>`
+             <div class="cidx-h" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]})">
+               <b>${indexSeries(g)}</b>${indexLabel(g.mod, topic)}
+               <em>${g.items.length} subtopic${g.items.length!==1?'s':''}</em>
+             </div>`).join("")}</div>
+         </div>
          <div class="cidx-tip" id="cidx-tip" hidden></div>
          <p class="hint cidx-foot">${ic('info')} Hover a number to see its subtopic; click to open it.</p>`
       : `<p class="tl-s">This course has no topics yet.</p>`);
@@ -5956,6 +5965,15 @@ function cidxTip(el, code, name){
   let y = c.top + c.height/2 - b.height/2;
   y = Math.max(8, Math.min(y, window.innerHeight - b.height - 8));
   t.style.left = x+'px'; t.style.top = y+'px';
+}
+// column heading without the topic name it repeats, plus its number series
+function indexLabel(mod, topic){
+  const p = (topic ? topic.name : "") + " \u2014 ";
+  return (topic && mod.indexOf(p)===0) ? mod.slice(p.length) : mod;
+}
+function indexSeries(g){
+  const c = (g.items[0]||{}).code || "";
+  return c.length>2 ? c.slice(0,c.length-2)+"00" : "";
 }
 // keep the learning-design group when jumping from the index
 function indexQuery(){ const g=parseHash().params.g; return g ? "g="+encodeURIComponent(g)+"&" : ""; }

@@ -1601,19 +1601,22 @@ main{min-height:60vh;animation:fade .3s ease}
 .pane-index:hover{color:var(--green-d)}
 .pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
 
-/* the course index matrix: a column per topic heading */
-.cidx{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(11rem,1fr);gap:.75rem;
-  overflow-x:auto;padding-bottom:.35rem;align-items:start}
-.cidx-col{border:1px solid var(--line-2);min-width:0}
-.cidx-h{background:var(--cts,var(--chip));color:var(--ct,var(--ink));border-bottom:2px solid var(--ct,var(--line-2));
-  padding:.7rem .75rem;font-size:.78rem;font-weight:800;line-height:1.35}
-.cidx-cells{display:grid}
-.cidx-cell{display:flex;align-items:flex-start;gap:.55rem;width:100%;border:0;border-top:1px solid var(--line);
-  background:#fff;padding:.6rem .75rem;font:inherit;text-align:left;cursor:pointer;transition:background .12s}
-.cidx-cell:first-child{border-top:0}
-.cidx-cell:hover{background:var(--cts,var(--bg-soft))}
-.cidx-cell b{flex:none;font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--ct,var(--muted-2))}
-.cidx-cell span{font-size:.82rem;color:var(--ink);line-height:1.45;min-width:0}
+/* the course index: numbered cells stacked into a column per topic heading */
+.cidx{display:grid;grid-auto-flow:column;grid-auto-columns:8.5rem;gap:.5rem;justify-content:center;
+  overflow-x:auto;padding-bottom:.35rem;align-items:stretch}
+.cidx-col{display:grid;grid-template-rows:1fr auto;align-items:end;min-width:0}
+.cidx-cells{display:flex;flex-direction:column-reverse;gap:2px}
+.cidx-cell{position:relative;display:block;width:100%;border:0;background:var(--ct,var(--green));color:#fff;
+  font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.02em;
+  padding:.52rem .4rem;text-align:center;cursor:pointer;transition:filter .12s}
+.cidx-cell:hover{filter:brightness(1.12);outline:2px solid var(--ink-3);outline-offset:-2px}
+.cidx-h{margin-top:.5rem;border-top:3px solid var(--ct,var(--line-2));padding:.55rem .3rem 0;
+  font-size:.72rem;font-weight:800;line-height:1.4;color:var(--ink);text-align:center}
+.cidx-foot{margin-top:.9rem}
+/* the hover label naming the subtopic behind a number */
+.cidx-tip{position:fixed;z-index:60;max-width:15rem;background:var(--ink-3);color:#fff;
+  padding:.4rem .55rem;font-size:.76rem;font-weight:600;line-height:1.4;pointer-events:none}
+.cidx-tip b{display:block;font-family:var(--mono);font-size:.68rem;font-weight:700;color:#e8dcc9}
 
 .pane-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:0 0 .7rem}
 .modhead{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:800;color:var(--ink);
@@ -2191,7 +2194,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
-<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
+<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:max-content;min-width:min(34rem,100%);max-width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -2667,6 +2670,8 @@ function phFallback(img, label, extra){
   if(parent) parent.appendChild(box);
 }
 function esc(s){ return (s||"").replace(/"/g,"&quot;"); }
+// safe inside a single-quoted JS string that sits in a double-quoted attribute
+function escj(s){ return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
 function initials(nm){
   const w=(nm||"").trim().split(/\s+/).filter(Boolean);
   if(!w.length) return "";
@@ -5914,27 +5919,46 @@ function openProcessDocs(sysId){
 }
 function closeProcessDocs(){ closeOverlay('ov-docs'); }
 /* the whole course index as a matrix — one column per topic heading */
-const INDEX_TINTS = ["forests","pastureland","water","map","leo","agri"];
+const INDEX_TINTS = ["forests","water","agri","leo","pastureland","map"];
 function openCourseIndex(topicId){
   const topic = topicById(topicId); if(!topic) return;
   const groups = subtopicsFor(topic).filter(g=>g.items.length);
   const total = groups.reduce((n,g)=>n+g.items.length,0);
   document.getElementById('pn-index').innerHTML =
-    modalHead(topic.name + " — course index",
-      `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}. Open any one to see its files.`,
+    modalHead(topic.name + " \u2014 course index",
+      `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}. Open any number to see its files.`,
       "closeCourseIndex()") +
     (groups.length
       ? `<div class="cidx">${groups.map((g,gi)=>`
-          <div class="cidx-col" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]});--cts:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]}-s)">
-            <div class="cidx-h">${g.mod}</div>
+          <div class="cidx-col" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]})">
             <div class="cidx-cells">${g.items.map(it=>`
-              <button class="cidx-cell" onclick="closeCourseIndex();go('#/modular/${topicSystem(topic)}?topic=${topic.id}&sub=${it.code}')">
-                <b>${it.code}</b><span>${it.name}</span></button>`).join("")}</div>
-          </div>`).join("")}</div>`
+              <button class="cidx-cell" onmouseenter="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onmouseleave="cidxTip(null)" onfocus="cidxTip(this,'${escj(it.code)}','${escj(it.name)}')" onblur="cidxTip(null)"
+                onclick="closeCourseIndex();go('#/modular/${topicSystem(topic)}?${indexQuery()}topic=${topic.id}&sub=${it.code}')">${it.code}</button>`).join("")}</div>
+            <div class="cidx-h">${g.mod}</div>
+          </div>`).join("")}</div>
+         <div class="cidx-tip" id="cidx-tip" hidden></div>
+         <p class="hint cidx-foot">${ic('info')} Hover a number to see its subtopic; click to open it.</p>`
       : `<p class="tl-s">This course has no topics yet.</p>`);
   openOverlay('ov-index');
 }
-function closeCourseIndex(){ closeOverlay('ov-index'); }
+function closeCourseIndex(){ cidxTip(null); closeOverlay('ov-index'); }
+/* the floating label for a hovered index number */
+function cidxTip(el, code, name){
+  const t=document.getElementById('cidx-tip'); if(!t) return;
+  if(!el){ t.hidden=true; return; }
+  t.textContent = name; t.insertAdjacentHTML('afterbegin','<b></b>');
+  t.firstChild.textContent = code;
+  t.hidden=false;
+  const c=el.getBoundingClientRect(), b=t.getBoundingClientRect();
+  let x = c.right + 8;
+  if(x + b.width > window.innerWidth - 8) x = c.left - b.width - 8;
+  x = Math.max(8, x);
+  let y = c.top + c.height/2 - b.height/2;
+  y = Math.max(8, Math.min(y, window.innerHeight - b.height - 8));
+  t.style.left = x+'px'; t.style.top = y+'px';
+}
+// keep the learning-design group when jumping from the index
+function indexQuery(){ const g=parseHash().params.g; return g ? "g="+encodeURIComponent(g)+"&" : ""; }
 /* which resource system a topic is being viewed under */
 function topicSystem(topic){
   const {params}=parseHash();

@@ -1568,9 +1568,12 @@ main{min-height:60vh;animation:fade .3s ease}
 .lc-main{flex:1;min-width:0}
 .lc-head{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap}
 .lc-kind{font-size:.76rem;font-weight:700;color:var(--faint);white-space:nowrap}
-.lc-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.7rem}
-.lc-foot .tags{gap:.35rem}
-.lc-by{display:inline-flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted-2);white-space:nowrap}
+.lc-foot{display:flex;align-items:center;gap:.5rem .9rem;flex-wrap:wrap;margin-top:.7rem}
+.lc-foot .tags{gap:.35rem;margin:0}
+/* the contributor follows the tags on the same line, separated by a hairline rule */
+.lc-by{display:inline-flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted-2);
+  white-space:nowrap;padding-left:.9rem;border-left:1px solid var(--line-2)}
+.lc-by .pw-av.sm{width:1.5rem;height:1.5rem;font-size:.58rem}
 .lc-act{display:flex;align-items:center;gap:.5rem;flex:none}
 @media(max-width:700px){.listcard{flex-wrap:wrap}.lc-act{width:100%;justify-content:flex-end}}
 

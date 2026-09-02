@@ -1012,22 +1012,21 @@ main{min-height:60vh;animation:fade .3s ease}
 
 /* ---- apps launcher ---- */
 .appsw{position:relative;display:inline-flex}
-.appsw-menu{position:absolute;right:0;top:calc(100% + .6rem);width:32rem;max-width:92vw;background:#fff;
+.appsw-menu{position:absolute;right:0;top:calc(100% + .6rem);width:26rem;max-width:92vw;background:#fff;
   border:1px solid var(--line);border-radius:0;box-shadow:var(--shadow-float);padding:1.25rem;display:none;z-index:70}
 .appsw.open .appsw-menu{display:block}
-.appsw-cols{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem}
+.appsw-cols{display:grid;grid-template-columns:1fr;gap:1.15rem}
+.appsw-cols>div+div{border-top:1px solid var(--line);padding-top:1.15rem}
 .appsw-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:.85rem}
 .app-grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem}
-.app-grid1{display:grid;grid-template-columns:1fr;gap:.35rem}
+.app-grid1{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem}
 .app-tile{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.7rem .35rem;border-radius:0;
   cursor:pointer;text-align:center;border:1px solid transparent;background:none;transition:.15s}
 .app-tile:hover{background:var(--bg-soft);border-color:var(--line)}
-.app-grid1 .app-tile{flex-direction:row;gap:.65rem;text-align:left;padding:.55rem .6rem}
-.app-grid1 .app-nm{white-space:nowrap}
 .app-nm{font-size:.76rem;font-weight:600;color:var(--ink);line-height:1.25}
 .appsw-menu .ic-tile{width:2.35rem;height:2.35rem;border-radius:.65rem}
 .appsw-menu .ic-tile i,.appsw-menu .ic-tile svg.lucide{width:1.15rem;height:1.15rem}
-@media(max-width:700px){.appsw{display:none}.appsw-cols{grid-template-columns:1fr}}
+@media(max-width:700px){.appsw{display:none}}
 
 /* ---- account: profile page ---- */
 .acct-head{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.5rem}

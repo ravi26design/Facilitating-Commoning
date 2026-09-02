@@ -847,8 +847,8 @@ button.dd-btn.lg-input{justify-content:space-between;font-weight:600;text-align:
 
 /* footer */
 /* footer — light cream, dark text, brand left and link columns beside it */
-footer.site{position:relative;z-index:1;background:var(--bg-soft);color:var(--muted);
-  border-top:1px solid var(--line);margin-top:0}
+footer.site{position:relative;z-index:1;background:#fff;color:var(--muted);
+  border-top:1px solid var(--line-2);margin-top:0}
 footer.site .cols{max-width:90rem;margin:0 auto;padding:3.75rem 2rem 2.5rem;display:grid;
   grid-template-columns:minmax(0,1.1fr) repeat(3,minmax(0,1fr));gap:2.5rem}
 footer.site .fbrand{display:inline-flex;align-items:center;gap:10px}
@@ -977,7 +977,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .acct-head .btn{flex:none}
 .acct-title{font-size:1.75rem;margin:0 0 .35rem}
 .acct-sub{color:var(--muted);margin:0 0 1.5rem}
-.idcard{position:relative;display:flex;align-items:flex-start;gap:1.25rem;background:var(--card);border:1px solid var(--line);
+.idcard{position:relative;display:flex;align-items:flex-start;gap:1.25rem;background:#fff;border:1px solid var(--line-2);
   box-shadow:var(--shadow-card);padding:1.6rem 1.75rem;margin-bottom:1.35rem}
 .id-av{flex:none;display:grid;place-items:center;object-fit:cover;width:5rem;height:5rem;border-radius:50%;
   background:var(--blue);color:#fff;font-size:1.5rem;font-weight:800;letter-spacing:.02em}
@@ -993,7 +993,7 @@ main{min-height:60vh;animation:fade .3s ease}
   background:#fff;color:var(--blue);display:grid;place-items:center;transition:.15s}
 .id-edit:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
 .id-edit i,.id-edit svg.lucide{width:1.05rem;height:1.05rem}
-.prefcard{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-card);padding:1.6rem 1.75rem}
+.prefcard{background:#fff;border:1px solid var(--line-2);padding:1.6rem 1.75rem}
 .prefcard h3{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;margin:0 0 1.25rem}
 .prefcard h3 i,.prefcard h3 svg.lucide{width:1.15rem;height:1.15rem;color:var(--blue)}
 .prefrow{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.1rem 0;border-top:1px solid var(--line)}
@@ -1010,8 +1010,8 @@ main{min-height:60vh;animation:fade .3s ease}
 
 /* ---- account section ---- */
 .acctwrap{display:grid;grid-template-columns:16.5rem minmax(0,1fr);min-height:calc(100vh - 4.25rem);background:var(--bg-soft)}
-.acct-side{background:var(--card);border-right:1px solid var(--line);padding:1.75rem 1rem}
-.acct-main{padding:2.5rem 1.5rem 4rem}
+.acct-side{background:#fff;border-right:1px solid var(--line-2);padding:1.75rem 1rem}
+.acct-main{padding:2.5rem 1.5rem 4rem;background:var(--bg-soft)}
 .acct-main>*{max-width:80rem;margin-left:auto;margin-right:auto}
 @media(max-width:860px){
   .acctwrap{grid-template-columns:1fr;min-height:0}
@@ -1139,10 +1139,10 @@ main{min-height:60vh;animation:fade .3s ease}
 .tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:.85rem;margin:1.1rem 0 1.25rem}
 .tab-c{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;font-size:.82rem;font-weight:600;
   cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;color:var(--ink);transition:.15s}
-.tab-c:hover{border-color:var(--blue);color:var(--blue)}
-.tab-c.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.tab-c .cnt{background:var(--chip);border-radius:999px;padding:0 .4rem;font-size:.7rem;font-weight:800;color:var(--muted)}
-.tab-c.active .cnt{background:rgba(255,255,255,.22);color:#fff}
+.tab-c:hover{border-color:var(--green);color:var(--green-d)}
+.tab-c.active{background:var(--green);color:#fff;border-color:var(--green)}
+.tab-c .cnt{background:none;padding:0;font-size:.8rem;font-weight:800;color:var(--faint);font-variant-numeric:tabular-nums}
+.tab-c.active .cnt{color:rgba(255,255,255,.72)}
 
 /* ---- submission rows ---- */
 .sub-row{display:flex;align-items:center;gap:.9rem;padding:.85rem .6rem;cursor:pointer;
@@ -1336,7 +1336,7 @@ main{min-height:60vh;animation:fade .3s ease}
 @media(max-width:900px){.ehero .stand .row{justify-content:flex-start}}
 /* a page head gives the title the room it needs; the actions size to content.
    The home hero keeps the even two-column split. */
-.ehero.page .in{grid-template-columns:minmax(0,1fr) auto;gap:2rem}
+.ehero.page .in{grid-template-columns:minmax(0,1fr) auto;gap:2rem;padding-bottom:1.5rem}
 .ehero.page h1{max-width:none}
 @media(max-width:900px){.ehero.page .in{grid-template-columns:1fr}}
 /* the standfirst sits under the title */
@@ -1735,19 +1735,19 @@ main{min-height:60vh;animation:fade .3s ease}
 
 .sd-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:1.5rem;align-items:stretch}
 @media(max-width:1000px){.sd-grid{grid-template-columns:1fr}}
-.sd-pv{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-card);overflow:hidden;
+.sd-pv{background:#fff;border:1px solid var(--line-2);overflow:hidden;
   display:flex;flex-direction:column}
 .sd-pv-h{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.25rem;border-bottom:1px solid var(--line);
   font-size:.85rem;font-weight:800;color:var(--ink)}
 .sd-pv-h i,.sd-pv-h svg.lucide{width:.95rem;height:.95rem;color:var(--muted)}
 .sd-pv-h .iconbtn{margin-left:auto}
-.sd-pv-b{background:var(--bg-soft);padding:2.25rem 2rem;display:grid;place-items:center;flex:1;min-height:22rem}
+.sd-pv-b{background:var(--card);padding:2.25rem 2rem;display:grid;place-items:center;flex:1;min-height:22rem}
 .sd-paper{height:100%;max-height:34rem;width:auto;aspect-ratio:1/1.3;max-width:100%;background:#fff;border:1px solid var(--line-2);
   box-shadow:0 10px 30px rgba(74,66,62,.10);overflow:hidden;position:relative}
 .sd-paper>*{width:100%;height:100%}
 .sd-paper .pv-page{padding:1.6rem 1.5rem;gap:.6rem}
 
-.sd-side{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-card);padding:1.45rem 1.5rem}
+.sd-side{background:#fff;border:1px solid var(--line-2);padding:1.45rem 1.5rem}
 .sd-side-h{padding-bottom:1.15rem;margin-bottom:1.25rem;border-bottom:1px solid var(--line)}
 .sd-side-h h3{font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
   color:var(--muted-2);margin-bottom:.9rem}
@@ -1774,19 +1774,21 @@ main{min-height:60vh;animation:fade .3s ease}
 .sd-who .pw-av{width:2rem;height:2rem;font-size:.7rem;flex:none}
 .sd-who b{display:block;font-size:.86rem;color:var(--ink)}
 .sd-who span{font-size:.76rem;color:var(--muted)}
-.sd-hist{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-card);margin-top:1.5rem}
+.sd-hist{background:#fff;border:1px solid var(--line-2);margin-top:1.5rem}
 .sd-hist-h{display:flex;align-items:center;gap:.5rem;padding:1.15rem 1.5rem;border-bottom:1px solid var(--line);
   font-size:1.05rem;font-weight:800;color:var(--ink)}
 .sd-hist-h i,.sd-hist-h svg.lucide{width:1rem;height:1rem;color:var(--muted)}
 .sd-hist-b{padding:1.5rem 1.6rem 1.75rem}
 
 /* segmented pills — the selected one is green */
-.seg-tabs{display:inline-flex;gap:.4rem;background:var(--bg-soft);
-  border-radius:999px;padding:.35rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.seg-tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.5rem 1.05rem;
-  font:inherit;font-size:.84rem;font-weight:800;color:var(--ink);cursor:pointer;transition:.15s}
-.seg-tab:hover{border-color:var(--green-line);color:var(--green-d)}
-.seg-tab.on{background:var(--green);border-color:var(--green);color:#fff}
+/* the same pill filter the contributions list uses */
+.seg-tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem;background:none;border:0;padding:0}
+.seg-tab{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;
+  font:inherit;font-size:.82rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s;
+  display:inline-flex;align-items:center;gap:.45rem}
+.seg-tab:hover{border-color:var(--green);color:var(--green-d)}
+.seg-tab.on{background:var(--green);color:#fff;border-color:var(--green)}
+.seg-tab.on:hover{background:var(--green-d);border-color:var(--green-d);color:#fff}
 
 /* the workflow trail */
 .tl-flow{list-style:none;display:grid}
@@ -1807,7 +1809,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .tl-meta{margin-left:auto;padding-left:1rem;font-size:.84rem;color:var(--muted);flex:none}
 
 /* the comment thread */
-.cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line);padding:1.25rem}
+.cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line-2);padding:1.25rem}
 .cm-grow{flex:1;min-width:0}
 /* the composer sits outside .field, so it needs the field styling of its own */
 .cm-box textarea{width:100%;min-height:5.5rem;resize:vertical;padding:.75rem .95rem;
@@ -1831,18 +1833,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .tl-bullet{width:.6rem;height:.6rem;border-radius:999px;background:var(--blue);flex:none;margin-top:.42rem}
 .tl-s{font-size:.83rem;color:var(--muted);margin-top:.25rem}
 /* --- Approvals table --- */
-.seg-tabs .cnt{margin-left:.5rem;background:var(--chip);border-radius:999px;padding:.05rem .45rem;
-  font-size:.72rem;font-weight:800;color:var(--muted-2)}
-.seg-tab.on .cnt{background:rgba(255,255,255,.24);color:#fff}
-.ap-panel{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-card);overflow-x:auto}
+/* the count reads as a quiet number, not a chip */
+.seg-tabs .cnt{margin-left:0;background:none;border:0;padding:0;
+  font-size:.8rem;font-weight:800;color:var(--faint);font-variant-numeric:tabular-nums}
+.seg-tab:hover .cnt{color:var(--muted-2)}
+.seg-tab.on .cnt{color:rgba(255,255,255,.72)}
+.ap-panel{background:#fff;border:1px solid var(--line-2);overflow-x:auto}
 .ap-table{width:100%;border-collapse:collapse;min-width:52rem}
-.ap-table th{text-align:left;font-size:.82rem;font-weight:800;color:var(--blue);
+.ap-table th{text-align:left;font-size:.82rem;font-weight:800;color:var(--ink);
   padding:1.05rem 1rem;border-bottom:1px solid var(--line);white-space:nowrap}
 .ap-table th:first-child,.ap-table td:first-child{padding-left:1.5rem}
 .ap-table th:last-child,.ap-table td:last-child{padding-right:1.5rem}
 .ap-table td{padding:.9rem 1rem;border-bottom:1px solid var(--line);vertical-align:middle;font-size:.9rem}
 .ap-table tbody tr:last-child td{border-bottom:0}
-.ap-table tbody tr:hover,.ap-table tbody tr.menu-open{background:var(--bg-soft)}
+.ap-table tbody tr:hover,.ap-table tbody tr.menu-open{background:var(--card)}
 .ap-name{display:flex;align-items:center;gap:.85rem;min-width:0}
 .ap-name .doc-fi{width:2.5rem;height:2.5rem;flex:none}
 .ap-name .doc-fi i,.ap-name .doc-fi svg.lucide{width:1.1rem;height:1.1rem}
@@ -1852,9 +1856,11 @@ main{min-height:60vh;animation:fade .3s ease}
 .ap-dim{color:var(--muted);white-space:nowrap}
 .ap-menu-cell{width:1%;text-align:right}
 .rowmenu{position:relative;display:inline-block}
-.rowmenu .kebab{width:2.1rem;height:2.1rem;display:grid;place-items:center;background:#fff;
-  border:1px solid var(--line-2);color:var(--muted);cursor:pointer;transition:.15s}
-.rowmenu .kebab:hover,.rowmenu.open .kebab{border-color:var(--blue);color:var(--blue)}
+/* the kebab only shows its outline once you are on the row */
+.rowmenu .kebab{width:2.1rem;height:2.1rem;display:grid;place-items:center;background:transparent;
+  border:1px solid transparent;color:var(--muted-2);cursor:pointer;transition:.15s}
+.ap-table tbody tr:hover .rowmenu .kebab{background:#fff;border-color:var(--line-2);color:var(--muted)}
+.rowmenu .kebab:hover,.rowmenu.open .kebab{background:#fff;border-color:var(--blue);color:var(--blue)}
 .rowmenu-list{position:absolute;right:0;top:calc(100% + .35rem);background:#fff;border:1px solid var(--line);
   box-shadow:var(--shadow-float);padding:.35rem;display:none;z-index:40;min-width:12.5rem;text-align:left}
 .rowmenu.open .rowmenu-list{display:block}
@@ -4384,8 +4390,6 @@ screens.contribute = () => {
               <li>Hindi and other local languages are especially welcome</li>
             </ul>
           </div>
-          ${callout("Not sure where it fits?","Ask the team and they will help you place it.",
-            `<button class="btn btn-outline sm" onclick="openContact()">${ic('life-buoy')} Get help</button>`)}
         </aside>
       </div>`;
 

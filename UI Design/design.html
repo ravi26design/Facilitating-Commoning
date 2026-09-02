@@ -1594,6 +1594,27 @@ main{min-height:60vh;animation:fade .3s ease}
 .emptypane .ic-tile{margin:0 auto 1.25rem}
 .emptypane h3{font-size:1.25rem;margin-bottom:.6rem}
 .emptypane p{color:var(--muted);line-height:1.7;max-width:32rem;margin:0 auto}
+/* the Topics pane header carries the index link */
+.pane-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.7rem}
+.pane-index{display:inline-flex;align-items:center;gap:.35rem;border:0;background:none;padding:0;
+  font:inherit;font-size:.74rem;font-weight:800;color:var(--cta);cursor:pointer;white-space:nowrap}
+.pane-index:hover{color:var(--green-d)}
+.pane-index i,.pane-index svg.lucide{width:.85rem;height:.85rem}
+
+/* the course index matrix: a column per topic heading */
+.cidx{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(11rem,1fr);gap:.75rem;
+  overflow-x:auto;padding-bottom:.35rem;align-items:start}
+.cidx-col{border:1px solid var(--line-2);min-width:0}
+.cidx-h{background:var(--cts,var(--chip));color:var(--ct,var(--ink));border-bottom:2px solid var(--ct,var(--line-2));
+  padding:.7rem .75rem;font-size:.78rem;font-weight:800;line-height:1.35}
+.cidx-cells{display:grid}
+.cidx-cell{display:flex;align-items:flex-start;gap:.55rem;width:100%;border:0;border-top:1px solid var(--line);
+  background:#fff;padding:.6rem .75rem;font:inherit;text-align:left;cursor:pointer;transition:background .12s}
+.cidx-cell:first-child{border-top:0}
+.cidx-cell:hover{background:var(--cts,var(--bg-soft))}
+.cidx-cell b{flex:none;font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--ct,var(--muted-2))}
+.cidx-cell span{font-size:.82rem;color:var(--ink);line-height:1.45;min-width:0}
+
 .pane-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:0 0 .7rem}
 .modhead{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:800;color:var(--ink);
   background:var(--bg-soft);border:1px solid var(--line);padding:.5rem .6rem;margin:.85rem 0 .35rem;
@@ -2170,6 +2191,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
+<div class="overlay" id="ov-index"><div class="modal" id="pn-index" style="width:min(72rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -3793,7 +3815,10 @@ screens.modular = (params) => {
       isAdmin()?`<button class="btn ${editMode?'btn-green':'btn-outline'}" onclick="toggleEdit()">${editMode?ic('check')+' Done':ic('pencil')+' Edit'}</button>`:'') +
     section(`<div class="twopane">
       <aside class="pane-side">
-        <p class="pane-h">Topics</p>
+        <div class="pane-top">
+          <p class="pane-h">Topics</p>
+          <button class="pane-index" onclick="openCourseIndex('${topic.id}')">${ic('table-2')} See all index</button>
+        </div>
         ${groups.length?groups.map((g,gi)=>{
           const shut = isGroupShut(topic.id, gi);
           return `<div class="modhead ${shut?'shut':''}" onclick="toggleGroup('${topic.id}',${gi})"
@@ -5888,6 +5913,33 @@ function openProcessDocs(sysId){
   openOverlay('ov-docs');
 }
 function closeProcessDocs(){ closeOverlay('ov-docs'); }
+/* the whole course index as a matrix — one column per topic heading */
+const INDEX_TINTS = ["forests","pastureland","water","map","leo","agri"];
+function openCourseIndex(topicId){
+  const topic = topicById(topicId); if(!topic) return;
+  const groups = subtopicsFor(topic).filter(g=>g.items.length);
+  const total = groups.reduce((n,g)=>n+g.items.length,0);
+  document.getElementById('pn-index').innerHTML =
+    modalHead(topic.name + " — course index",
+      `${total} subtopic${total!==1?'s':''} across ${groups.length} topic${groups.length!==1?'s':''}. Open any one to see its files.`,
+      "closeCourseIndex()") +
+    (groups.length
+      ? `<div class="cidx">${groups.map((g,gi)=>`
+          <div class="cidx-col" style="--ct:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]});--cts:var(--s-${INDEX_TINTS[gi % INDEX_TINTS.length]}-s)">
+            <div class="cidx-h">${g.mod}</div>
+            <div class="cidx-cells">${g.items.map(it=>`
+              <button class="cidx-cell" onclick="closeCourseIndex();go('#/modular/${topicSystem(topic)}?topic=${topic.id}&sub=${it.code}')">
+                <b>${it.code}</b><span>${it.name}</span></button>`).join("")}</div>
+          </div>`).join("")}</div>`
+      : `<p class="tl-s">This course has no topics yet.</p>`);
+  openOverlay('ov-index');
+}
+function closeCourseIndex(){ closeOverlay('ov-index'); }
+/* which resource system a topic is being viewed under */
+function topicSystem(topic){
+  const {params}=parseHash();
+  return (parseHash().parts[1]) || "pastureland";
+}
 function openTour(){
   document.getElementById('pn-tour').innerHTML =
     modalHead("Take a tour · get started","Five steps to find your way around the repository.","closeTour()") +

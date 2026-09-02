@@ -2505,6 +2505,11 @@ function topicsForGroup(name, group){
 const SUBSTORE = {};
 function _genSubtopics(topic){
   const F=(a,b,c)=>[{name:a,type:"PDF"},{name:b,type:"Video"}].concat(c?[{name:c,type:"Image"}]:[]);
+  // a module of numbered subtopics; each carries a reading, a walkthrough and (every third) a field photo
+  const G=(mod,series,names)=>({mod:mod, items:names.map((nm,i)=>({
+    code:String(series)+String(i+1).padStart(2,"0"), name:nm,
+    files:F(nm+" — reading note", nm+" — walkthrough", i%3===0 ? nm+" — field photo" : null)
+  }))});
   return [
     {mod:(topic?topic.name:"Topic")+" — Introduction & Basics", items:[
       {code:"101", name:"Historical background", files:F("Background note","Intro video","Concept map")},
@@ -2520,7 +2525,33 @@ function _genSubtopics(topic){
       {code:"204", name:"Meeting process", files:F("Process steps","Process video")},
       {code:"205", name:"Participation", files:F("Participation guide","Short video")},
       {code:"206", name:"Documentation", files:F("Documentation format","Sample records")}
-    ]}
+    ]},
+    G("Recognition & Claim Process",3,[
+      "Who can claim","Evidence a claim needs","Preparing the claim form","Mapping the claim boundary",
+      "The Gram Sabha resolution","Forming the Forest Rights Committee","Filing at the sub-divisional level",
+      "Sub-divisional committee review","District committee approval","Title issue and record entry",
+      "Common objections and how to answer them","Appeals and re-submission"
+    ]),
+    G("Rights & Legal Framework",4,[
+      "The Act and its schedule","Individual and community rights","Rights over minor forest produce",
+      "Grazing and seasonal access","Habitat rights","Duties of a rights holder",
+      "Conservation and protection powers","Where the law is silent"
+    ]),
+    G("Role of Field Stakeholders",5,[
+      "The frontline officer's role","Working with the Gram Sabha","Facilitators and support organisations",
+      "Coordination between departments","Handling disagreement in the field"
+    ]),
+    G("Documentation, Verification & Mapping",6,[
+      "Records the Gram Sabha keeps","Minutes and resolutions","Site verification basics",
+      "Preparing for a joint site visit","GPS readings and waypoints","Drawing the sketch map",
+      "Reading a cadastral map","Overlaying forest and revenue maps","Photo evidence and geotagging",
+      "Compiling the claim file","Common documentation mistakes"
+    ]),
+    G("Implementation & Field Roles",7,[
+      "After the title: what changes","The management plan","Protection and patrolling",
+      "Sustainable harvest rules","Benefit sharing","Monitoring and review",
+      "Convergence with schemes","Reporting back to the Gram Sabha"
+    ])
   ];
 }
 function subtopicsFor(topic){
@@ -3828,8 +3859,9 @@ screens.modular = (params) => {
           <button class="pane-index" onclick="openCourseIndex('${topic.id}')">${ic('table-2')} See all index</button>
         </div>
         ${groups.length?groups.map((g,gi)=>{
-          const shut = isGroupShut(topic.id, gi);
-          return `<div class="modhead ${shut?'shut':''}" onclick="toggleGroup('${topic.id}',${gi})"
+          const holdsActive = !!(activeSub && g.items.some(it=>it.code===activeSub.code));
+          const shut = isGroupShut(topic.id, gi, holdsActive);
+          return `<div class="modhead ${shut?'shut':''}" onclick="toggleGroup('${topic.id}',${gi},${holdsActive})"
             title="${shut?'Expand':'Collapse'} this topic">
             <span class="mh-cv">${ic('chevron-down')}</span>
             <span class="mh-t${canEdit?' renamable':''}"
@@ -5390,10 +5422,13 @@ function adminDeleteTopic(id, sysId, group){
 /* which topic headings the admin has collapsed, keyed by topic and index */
 let SHUT_GROUPS = {};
 function _gkey(topicId, gi){ return topicId + "::" + gi; }
-function isGroupShut(topicId, gi){ return !!SHUT_GROUPS[_gkey(topicId, gi)]; }
-function toggleGroup(topicId, gi){
-  const k=_gkey(topicId, gi);
-  if(SHUT_GROUPS[k]) delete SHUT_GROUPS[k]; else SHUT_GROUPS[k]=true;
+// until the reader says otherwise, only the topic holding the open subtopic is expanded
+function isGroupShut(topicId, gi, holdsActive){
+  const v = SHUT_GROUPS[_gkey(topicId, gi)];
+  return v===undefined ? !holdsActive : !!v;
+}
+function toggleGroup(topicId, gi, holdsActive){
+  SHUT_GROUPS[_gkey(topicId, gi)] = !isGroupShut(topicId, gi, holdsActive);
   render();
 }
 /* rename a topic heading or a subtopic in place */
@@ -5922,7 +5957,7 @@ function openProcessDocs(sysId){
 }
 function closeProcessDocs(){ closeOverlay('ov-docs'); }
 /* the whole course index as a matrix — one column per topic heading */
-const INDEX_TINTS = ["forests","water","agri","leo","pastureland","map"];
+const INDEX_TINTS = ["forests","water","agri","map","pastureland","leo"];
 function openCourseIndex(topicId){
   const topic = topicById(topicId); if(!topic) return;
   const groups = subtopicsFor(topic).filter(g=>g.items.length);

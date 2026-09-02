@@ -147,10 +147,6 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   display:grid;place-items:center;color:var(--muted);transition:.15s}
 .iconbtn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
 .iconbtn i,.iconbtn svg.lucide{width:1.05rem;height:1.05rem}
-.signin-btn{background:var(--cta);color:var(--cta-ink);border:none;border-radius:0;padding:.6rem 1.15rem;
-  font-size:.9rem;font-weight:700;display:inline-flex;align-items:center;gap:.45rem;transition:.15s}
-.signin-btn:hover{background:var(--cta-h)}
-.signin-btn i,.signin-btn svg.lucide{width:1rem;height:1rem}
 .navtoggle{display:none;width:2.4rem;height:2.4rem;border-radius:0;border:1px solid var(--line-2);
   background:#fff;color:var(--ink);place-items:center}
 .navtoggle i,.navtoggle svg.lucide{width:1.2rem;height:1.2rem}
@@ -163,7 +159,6 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   .navright{gap:.5rem}
   .brand .bt{font-size:.95rem}
   .brand .mk{width:34px;height:34px}
-  .signin-btn{padding:.55rem .8rem}
   .profilew-menu{width:14.5rem}
 }
 /* mobile drawer */
@@ -482,7 +477,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .feature:hover .f-cta i,.feature:hover .f-cta svg.lucide{transform:translateX(3px)}
 
 /* dark map tile */
-.feature.dark{background:linear-gradient(140deg,#3f6549 0%,#4a423e 58%,#4e7c59 100%);border-color:transparent}
+.feature.dark{background:var(--green);border-color:transparent}
 .feature.dark::before{content:'';position:absolute;right:-90px;top:-90px;width:300px;height:300px;
   background:radial-gradient(circle,rgba(78,124,89,.35),transparent 68%);pointer-events:none}
 .feature.dark>*{position:relative;z-index:1}
@@ -782,7 +777,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .lg-inner{width:100%;max-width:25rem;margin:0 auto}
 .lg-panel{position:relative;overflow:hidden;padding:3rem clamp(1.5rem,4vw,3.5rem);color:#fff;display:flex;
   flex-direction:column;justify-content:center;gap:1.25rem;
-  background:linear-gradient(140deg,#3f6549 0%,#4a423e 55%,#4e7c59 100%)}
+  background:var(--green)}
 .lg-panel::before{content:'';position:absolute;right:-120px;top:-80px;width:380px;height:380px;
   background:radial-gradient(circle,rgba(78,124,89,.38),transparent 68%)}
 .lg-panel::after{content:'';position:absolute;left:-100px;bottom:-140px;width:340px;height:340px;
@@ -1786,8 +1781,7 @@ main{min-height:60vh;animation:fade .3s ease}
 /* the conclusion */
 .ldfig-end{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
   align-items:center;text-align:center;gap:1.15rem;padding:2rem 1.5rem;border-radius:.55rem;color:#fff;
-  background:radial-gradient(circle at 75% 12%,rgba(78,124,89,.42),transparent 58%),
-             linear-gradient(155deg,#3b3531 0%,#4a423e 60%,#3f6549 100%)}
+  background:var(--green)}
 .ldfig-end::before{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:20px 20px;
   -webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 72%);
@@ -2762,7 +2756,10 @@ function appsMenu(){
 function header(active){
   let authArea;
   if(currentRole==="visitor"){
-    authArea=`<button class="signin-btn" onclick="go('#/login')">${tr('nav.signin')}</button>`;
+    /* a visitor gets the same profile mark, which takes them to sign in */
+    authArea=`<button class="profilew-btn" onclick="go('#/login')"
+      aria-label="${tr('nav.signin')}" title="${tr('nav.signin')}">
+      <span class="nav-av">${ic('user-round')}</span></button>`;
   }else{
     authArea=`<div class="profilew" id="profilew">
       <button class="profilew-btn" onclick="toggleProfile(event)" aria-label="${roleLabel()}" title="${roleLabel()}">

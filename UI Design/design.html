@@ -537,11 +537,17 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .gateway>*{position:relative;z-index:1}
 .gateway h2{color:#fff;font-size:clamp(1.5rem,2.6vw,1.9rem);letter-spacing:-.02em;margin:0 0 .8rem}
 .gateway p{color:rgba(255,255,255,.8);max-width:38rem;margin:0 auto 1.9rem;line-height:1.75;font-size:1rem}
+/* a step chain needs the full band width to flow */
+.gateway p:has(.flowline){max-width:58rem}
 /* the primary action lifts off the band */
 .gateway .btn-white{padding:.8rem 1.6rem;box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
 .gateway .btn-white:hover{transform:translateY(-2px);box-shadow:0 20px 38px -14px rgba(0,0,0,.6)}
 @media(max-width:700px){.gateway{padding:2.75rem 1.25rem}}
 
+/* the arrow-separated step chain inside a gateway band */
+.flowline{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.45rem .7rem;margin:0 auto}
+.flowline .fl-step{white-space:nowrap}
+.flowline .fl-sep{color:rgba(255,255,255,.55);font-weight:700;flex:none}
 /* callout strip */
 .callout{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;
   background:var(--card);border:1px solid var(--line);border-left:5px solid var(--green);border-radius:0;
@@ -3337,6 +3343,11 @@ function filterSidebar(omit){
 /* closing note under the common-thread flow */
 
 /* gateway CTA band */
+/* a chain of steps, arrow-separated, for the gateway band */
+function flowline(steps){
+  return `<span class="flowline">${steps.map((x,i)=>
+    `${i?`<span class="fl-sep" aria-hidden="true">&rarr;</span>`:''}<span class="fl-step">${x}</span>`).join("")}</span>`;
+}
 function gateway(_icon, title, body, actions){
   return `<div class="gateway">
     <h2>${title}</h2>
@@ -3423,7 +3434,8 @@ screens.home = () => shell("#/home", null, `
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 
   ${section(gateway("compass","Ready to begin?",
-    "Understand what Commoning means, learn how capacity building works, then choose the resource system or theme you are working with.",
+    flowline(["Learn the approach","Understand what commoning means","Choose a resource system or Theme",
+              "Follow the process","Access learning resources to facilitate training and action"]),
     `<button class="btn btn-white arrow" onclick="go('#/learning-approach')">Start learning ${ic('arrow-right')}</button>
      <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Go to the Resource Library</button>`), "bleed")}
   </div>

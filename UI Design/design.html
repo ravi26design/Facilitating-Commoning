@@ -2382,13 +2382,18 @@ const LD = [
 ];
 function ldById(id){ return LD.find(x=>x.id===id); }
 
-/* 5-step orientation — take a tour */
+/* 5-step orientation — Get Started */
 const JOURNEY5 = [
-  {n:"1", k:"ORIENT",     q:"What is this repository?",             d:"Understand what the repository is and what it helps you do.", href:"#/commoning", icon:"compass"},
-  {n:"2", k:"UNDERSTAND", q:"What is Commoning?",                   d:"The meaning of Commoning of Commons.", href:"#/commoning", icon:"lightbulb"},
-  {n:"3", k:"LEARN",      q:"How does capacity building work?",     d:"How continuous learning supports Commoning — and two methods of doing it.", href:"#/learning-approach", icon:"graduation-cap"},
-  {n:"4", k:"CHOOSE",     q:"Pastureland / Forest / Water",         d:"Select the natural-resource system or theme you are working with.", href:"#/resource-systems", icon:"layers"},
-  {n:"5", k:"ACT",        q:"Use resources in sequence",            d:"Access resources in a logical sequence to facilitate processes on the ground.", href:"#/library", icon:"library"}
+  {n:"1", k:"KNOW",          q:"How does capacity building work?",
+   d:"How continuous learning enables Commoning and learning approaches.", href:"#/learning-approach", icon:"graduation-cap"},
+  {n:"2", k:"UNDERSTAND",    q:"What is Commoning?",
+   d:"The meaning of Commoning of Commons.", href:"#/commoning", icon:"lightbulb"},
+  {n:"3", k:"CHOOSE",        q:"Resource system or theme relevant to your context.",
+   d:"Select the resource system or theme you are working with.", href:"#/resource-systems", icon:"layers"},
+  {n:"4", k:"LEARN AND ACT", q:"Find and use resources in an organized manner",
+   d:"Access resources in a logical sequence to facilitate trainings or action on ground.", href:"#/library", icon:"library"},
+  {n:"5", k:"CONTRIBUTE",    q:"Upload Resources",
+   d:"Share field-tested resources, guides, tools, or videos to help others learn.", href:"#/contribute", icon:"upload"}
 ];
 
 /* Commoning in Action — field stories */
@@ -3389,7 +3394,7 @@ screens.home = () => shell("#/home", null, `
     <div class="stand">
       <p>A learning system that helps ecosystem actors build capacity and facilitate the Commoning of Commons. Explore learning modules, guides, field tools and mentoring — organised around the Commoning process.</p>
       <div class="row">
-        <button class="btn btn-primary" onclick="openTour()">${ic('compass')} Take a tour</button>
+        <button class="btn btn-primary" onclick="openTour()">${ic('compass')} Get Started</button>
         <button class="btn btn-outline" onclick="go('#/contribute')">${ic('upload')} Contribute</button>
       </div>
     </div>
@@ -3655,7 +3660,7 @@ screens["resource-systems"] = () => shell("#/resource-systems", null,
     `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band roomy") +
   section(gateway("map","Not sure where to start?",
     "Follow the five-step orientation, or go straight to the Resource Library and filter your way to what you need.",
-    `<button class="btn btn-white" onclick="openTour()">${ic('compass')} Take a tour</button>
+    `<button class="btn btn-white" onclick="openTour()">${ic('compass')} Get Started</button>
      <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`), "bleed")
 );
 
@@ -6076,7 +6081,7 @@ function indexSeries(g){
 }
 function openTour(){
   document.getElementById('pn-tour').innerHTML =
-    modalHead("Take a tour · get started","Five steps to find your way around the repository.","closeTour()") +
+    modalHead("Get Started","Five steps to find your way around this platform.","closeTour()") +
     `<ol class="tour">${JOURNEY5.map(s=>`
       <li><button class="tour-step" onclick="closeTour();go('${s.href}')">
         <span class="tour-n">${s.n}</span>
@@ -6088,8 +6093,7 @@ function openTour(){
         <span class="tour-go">${ic('arrow-right')}</span>
       </button></li>`).join("")}</ol>
     <div class="row" style="justify-content:flex-end;margin-top:1.5rem">
-      <button class="btn btn-outline" onclick="closeTour();go('#/resource-systems')">Choose a resource system</button>
-      <button class="btn btn-primary arrow" onclick="closeTour();go('#/learning-approach')">Start learning ${ic('arrow-right')}</button></div>`;
+      <button class="btn btn-primary arrow" onclick="closeTour();go('#/learning-approach')">Explore the Learning Approach ${ic('arrow-right')}</button></div>`;
   openOverlay('ov-tour');
 }
 function closeTour(){ closeOverlay('ov-tour'); }

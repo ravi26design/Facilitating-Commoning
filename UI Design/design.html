@@ -2112,14 +2112,10 @@ main{min-height:60vh;animation:fade .3s ease}
   display:flex;flex-direction:column;justify-content:center;gap:.9rem;
   background:var(--green);padding:2rem 2.25rem;
   box-shadow:0 18px 38px -24px rgba(46,133,64,.75)}
-/* the quote mark sits behind the text as a watermark */
-.rq-mark{position:absolute;top:-1.4rem;right:1rem;font-size:9rem;line-height:1;font-weight:800;
-  color:rgba(255,255,255,.16);pointer-events:none;user-select:none}
 .rownote>*{position:relative;z-index:1}
 .rownote p{font-size:1.12rem;line-height:1.65;font-weight:500;color:#fff;letter-spacing:-.01em}
-.rq-by{display:flex;align-items:center;gap:.6rem;font-size:.76rem;font-weight:800;letter-spacing:.09em;
-  text-transform:uppercase;color:rgba(255,255,255,.82)}
-.rq-by::before{content:'';width:1.6rem;height:2px;background:rgba(255,255,255,.5);flex:none}
+/* a long note reads better a size down */
+.rownote.long p{font-size:.94rem;line-height:1.7;font-weight:400;letter-spacing:0}
 @media(max-width:700px){.rownote{padding:1.6rem 1.5rem}.rownote p{font-size:1rem}}
 @media(max-width:980px){.rownote{grid-column:span 2}}
 @media(max-width:700px){.rownote{grid-column:span 1}}
@@ -3420,12 +3416,10 @@ screens.home = () => shell("#/home", null, `
   ${section(`<div class="grid g3">${HOME_INTRO.map(introCard).join("")}</div>`)}
 
   ${docRow("Featured Resources","Hand-picked resources to get you started.",["facilitator-guide","cfr-course"], 4,
-    `<blockquote class="rownote">
-      <span class="rq-mark" aria-hidden="true">&ldquo;</span>
-      <p>Start with these two and the rest of the library falls into place — one shows what facilitating Commoning asks of you, the other how a community secures its rights.</p>
-      <footer class="rq-by">Where to begin</footer>
-    </blockquote>`, "cream")}
-  ${docRow("What people are reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
+    `<div class="rownote long">
+      <p>September is an important preparatory period for the October Gram Sabha, during which annual action plans mandated by the Rural Development and Panchayati Raj (RD&amp;PR) Department are discussed and developed. The month is an important period for to capacitate and mobilize communities, identify and prioritize local needs, review available resources, and prepare proposals for inclusion in the Gram Panchayat Development Plan and other relevant annual plans. Meaningful preparation can help ensure that the priorities of women, marginalized groups, and Commons-dependent communities are reflected in local planning and decision-making.</p>
+    </div>`, "cream")}
+  ${docRow("What People Are Reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 
   ${section(gateway("compass","Ready to begin?",

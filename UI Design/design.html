@@ -1315,6 +1315,17 @@ main{min-height:60vh;animation:fade .3s ease}
 .tour-tx em i,.tour-tx em svg.lucide{width:.85rem;height:.85rem}
 .tour-tx b{display:block;font-size:1rem;font-weight:800;color:var(--ink);line-height:1.4;margin-top:.3rem}
 .tour-tx span{display:block;font-size:.87rem;color:var(--muted);line-height:1.6;margin-top:.25rem}
+.tour-links{display:flex;flex-wrap:wrap;gap:.35rem 1.1rem;padding:0 0 .6rem 3.85rem;margin-top:-.35rem}
+.tour-links a,.tour-links button{display:inline-flex;align-items:center;gap:.35rem;border:0;background:none;padding:0;
+  font:inherit;font-size:.8rem;font-weight:700;color:var(--cta);text-decoration:none;cursor:pointer;transition:color .15s}
+.tour-links a:hover,.tour-links button:hover{color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
+.tour-links i,.tour-links svg.lucide{width:.85rem;height:.85rem}
+.tour-note{margin:-.15rem 0 .7rem;padding:.6rem .75rem;background:var(--bg-soft);border-left:3px solid var(--green-line);
+  margin-left:3.85rem;font-size:.83rem;line-height:1.6;color:var(--muted)}
+.tour-note button{display:inline-flex;align-items:center;gap:.3rem;border:0;background:none;padding:0;margin-left:.35rem;
+  font:inherit;font-size:.8rem;font-weight:700;color:var(--cta);cursor:pointer;transition:color .15s}
+.tour-note button:hover{color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
+.tour-note i,.tour-note svg.lucide{width:.8rem;height:.8rem}
 .tour-go{flex:none;align-self:center;color:var(--faint);opacity:.35;transition:opacity .15s,transform .15s}
 .tour-step:hover .tour-go{opacity:1;transform:translateX(3px);color:var(--green-d)}
 .tour-go i,.tour-go svg.lucide{width:1rem;height:1rem}
@@ -2386,8 +2397,12 @@ function ldById(id){ return LD.find(x=>x.id===id); }
 const JOURNEY5 = [
   {n:"1", k:"KNOW",          q:"How does capacity building work?",
    d:"How continuous learning enables Commoning and learning approaches.", href:"#/learning-approach", icon:"graduation-cap"},
-  {n:"2", k:"UNDERSTAND",    q:"What is Commoning?",
-   d:"The meaning of Commoning of Commons.", href:"#/commoning", icon:"lightbulb"},
+  {n:"2", k:"UNDERSTAND",    q:"What are Commons",
+   d:"The meaning of Commoning of Commons.", href:"#/commoning", icon:"lightbulb",
+   links:[{label:"Watch: what are Commons", icon:"play", act:"toast('Video on Commons — link to be added')"},
+          {label:"Discover on Promise of Commons", icon:"external-link", href:"https://promiseofcommons.in/discover/"}],
+   note:{text:"Commoning is what people do together to care for, secure, govern, restore, and sustain those Commons.",
+         link:{label:"Learn More", href:"#/commoning"}}},
   {n:"3", k:"CHOOSE",        q:"Resource system or theme relevant to your context.",
    d:"Select the resource system or theme you are working with.", href:"#/resource-systems", icon:"layers"},
   {n:"4", k:"LEARN AND ACT", q:"Find and use resources in an organized manner",
@@ -3358,10 +3373,10 @@ const screens = {};
 const HOME_INTRO = [
   {t:"What is Commoning?", d:"A very short explanation of Commoning — the ongoing practice through which a community takes collective responsibility for a shared natural resource.",
    img:"assets/img/about-commons.jpg", href:"#/commoning", icon:"users", video:true},
-  {t:"How Learning Enables Action", d:"How continuous learning, field application, reflection and handholding translate training inputs into action on the ground.",
-   img:"assets/img/commons-gramsabha.jpg", href:"#/learning-approach", icon:"graduation-cap"},
-  {t:"Choose Your Commons", d:"Pick the resource system or cross-cutting theme you are working with, and follow the pathway built for it.",
-   img:"assets/img/commons-landscape.jpg", href:"#/resource-systems", icon:"layers"}
+  {t:"How Learning Enables Commoning?", d:"Learning creates the foundation for informed participation, collective action, and sustained commoning processes.",
+   img:"assets/img/commons-gramsabha.jpg", href:"#/learning-approach", icon:"graduation-cap", cta:"Understand The Learning Process"},
+  {t:"Choose Your Commons", d:"Choose a Commons resource system or theme to access relevant learning content, tools, and resources.",
+   img:"assets/img/commons-landscape.jpg", href:"#/resource-systems", icon:"layers", cta:"Explore More"}
 ];
 function introCard(c){
   return `<article class="card imgcard click" onclick="go('${c.href}')">
@@ -3371,7 +3386,7 @@ function introCard(c){
       <h3>${c.t}</h3>
       <p>${c.d}</p>
       <div class="ic-cta">
-        <span class="f-cta">Read more ${ic('chevron-right')}</span>
+        <span class="f-cta">${c.cta||"Read more"} ${ic('chevron-right')}</span>
         ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`:''}
       </div>
     </div>
@@ -6091,7 +6106,13 @@ function openTour(){
           <span>${s.d}</span>
         </span>
         <span class="tour-go">${ic('arrow-right')}</span>
-      </button></li>`).join("")}</ol>
+      </button>
+      ${s.links?`<div class="tour-links">${s.links.map(l=>l.href
+        ? `<a href="${l.href}" target="_blank" rel="noopener noreferrer">${ic(l.icon)} ${l.label}</a>`
+        : `<button type="button" onclick="${l.act}">${ic(l.icon)} ${l.label}</button>`).join("")}</div>`:''}
+      ${s.note?`<p class="tour-note">${s.note.text}
+        <button type="button" onclick="closeTour();go('${s.note.link.href}')">${s.note.link.label} ${ic('arrow-right')}</button></p>`:''}
+      </li>`).join("")}</ol>
     <div class="row" style="justify-content:flex-end;margin-top:1.5rem">
       <button class="btn btn-primary arrow" onclick="closeTour();go('#/learning-approach')">Explore the Learning Approach ${ic('arrow-right')}</button></div>`;
   openOverlay('ov-tour');

@@ -969,8 +969,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .ehero-bg.art.fill img{object-fit:cover;object-position:center 62%}
 .ehero-bg.fill img{object-position:center 34%}
 .ehero-bg.fill.mid img{object-position:center 46%}
-/* a taller frame drops the photograph's mid-band into the scroll window */
-.ehero-bg.tall img{top:32%;height:100%;bottom:auto}
 /* illustrated backdrop — show the whole artwork rather than cropping it */
 
 /* illustrated types landscape — shown whole, edge to edge */
@@ -3411,7 +3409,7 @@ function docRow(title, sub, ids, cols, note, cls){
 }
 
 screens.home = () => shell("#/home", null, `
-  ${heroBackdrop('assets/img/hero-commoning.jpg','fill tall')}
+  ${heroBackdrop('assets/img/hero-commoning.jpg','fill')}
 
   <div class="ehero"><div class="in">
     <h1>Commoning of Commons:<br>Learn. Facilitate. <em>Act.</em></h1>

@@ -1349,6 +1349,9 @@ main{min-height:60vh;animation:fade .3s ease}
   padding:1.4rem .7rem .8rem;opacity:0;transition:opacity .2s;
   background:linear-gradient(to top,rgba(246,248,252,.98) 45%,rgba(246,248,252,0))}
 .doccard:hover .dc-actions,.doccard:focus-within .dc-actions{opacity:1}
+/* the hover row is icons only — the labels live in the tooltips */
+.dc-ic{width:2.6rem;height:2.6rem;padding:0;display:grid;place-items:center;gap:0}
+.dc-ic i,.dc-ic svg.lucide{width:1.1rem;height:1.1rem}
 @media(hover:none){.dc-actions{display:none}}
 
 .dc-body{padding:.8rem 1rem .85rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
@@ -3558,9 +3561,11 @@ function docCard(r, idx){
     <div class="dc-thumb">
       ${docPreview(r)}
       <div class="dc-actions">
-        <button class="btn btn-primary sm" onclick="event.stopPropagation();go('#/resource/${r.id}')">${ic('eye')} View</button>
-        <button class="btn btn-outline sm" onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')} Download</button>
-        ${isAdmin()?`<button class="btn btn-outline sm danger" title="Delete this resource"
+        <button class="btn btn-primary sm dc-ic" title="View" aria-label="View ${esc(r.title)}"
+          onclick="event.stopPropagation();go('#/resource/${r.id}')">${ic('eye')}</button>
+        <button class="btn btn-outline sm dc-ic" title="Download" aria-label="Download ${esc(r.title)}"
+          onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')}</button>
+        ${isAdmin()?`<button class="btn btn-outline sm dc-ic danger" title="Delete" aria-label="Delete ${esc(r.title)}"
           onclick="event.stopPropagation();adminDeleteResource('${escj(r.id)}')">${ic('trash-2')}</button>`:''}
       </div>
     </div>
@@ -5270,7 +5275,8 @@ function subDocCard(sub){
     <div class="dc-thumb">
       ${docPreview(f)}
       <div class="dc-actions">
-        <button class="btn btn-primary sm" onclick="event.stopPropagation();go('#/submission/${sub.id}')">${ic('eye')} View</button>
+        <button class="btn btn-primary sm dc-ic" title="View" aria-label="View ${esc(sub.title)}"
+          onclick="event.stopPropagation();go('#/submission/${sub.id}')">${ic('eye')}</button>
       </div>
     </div>
     <div class="dc-body">

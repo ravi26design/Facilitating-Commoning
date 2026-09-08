@@ -1176,6 +1176,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.1rem}
 
 /* ---- Settings ---- */
+.tabs-c.plain{border-bottom:0;padding-bottom:0;margin:1.1rem 0 1.25rem}
 .tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
 .settable{box-shadow:none}
 .settable table.admin th{background:var(--bg-soft);color:var(--ink);border-bottom:1px solid var(--line-2)}
@@ -5867,7 +5868,7 @@ screens.settings = (params) => {
       </div>`:''}
     </div>
 
-    <div class="tabs-c">${SET_TABS.map(([k,label])=>
+    <div class="tabs-c plain">${SET_TABS.map(([k,label])=>
       `<button class="tab-c ${tab===k?'active':''}" onclick="go('${q(k)}')">${label}</button>`).join("")}</div>
 
     ${tab==="tags"?`<div class="tabs-c sub">

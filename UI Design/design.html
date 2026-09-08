@@ -1194,6 +1194,16 @@ main{min-height:60vh;animation:fade .3s ease}
 .set-act .iconbtn:hover,.set-act .iconbtn:focus-visible{border-color:var(--line-2);background:#fff;color:var(--ink)}
 .set-act .iconbtn.danger:hover,.set-act .iconbtn.danger:focus-visible{border-color:var(--red);color:var(--red);background:#fbeee9}
 .set-empty{text-align:center;color:var(--muted);padding:2rem 1rem!important}
+.th-cell{display:flex;align-items:center;gap:.8rem;min-width:0}
+.th-cell b{font-size:.92rem;color:var(--ink);line-height:1.35}
+.th-thumb{flex:none;display:grid;place-items:center;width:3.6rem;height:2.4rem;overflow:hidden;
+  background:var(--bg-soft);border:1px solid var(--line);color:var(--faint)}
+.th-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.th-thumb i,.th-thumb svg.lucide{width:1.05rem;height:1.05rem}
+.th-desc{color:var(--muted);max-width:34rem;line-height:1.55}
+.th-current{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
+.th-current img{width:5rem;height:3rem;object-fit:cover;border:1px solid var(--line)}
+.th-current span{font-size:.8rem;color:var(--muted-2)}
 .tagpill{display:inline-flex;align-items:center;background:var(--green);color:#fff;
   padding:.28rem .7rem;font-size:.78rem;font-weight:700;border-radius:999px}
 /* the required / not required choice */
@@ -2643,7 +2653,7 @@ const FAQS = [
 
 /* resources — full metadata set from the wireframe */
 /* ---- Settings: categories, tags, types and archive rules ---- */
-const SET_TABS = [["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
+const SET_TABS = [["themes","Themes"],["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
 const SET_LABEL = {categories:"Category", tags:"Tag", types:"Type"};
 const SETTINGS = {
   categories:[
@@ -5821,6 +5831,27 @@ function setTable(kind, sub){
     </tr>`).join(""):`<tr><td colspan="${isCat?5:4}" class="set-empty">Nothing here yet — add the first one.</td></tr>`}</tbody>
   </table></div>`;
 }
+/* themes come from the repository itself, so the picture and wording stay in step */
+function setThemeTable(){
+  return `<div class="scrollx settable"><table class="admin">
+    <thead><tr><th>Theme</th><th>Short description</th><th class="ta-r">Actions</th></tr></thead>
+    <tbody>${THEME_LIST.length?THEME_LIST.map(t=>`<tr>
+      <td><div class="th-cell">
+        <span class="th-thumb">${t.img
+          ? `<img src="${t.img}" alt="" loading="lazy" onerror="this.remove()">`
+          : ic(t.icon||'tag')}</span>
+        <b>${t.name}</b>
+      </div></td>
+      <td class="th-desc">${t.desc||''}</td>
+      <td class="ta-r"><div class="set-act">
+        <button class="iconbtn" title="Edit ${esc(t.name)}" aria-label="Edit ${esc(t.name)}"
+          onclick="openAddTheme('${escj(t.id)}')">${ic('pencil')}</button>
+        <button class="iconbtn danger" title="Delete ${esc(t.name)}" aria-label="Delete ${esc(t.name)}"
+          onclick="adminDeleteTheme('${escj(t.id)}')">${ic('trash-2')}</button>
+      </div></td>
+    </tr>`).join(""):`<tr><td colspan="3" class="set-empty">No themes yet — add the first one.</td></tr>`}</tbody>
+  </table></div>`;
+}
 function setArchivePanel(){
   const d = SETTINGS.archiveDays;
   const chip = (v,label)=>`<button class="arc-chip${d===v?' on':''}" onclick="setArchiveDays(${v})">${label}</button>`;
@@ -5846,18 +5877,18 @@ function setArchivePanel(){
 }
 screens.settings = (params) => {
   if(!isAdmin()) return gateScreen("Settings","Sign in as the Platform Super Admin to manage the repository settings.");
-  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "categories";
+  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "themes";
   const kind = params.kind==="user" ? "user" : "system";
   const q = (k)=>`#/settings?tab=${k}`;
-  const addLabel = {categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
+  const addLabel = {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
   return accountShell('settings', `
     <div class="acct-head">
       <div>
         <h1 class="acct-title">Settings</h1>
-        <p class="acct-sub" style="margin:0">Manage categories, tags, types and archive rules across the repository.</p>
+        <p class="acct-sub" style="margin:0">Manage themes, categories, tags, types and archive rules across the repository.</p>
       </div>
       ${tab!=="archive"?`<div class="row">
-        <button class="btn btn-primary" onclick="openSetDialog('${tab}','${tab==='tags'?kind:''}')">${ic('plus')} ${addLabel}</button>
+        <button class="btn btn-primary" onclick="${tab==='themes'?'openAddTheme()':`openSetDialog('${tab}','${tab==='tags'?kind:''}')`}">${ic('plus')} ${addLabel}</button>
       </div>`:''}
     </div>
 
@@ -5870,7 +5901,8 @@ screens.settings = (params) => {
     </div>`:''}
 
     ${tab==="archive" ? setArchivePanel()
-      : tab==="tags"  ? setTable('tags', kind)
+      : tab==="themes" ? setThemeTable()
+      : tab==="tags"   ? setTable('tags', kind)
       : setTable(tab)}
   `);
 };
@@ -6037,32 +6069,48 @@ function closeConfirm(){ _confirmAction = null; closeOverlay('ov-confirm'); }
 function runConfirm(){ const fn=_confirmAction; _confirmAction=null; closeOverlay('ov-confirm'); if(fn) fn(); }
 
 /* ---- add / edit a theme ---- */
-function openAddTheme(){
+let TH_EDIT = null;   // the theme being edited, if any
+function openAddTheme(editId){
   if(!isAdmin()) return;
+  TH_EDIT = editId ? (THEMES[editId]||null) : null;
+  const t = TH_EDIT;
   document.getElementById('pn-theme').innerHTML =
-    modalHead("Add a theme","Create a new theme under Resource Systems &amp; Themes","closeAddTheme()") +
+    modalHead(t?"Edit theme":"Add a theme",
+      t?"Update how this theme reads across the repository":"Create a new theme under Resource Systems &amp; Themes",
+      "closeAddTheme()") +
     `<div class="field"><label>Theme name <span class="req">*</span></label>
-      <input id="th-name" placeholder="e.g. Water Stewardship"></div>
-    <div class="field"><label>Purpose &amp; relevance to Commons</label>
-      <textarea id="th-desc" placeholder="One line describing this theme"></textarea></div>
+      <input id="th-name" placeholder="e.g. Water Stewardship" value="${t?esc(t.name):''}"></div>
+    <div class="field"><label>Short description</label>
+      <textarea id="th-desc" placeholder="One line describing this theme">${t?escText(t.desc||''):''}</textarea></div>
     <div class="field"><label>Intended users</label>
-      <input id="th-users" placeholder="Who is this theme for?"></div>
+      <input id="th-users" placeholder="Who is this theme for?" value="${t?esc(t.users||''):''}"></div>
     <div class="field"><label>Expected outcome</label>
-      <input id="th-outcome" placeholder="What should this theme achieve?"></div>
+      <input id="th-outcome" placeholder="What should this theme achieve?" value="${t?esc(t.outcome||''):''}"></div>
     <div class="field"><label>Theme image</label>
+      ${t&&t.img?`<div class="th-current"><img src="${t.img}" alt="" onerror="this.remove()">
+        <span>Current image — upload a new one to replace it.</span></div>`:''}
       ${dropzone('image-plus','Drag &amp; drop an image, or click to upload',
         'JPEG or PNG · 16:9 works best',"toast('Upload theme image (placeholder)')")}</div>
     <div class="row" style="justify-content:flex-end">
       <button class="btn btn-ghost" onclick="closeAddTheme()">Cancel</button>
-      <button class="btn btn-primary" onclick="adminAddTheme()">Save theme</button></div>`;
+      <button class="btn btn-primary" onclick="adminAddTheme()">${t?'Save changes':'Save theme'}</button></div>`;
   openOverlay('ov-theme'); focusIn('th-name');
 }
-function closeAddTheme(){ closeOverlay('ov-theme'); }
+function closeAddTheme(){ closeOverlay('ov-theme'); TH_EDIT = null; }
 function adminAddTheme(){
   if(!isAdmin()) return;
   const v=id=>(document.getElementById(id)||{}).value||"";
   const name=v('th-name');
   if(!name.trim()){ toast("Enter a theme name"); return; }
+  const onSettings = (location.hash||"").indexOf('#/settings')===0;
+  if(TH_EDIT){
+    TH_EDIT.name = name.trim();
+    TH_EDIT.desc = v('th-desc').trim() || TH_EDIT.desc;
+    TH_EDIT.users = v('th-users').trim() || TH_EDIT.users;
+    TH_EDIT.outcome = v('th-outcome').trim() || TH_EDIT.outcome;
+    closeAddTheme(); render(); toast("Theme updated — "+name.trim());
+    return;
+  }
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('theme-'+(THEME_LIST.length+1));
   if(THEMES[id] || SYSTEMS[id]){ toast("A theme with a similar name already exists"); return; }
   THEMES[id] = {id:id, kind:"theme", name:name.trim(), icon:"tag", accent:"map", img:"",
@@ -6070,7 +6118,23 @@ function adminAddTheme(){
     users:v('th-users').trim()||"Facilitators, partners and community institutions.",
     outcome:v('th-outcome').trim()||"Advances commoning across the resource systems."};
   THEME_LIST.push(THEMES[id]);
-  closeAddTheme(); toast("Theme added — "+name.trim()); go('#/resource-systems');
+  closeAddTheme(); toast("Theme added — "+name.trim());
+  if(onSettings) render(); else go('#/resource-systems');
+}
+function adminDeleteTheme(id){
+  if(!isAdmin()) return;
+  const t = THEMES[id]; if(!t) return;
+  confirmDialog({
+    title:"Delete theme?",
+    body:`“${t.name}” will be removed from Resource Systems &amp; Themes and from the settings list.`,
+    confirmLabel:"Delete", icon:"trash-2",
+    onConfirm:()=>{
+      delete THEMES[id];
+      const i = THEME_LIST.findIndex(x=>x.id===id);
+      if(i>-1) THEME_LIST.splice(i,1);
+      render(); toast("Theme deleted — "+t.name);
+    }
+  });
 }
 
 /* ---- add / edit a topic ---- */

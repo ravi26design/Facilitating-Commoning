@@ -1188,8 +1188,11 @@ main{min-height:60vh;animation:fade .3s ease}
 .set-by{display:inline-flex;align-items:center;gap:.55rem;white-space:nowrap}
 .set-by .pw-av{width:1.7rem;height:1.7rem;font-size:.62rem}
 .set-act{display:inline-flex;gap:.45rem;justify-content:flex-end}
-.set-act .iconbtn{width:2.1rem;height:2.1rem;display:grid;place-items:center}
-.set-act .iconbtn.danger:hover{border-color:var(--red);color:var(--red);background:#fbeee9}
+/* the row controls stay quiet until the pointer reaches them */
+.set-act .iconbtn{width:2.1rem;height:2.1rem;display:grid;place-items:center;
+  border-color:transparent;background:none;color:var(--muted-2)}
+.set-act .iconbtn:hover,.set-act .iconbtn:focus-visible{border-color:var(--line-2);background:#fff;color:var(--ink)}
+.set-act .iconbtn.danger:hover,.set-act .iconbtn.danger:focus-visible{border-color:var(--red);color:var(--red);background:#fbeee9}
 .set-empty{text-align:center;color:var(--muted);padding:2rem 1rem!important}
 .tagpill{display:inline-flex;align-items:center;background:var(--green);color:#fff;
   padding:.28rem .7rem;font-size:.78rem;font-weight:700;border-radius:999px}

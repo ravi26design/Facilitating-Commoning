@@ -1101,7 +1101,7 @@ main{min-height:60vh;animation:fade .3s ease}
 
 
 /* ---- Featured Resources editor + document picker ---- */
-#ov-featpick{z-index:95}
+#ov-featpick,#ov-bulkhist{z-index:95}
 .featband{background:none;border:0;padding:0}
 .iconbtn.on{background:var(--green);border-color:var(--green);color:#fff}
 .iconbtn.on:hover{background:var(--green-d);border-color:var(--green-d);color:#fff}
@@ -1213,7 +1213,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .bl-head b{font-size:.88rem;color:var(--ink)}
 .bl-row{padding:.7rem 1rem}
 .bl-row .fd-main{display:flex;align-items:center;gap:.7rem;min-width:0}
-.bulkvis{margin-top:1.35rem}
 /* a segmented choice, used for visibility */
 .segchoice{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2)}
 .sc-btn{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.75rem .8rem;border:0;background:#fff;
@@ -1222,7 +1221,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .sc-btn:hover{background:var(--bg-soft);color:var(--ink)}
 .sc-btn.on{background:var(--green);color:#fff}
 .sc-btn i,.sc-btn svg.lucide{width:1rem;height:1rem}
-.bulkvis .segchoice{grid-template-columns:repeat(3,1fr)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
 /* ---- learning approach: a graphic and its text, alternating sides ---- */
 .larows{display:flex;flex-direction:column;gap:1.35rem}
@@ -2535,6 +2533,7 @@ table.admin th:last-child,table.admin td:last-child,
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-upl"><div class="modal" id="pn-upl" style="width:min(38rem,100%)"></div></div>
+<div class="overlay" id="ov-bulk"><div class="modal" id="pn-bulk" style="width:min(42rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-bulkhist"><div class="modal" id="pn-bulkhist" style="width:min(40rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-ur"><div class="modal" id="pn-ur" style="width:min(42rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-set"><div class="modal" id="pn-set" style="width:min(32rem,100%)"></div></div>
@@ -2762,7 +2761,6 @@ const BULK_MODES = [
   {id:"zip",    label:"Zip file", icon:"file-archive",
    title:"Drag and drop a .zip file here, or click to browse", hint:"A single .zip archive"}
 ];
-const BULK_VIS = [["public","Public","globe"],["private","Private","lock"],["org","Organisation","building-2"]];
 /* what a picked batch looks like, so the prototype can show a real list */
 const BULK_SAMPLE = {
   files:[["Grazing_calendar_2026.pdf","1.8 MB"],["Water_budget_Anand.xlsx","640 KB"],
@@ -2772,11 +2770,11 @@ const BULK_SAMPLE = {
           ["Pastureland_training/photos/plot-2.jpg","2.1 MB"]],
   zip:[["Commoning_toolkit_v3.zip","18.4 MB"]]
 };
-let BULK = {mode:"files", vis:"public", picked:[], busy:false};
+let BULK = {mode:"files", picked:[], busy:false};
 const BULK_HISTORY = [
-  {on:"04 Sep 2026", mode:"Folder",   count:12, vis:"Public",       by:"Priya Sharma"},
-  {on:"28 Aug 2026", mode:"Files",    count:5,  vis:"Organisation", by:"Priya Sharma"},
-  {on:"19 Aug 2026", mode:"Zip file", count:31, vis:"Private",      by:"Kavita Menon"}
+  {on:"04 Sep 2026", mode:"Folder",   count:12,       by:"Priya Sharma"},
+  {on:"28 Aug 2026", mode:"Files",    count:5, by:"Priya Sharma"},
+  {on:"19 Aug 2026", mode:"Zip file", count:31,      by:"Kavita Menon"}
 ];
 
 /* ---- Users & Roles ---- */
@@ -6110,7 +6108,7 @@ function openUploadChoice(){
         <b>Single file upload</b>
         <span>One document, with its title, purpose and the rest of its metadata.</span>
       </button>
-      <button class="uplopt" onclick="closeUploadChoice();go('#/bulk-upload')">
+      <button class="uplopt" onclick="closeUploadChoice();openBulk()">
         <span class="uo-ic">${ic('layers')}</span>
         <b>Bulk upload</b>
         <span>Several files, a whole folder, or a zip archive in one go.</span>
@@ -6122,26 +6120,24 @@ function closeUploadChoice(){ closeOverlay('ov-upl'); }
 
 /* ---- the bulk upload page ---- */
 function bulkMode(){ return BULK_MODES.find(m=>m.id===BULK.mode) || BULK_MODES[0]; }
-function bulkSet(mode){ BULK.mode = mode; BULK.picked = []; render(); }
-function bulkVis(v){ BULK.vis = v; render(); }
+function bulkSet(mode){ BULK.mode = mode; BULK.picked = []; renderBulk(); }
 function bulkPick(){
   BULK.picked = (BULK_SAMPLE[BULK.mode]||[]).map(f=>({n:f[0], size:f[1]}));
-  render();
+  renderBulk();
   toast(`${BULK.picked.length} file${BULK.picked.length!==1?'s':''} ready to upload`);
 }
-function bulkDrop(i){ BULK.picked.splice(i,1); render(); }
-function bulkClear(){ BULK.picked = []; render(); }
+function bulkDrop(i){ BULK.picked.splice(i,1); renderBulk(); }
+function bulkClear(){ BULK.picked = []; renderBulk(); }
 function bulkStart(){
   if(!BULK.picked.length || BULK.busy) return;
-  BULK.busy = true; render();
+  BULK.busy = true; renderBulk();
   const n = BULK.picked.length;
   setTimeout(()=>{
-    const visLabel = (BULK_VIS.find(v=>v[0]===BULK.vis)||[])[1] || "Public";
     BULK.picked.forEach(f=>submitForReview({title:f.n, purpose:"Added in a bulk upload.",
-      system:"All Systems", type:"Format", lang:"English", visibility:visLabel}, true));
-    BULK_HISTORY.unshift({on:setDateToday(), mode:bulkMode().label, count:n, vis:visLabel, by:USER.name});
+      system:"All Systems", type:"Manual", format:"PDF", lang:"English"}, true));
+    BULK_HISTORY.unshift({on:setDateToday(), mode:bulkMode().label, count:n, by:USER.name});
     BULK.picked = []; BULK.busy = false;
-    render();
+    closeBulk();
     toast(`${n} file${n!==1?'s':''} sent for review`);
     go('#/contributions');
   }, 900);
@@ -6151,58 +6147,66 @@ function openBulkHistory(){
     modalHead("Bulk upload history","Batches sent for review from this account.","closeBulkHistory()") +
     (BULK_HISTORY.length
       ? `<div class="scrollx settable" style="border:1px solid var(--line)"><table class="admin">
-          <thead><tr><th>Date</th><th>Kind</th><th>Files</th><th>Visibility</th><th>By</th></tr></thead>
+          <thead><tr><th>Date</th><th>Kind</th><th>Files</th><th>By</th></tr></thead>
           <tbody>${BULK_HISTORY.map(h=>`<tr>
             <td class="nowrap">${h.on}</td><td>${h.mode}</td><td>${h.count}</td>
-            <td>${h.vis}</td><td>${h.by}</td></tr>`).join("")}</tbody>
+            <td>${h.by}</td></tr>`).join("")}</tbody>
         </table></div>`
       : `<p class="muted" style="font-size:.88rem">No bulk uploads yet.</p>`);
   openOverlay('ov-bulkhist');
 }
 function closeBulkHistory(){ closeOverlay('ov-bulkhist'); }
-screens["bulk-upload"] = () => {
-  if(!isRegistered()) return gateScreen("Bulk upload","Sign in to add documents to the repository.");
+/* ---- bulk upload lives in a dialog ---- */
+function openBulk(){
+  if(!isRegistered()) return;
+  BULK.busy = false;
+  renderBulk();
+  openOverlay('ov-bulk');
+}
+function closeBulk(){ closeOverlay('ov-bulk'); }
+function renderBulk(){
+  const host = document.getElementById('pn-bulk'); if(!host) return;
   const m = bulkMode(), picked = BULK.picked;
-  return shell("#/library",
-    [{label:"Home",href:"#/home"},{label:"Resource Library",href:"#/library"},{label:"Bulk upload"}],
-    pagehead("Upload","Bulk <em>upload</em>","Several files, a whole folder, or a zip archive at once — every file goes for review before it is published.",
-      `<button class="btn btn-outline" onclick="openBulkHistory()">${ic('history')} History</button>`) +
-    section(`<div class="panel bulkbox">
-      <div class="bulktabs">${BULK_MODES.map(x=>
-        `<button class="bt-tab${x.id===BULK.mode?' on':''}" onclick="bulkSet('${x.id}')">${ic(x.icon)} ${x.label}</button>`).join("")}</div>
+  host.innerHTML =
+    `<div class="between" style="align-items:flex-start;flex-wrap:nowrap;gap:1rem;margin-bottom:1.25rem">
+      <div><h3 style="font-size:1.15rem">Bulk upload</h3>
+        <p class="muted" style="font-size:.87rem;margin-top:.25rem">Several files, a whole folder, or a zip archive at
+        once - every file goes for review before it is published.</p></div>
+      <div class="row" style="gap:.5rem;flex:none">
+        <button class="btn btn-outline sm" onclick="openBulkHistory()">${ic('history')} History</button>
+        <button class="modal-x" style="position:static" onclick="closeBulk()">${ic('x')}</button>
+      </div>
+    </div>
+    <div class="bulktabs">${BULK_MODES.map(x=>
+      `<button class="bt-tab${x.id===BULK.mode?' on':''}" onclick="bulkSet('${x.id}')">${ic(x.icon)} ${x.label}</button>`).join("")}</div>
 
-      ${dropzone(m.icon, m.title, m.hint, "bulkPick()")}
+    ${dropzone(m.icon, m.title, m.hint, "bulkPick()")}
 
-      ${picked.length?`<div class="bulklist">
-        <div class="between bl-head">
-          <b>${picked.length} file${picked.length!==1?'s':''} ready</b>
-          <button class="linkbtn" onclick="bulkClear()">Clear all</button>
+    ${picked.length?`<div class="bulklist">
+      <div class="between bl-head">
+        <b>${picked.length} file${picked.length!==1?'s':''} ready</b>
+        <button class="linkbtn" onclick="bulkClear()">Clear all</button>
+      </div>
+      ${picked.map((f,i)=>`<div class="listrow bl-row">
+        <div class="fd-main">
+          <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
+          <div style="min-width:0"><div class="lt">${f.n}</div>
+            <div class="muted" style="font-size:.8rem">${f.size}</div></div>
         </div>
-        ${picked.map((f,i)=>`<div class="listrow bl-row">
-          <div class="fd-main">
-            <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
-            <div style="min-width:0"><div class="lt">${f.n}</div>
-              <div class="muted" style="font-size:.8rem">${f.size}</div></div>
-          </div>
-          <button class="iconbtn danger" title="Remove ${esc(f.n)}" aria-label="Remove ${esc(f.n)}"
-            onclick="bulkDrop(${i})">${ic('x')}</button>
-        </div>`).join("")}
-      </div>`:''}
+        <button class="iconbtn danger" title="Remove ${esc(f.n)}" aria-label="Remove ${esc(f.n)}"
+          onclick="bulkDrop(${i})">${ic('x')}</button>
+      </div>`).join("")}
+    </div>`:''}
 
-      <div class="field bulkvis">
-        <label>Visibility</label>
-        <div class="segchoice">${BULK_VIS.map(v=>
-          `<button type="button" class="sc-btn ${BULK.vis===v[0]?'on':''}" onclick="bulkVis('${v[0]}')">${ic(v[2])} ${v[1]}</button>`).join("")}</div>
-      </div>
-
-      <div class="row" style="justify-content:flex-end;margin-top:1.4rem">
-        <button class="btn btn-ghost" onclick="go('#/library')">Cancel</button>
-        <button class="btn btn-primary" ${picked.length&&!BULK.busy?'':'disabled'} onclick="bulkStart()">
-          ${ic(BULK.busy?'loader':'cloud-upload')} ${BULK.busy?'Uploading…':'Start bulk upload'}</button>
-      </div>
-    </div>`)
-  );
-};
+    <div class="row" style="justify-content:flex-end;margin-top:1.4rem">
+      <button class="btn btn-ghost" onclick="closeBulk()">Cancel</button>
+      <button class="btn btn-primary" ${picked.length&&!BULK.busy?'':'disabled'} onclick="bulkStart()">
+        ${ic(BULK.busy?'loader':'cloud-upload')} ${BULK.busy?'Uploading…':'Start bulk upload'}</button>
+    </div>`;
+  icons();
+}
+/* an old link to the page still works — it opens the dialog over the library */
+screens["bulk-upload"] = () => { setTimeout(()=>{ go('#/library'); openBulk(); }, 0); return screens.library(); };
 /* ============================================================
    USERS & ROLES
    ============================================================ */

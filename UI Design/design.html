@@ -2755,11 +2755,14 @@ const FAQS = [
 /* ---- Bulk upload: many files, a folder, or a zip, in one go ---- */
 const BULK_MODES = [
   {id:"files",  label:"Files",    icon:"upload",
-   title:"Drag and drop files here, or click to browse", hint:"Select any number of files"},
+   title:"Drag and drop files here, or click to browse",
+   hint:"Select any number of files · PDF, Video, Audio or Image"},
   {id:"folder", label:"Folder",   icon:"folder",
-   title:"Click to select a folder",                     hint:"All files inside the folder will be uploaded"},
+   title:"Click to select a folder",
+   hint:"All files inside the folder will be uploaded · PDF, Video, Audio or Image"},
   {id:"zip",    label:"Zip file", icon:"file-archive",
-   title:"Drag and drop a .zip file here, or click to browse", hint:"A single .zip archive"}
+   title:"Drag and drop a .zip file here, or click to browse",
+   hint:"A single .zip archive of PDF, Video, Audio or Image files"}
 ];
 /* what a picked batch looks like, so the prototype can show a real list */
 const BULK_SAMPLE = {
@@ -7035,7 +7038,7 @@ function openUploadDoc(editId){
       "closeUploadDoc()") +
     dropzone('cloud-upload',
       editing?"Drag &amp; drop to replace the file, or click to browse":"Drag and drop files here, or click to browse",
-      `Supported: PDF, DOCX, XLSX, JPEG, PPTX, MP4, MP3${editing&&r?`<br>Current file: <strong>${esc(r.title)}</strong> — leave as is to keep it.`:''}`,
+      `Supported formats: ${FORMAT_OPTS.join(", ")}${editing&&r?`<br>Current file: <strong>${esc(r.title)}</strong> — leave as is to keep it.`:''}`,
       "toast('Choose a file (placeholder)')", 'margin-bottom:1.35rem') +
     `<div class="field"><label>Title <span class="req">*</span></label>
       <input id="dc-name" value="${editing?esc(r.title):''}" placeholder="e.g. Facilitator Guide for Commoning"></div>

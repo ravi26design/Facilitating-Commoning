@@ -278,6 +278,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .muted{color:var(--muted-2)}
 .section{padding:76px 0}
 .section.tight{padding:44px 0}
+/* a section that continues the one above it, without stacking both paddings */
+.section.contd{padding-top:1.35rem}
+.section:has(+ .section.contd){padding-bottom:0}
 @media(max-width:700px){.section{padding:56px 0}.section.tight{padding:40px 0}}
 .band{background:var(--bg-soft)}
 /* two bands in a row share one modest gap rather than stacking their padding */
@@ -4122,7 +4125,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
           apply what they learn in real-life contexts.</p>
         </div>
       </article>
-    </div>`, "tight") +
+    </div>`, "tight contd") +
 
   section(`<div class="stack" style="gap:1.5rem">
       <div class="panel">

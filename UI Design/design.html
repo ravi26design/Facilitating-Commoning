@@ -1182,10 +1182,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .settable{box-shadow:none}
 /* keep the columns readable — the frame scrolls rather than the words breaking up */
 .settable table.admin{min-width:46rem}
-.settable table.admin th{background:var(--bg-soft);color:var(--ink);border-bottom:1px solid var(--line-2)}
-.settable table.admin tr:nth-child(even) td{background:#fff}
-.settable table.admin tr:hover td{background:var(--bg-soft)}
-.settable td,.settable th{vertical-align:middle}
 .settable .ta-r{text-align:right}
 .settable .nowrap{white-space:nowrap;color:var(--muted-2)}
 .set-by{display:inline-flex;align-items:center;gap:.55rem;white-space:nowrap}
@@ -2266,14 +2262,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .seg-tab:hover .cnt{color:var(--muted-2)}
 .seg-tab.on .cnt{color:rgba(255,255,255,.72)}
 .ap-panel{background:#fff;border:1px solid var(--line-2);overflow-x:auto}
-.ap-table{width:100%;border-collapse:collapse;min-width:52rem}
-.ap-table th{text-align:left;font-size:.82rem;font-weight:800;color:var(--ink);
-  padding:1.05rem 1rem;border-bottom:1px solid var(--line);white-space:nowrap}
-.ap-table th:first-child,.ap-table td:first-child{padding-left:1.5rem}
-.ap-table th:last-child,.ap-table td:last-child{padding-right:1.5rem}
-.ap-table td{padding:.9rem 1rem;border-bottom:1px solid var(--line);vertical-align:middle;font-size:.9rem}
-.ap-table tbody tr:last-child td{border-bottom:0}
-.ap-table tbody tr:hover,.ap-table tbody tr.menu-open{background:var(--card)}
+.ap-table{min-width:52rem}
 .ap-name{display:flex;align-items:center;gap:.85rem;min-width:0}
 .ap-name .doc-fi{width:2.5rem;height:2.5rem;flex:none}
 .ap-name .doc-fi i,.ap-name .doc-fi svg.lucide{width:1.1rem;height:1.1rem}
@@ -2435,12 +2424,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .pweye{position:absolute;right:.75rem;border:0;background:none;font:inherit;font-size:.78rem;font-weight:700;color:var(--blue)}
 .gridauto{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:1.35rem}
 .docgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr));gap:1.25rem}
-table.admin{width:100%;border-collapse:collapse;font-size:.88rem}
-table.admin th{text-align:left;padding:.75rem 1rem;background:var(--ink);color:#fff;font-size:.76rem;
-  font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
-table.admin td{padding:.75rem 1rem;border-top:1px solid var(--line);color:var(--ink);vertical-align:top}
-table.admin tr:nth-child(even) td{background:var(--bg-soft)}
-.scrollx{overflow-x:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-card)}
+/* every table in the portal reads the same: a quiet header, hairline rows, a tint on hover */
+table.admin,.ap-table{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff}
+table.admin th,.ap-table th{text-align:left;padding:.85rem 1rem;background:var(--bg-soft);color:var(--ink);
+  font-size:.74rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;
+  border-bottom:1px solid var(--line-2)}
+table.admin td,.ap-table td{padding:.85rem 1rem;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:middle;font-size:.88rem}
+table.admin tbody tr:first-child td,.ap-table tbody tr:first-child td{border-top:0}
+table.admin tbody tr:hover td,.ap-table tbody tr:hover td,.ap-table tbody tr.menu-open td{background:var(--bg-soft)}
+table.admin th:first-child,table.admin td:first-child,
+.ap-table th:first-child,.ap-table td:first-child{padding-left:1.25rem}
+table.admin th:last-child,table.admin td:last-child,
+.ap-table th:last-child,.ap-table td:last-child{padding-right:1.25rem}
+.scrollx{overflow-x:auto;background:#fff;border:1px solid var(--line);box-shadow:none}
 .imgblock{width:100%;display:block;border:1px solid var(--line);background:var(--card)}
 @media(max-width:700px){.twopane{gap:1.25rem}}
 
@@ -2691,18 +2688,16 @@ const FAQS = [
 
 /* resources — full metadata set from the wireframe */
 /* ---- Users & Roles ---- */
-const ORGS = ["Foundation for Ecological Security","Aarohi Grameen Vikas Sansthan","Vanvasi Chetna Ashram",
-  "Prakruti Seva Samiti","Deccan Development Society"];
 const USER_STATUS = {active:{label:"Active", cls:"ok"}, pending:{label:"Pending", cls:"warn"}, inactive:{label:"Inactive", cls:"off"}};
 const USERS = [
-  {n:"Rajesh Nair",   role:"Org. Administrator", org:ORGS[0], email:"rajesh@fes.org.in",        last:"2026-05-27", st:"active"},
-  {n:"Kavita Menon",  role:"Org. Moderator",     org:ORGS[0], email:"kavita@fes.org.in",        last:"2026-05-26", st:"active"},
-  {n:"Priya Sharma",  role:"Registered User",    org:ORGS[0], email:"priya@fes.org.in",         last:"2026-05-25", st:"active"},
-  {n:"Sarah Johnson", role:"Registered User",    org:ORGS[1], email:"sarah@mpforest.gov.in",    last:"2026-05-24", st:"active"},
-  {n:"Michael Chen",  role:"Registered User",    org:ORGS[2], email:"mchen@atree.org",          last:"2026-05-23", st:"active"},
-  {n:"Emma Davis",    role:"Org. Moderator",     org:ORGS[3], email:"edavis@pccf.odisha.gov.in",last:"2026-05-21", st:"active"},
-  {n:"Robert Wilson", role:"Registered User",    org:ORGS[4], email:"rwilson@jtri.ac.in",       last:"2026-05-19", st:"pending"},
-  {n:"Lisa Park",     role:"Registered User",    org:ORGS[2], email:"lpark@greensoil.in",       last:"2026-04-30", st:"inactive"}
+  {n:"Rajesh Nair",   role:"Org. Administrator", email:"rajesh@fes.org.in",        last:"2026-05-27", st:"active"},
+  {n:"Kavita Menon",  role:"Org. Moderator",     email:"kavita@fes.org.in",        last:"2026-05-26", st:"active"},
+  {n:"Priya Sharma",  role:"Registered User",    email:"priya@fes.org.in",         last:"2026-05-25", st:"active"},
+  {n:"Sarah Johnson", role:"Registered User",    email:"sarah@mpforest.gov.in",    last:"2026-05-24", st:"active"},
+  {n:"Michael Chen",  role:"Registered User",    email:"mchen@atree.org",          last:"2026-05-23", st:"active"},
+  {n:"Emma Davis",    role:"Org. Moderator",     email:"edavis@pccf.odisha.gov.in",last:"2026-05-21", st:"active"},
+  {n:"Robert Wilson", role:"Registered User",    email:"rwilson@jtri.ac.in",       last:"2026-05-19", st:"pending"},
+  {n:"Lisa Park",     role:"Registered User",    email:"lpark@greensoil.in",       last:"2026-04-30", st:"inactive"}
 ];
 /* what a role may be granted, and which actions make sense for each module */
 const ROLE_MODULES = [
@@ -3121,6 +3116,13 @@ function esc(s){ return (s||"").replace(/"/g,"&quot;"); }
 function escText(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 // safe inside a single-quoted JS string that sits in a double-quoted attribute
 function escj(s){ return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
+/* every person gets a steady colour of their own, so a table of avatars reads as people */
+const AV_TINTS = ["#3f6549","#3d7b8c","#c46a4a","#4a8f86","#a05777","#b07c00","#4e7c59","#7a5c3e"];
+function avatarTint(name){
+  const s2 = (name||"?"); let h = 0;
+  for(let i=0;i<s2.length;i++) h = (h*31 + s2.charCodeAt(i)) >>> 0;
+  return AV_TINTS[h % AV_TINTS.length];
+}
 function initials(nm){
   const w=(nm||"").trim().split(/\s+/).filter(Boolean);
   if(!w.length) return "";
@@ -3569,7 +3571,7 @@ function docCard(r, idx){
           onclick="event.stopPropagation();filterByTheme('${(t+'').replace(/'/g,"\\'")}')">${t}</button>`).join("")}</div>
     </div>
     <div class="doc-foot">
-      <span class="pw-av">${initials(who)}</span>
+      <span class="pw-av" style="background:${avatarTint(who)}">${initials(who)}</span>
       <span>${who} · ${resDate(idx)}</span>
     </div>
   </article>`;
@@ -3587,7 +3589,7 @@ function listCard(r, idx){
       <p class="purpose">${r.purpose}</p>
       <div class="lc-foot">
         <div class="tags">${resTags(r).slice(0,4).map(metaTag).join("")}</div>
-        <span class="lc-by"><span class="pw-av sm">${initials(who)}</span>${who} &middot; ${resDate(idx==null?0:idx)}</span>
+        <span class="lc-by"><span class="pw-av sm" style="background:${avatarTint(who)}">${initials(who)}</span>${who} &middot; ${resDate(idx==null?0:idx)}</span>
       </div>
     </div>
     <div class="lc-act">
@@ -4651,7 +4653,7 @@ screens.doc = (params) => {
         <div class="detail-blk" style="margin-top:.9rem">
           <div class="k">Uploaded by</div>
           <div class="row" style="gap:.65rem;align-items:center;margin-top:.35rem">
-            <span class="pw-av">${initials(who)}</span>
+            <span class="pw-av" style="background:${avatarTint(who)}">${initials(who)}</span>
             <div><div style="font-weight:700;font-size:.9rem">${who}</div>
               <div class="muted" style="font-size:.78rem">2026-05-18</div></div></div>
         </div>
@@ -4793,7 +4795,7 @@ screens.resource = (params) => {
         <div class="detail-blk" style="margin-top:.9rem">
           <div class="k">Contributor</div>
           <div class="row" style="gap:.65rem;align-items:center;margin-top:.35rem">
-            <span class="pw-av">${initials(who)}</span>
+            <span class="pw-av" style="background:${avatarTint(who)}">${initials(who)}</span>
             <div><div style="font-weight:700;font-size:.9rem">${who}</div>
               <div class="muted" style="font-size:.78rem">${resDate(idx)}</div></div></div>
         </div>
@@ -5124,7 +5126,7 @@ screens.approvals = (params) => {
       <td><div class="ap-name">
         <span class="doc-fi ${m.fi}">${ic(m.icon)}</span>
         <a onclick="go('#/submission/${sub.id}')">${f.title}</a></div></td>
-      <td><div class="ap-owner"><span class="pw-av sm">${initials(sub.by)}</span>${sub.by}</div></td>
+      <td><div class="ap-owner"><span class="pw-av sm" style="background:${avatarTint(sub.by)}">${initials(sub.by)}</span>${sub.by}</div></td>
       <td class="ap-dim">${sub.date}</td>
       <td class="ap-dim">${subSize(sub)}</td>
       <td>${statusPill(sub.status)}</td>
@@ -5346,7 +5348,7 @@ function activityBlock(o){
       </div>
       ${o.thread.length
         ? `<div class="cm-list">${o.thread.map(c=>`<div class="cm-item">
-            <span class="pw-av sm">${initials(c.by)}</span>
+            <span class="pw-av sm" style="background:${avatarTint(c.by)}">${initials(c.by)}</span>
             <div><p class="cm-h"><b>${c.by}</b> &middot; ${c.date}${c.at?` &middot; ${c.at}`:''}</p>
               <p class="cm-t">${esc(c.text)}</p></div></div>`).join("")}</div>`
         : `<p class="tl-s" style="margin-top:1.25rem">No comments yet.</p>`}`;
@@ -5434,7 +5436,7 @@ screens.submission = (params) => {
           <div class="detail-blk" style="margin-top:.9rem">
             <div class="k">Uploaded by</div>
             <div class="row" style="gap:.65rem;align-items:center;margin-top:.35rem">
-              <span class="pw-av">${initials(sub.by)}</span>
+              <span class="pw-av" style="background:${avatarTint(sub.by)}">${initials(sub.by)}</span>
               <div><div style="font-weight:700;font-size:.9rem">${sub.by}</div>
                 <div class="muted" style="font-size:.78rem">${sub.date}</div></div></div>
           </div>
@@ -5928,11 +5930,10 @@ function urTable(tab){
     </table></div>`;
   }
   return `<div class="scrollx settable"><table class="admin">
-    <thead><tr><th>Name</th><th>Role</th><th>Organization</th><th>Email</th><th>Last Active</th><th>Status</th><th class="ta-r">Actions</th></tr></thead>
+    <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Last Active</th><th>Status</th><th class="ta-r">Actions</th></tr></thead>
     <tbody>${USERS.length?USERS.map((u,i)=>{const st=USER_STATUS[u.st]||USER_STATUS.active; return `<tr>
-      <td><span class="set-by"><span class="pw-av sm">${initials(u.n)}</span>${u.n}</span></td>
+      <td><span class="set-by"><span class="pw-av sm" style="background:${avatarTint(u.n)}">${initials(u.n)}</span>${u.n}</span></td>
       <td>${u.role}</td>
-      <td>${u.org}</td>
       <td class="nowrap"><a class="ur-mail" href="mailto:${esc(u.email)}">${u.email}</a></td>
       <td class="nowrap">${u.last}</td>
       <td><span class="stpill ${st.cls}">${st.label}</span></td>
@@ -5942,7 +5943,7 @@ function urTable(tab){
         <button class="iconbtn danger" title="Remove ${esc(u.n)}" aria-label="Remove ${esc(u.n)}"
           onclick="urDelete('users',${i})">${ic('trash-2')}</button>
       </div></td>
-    </tr>`;}).join(""):`<tr><td colspan="7" class="set-empty">No users yet.</td></tr>`}</tbody>
+    </tr>`;}).join(""):`<tr><td colspan="6" class="set-empty">No users yet.</td></tr>`}</tbody>
   </table></div>`;
 }
 screens.users = (params) => {
@@ -5970,7 +5971,6 @@ function openUrDialog(kind, idx){
   const editing = idx!==undefined && idx!==null;
   const row = editing ? (kind==='roles'?ROLES_LIST:USERS)[idx] : null;
   UR_DRAFT = {kind, idx: editing?idx:null};
-  const orgOpts = (sel)=>ORGS.map(o=>`<option ${sel===o?'selected':''}>${o}</option>`).join("");
   document.getElementById('pn-ur').innerHTML =
     modalHead(`${editing?'Edit':'Add'} ${kind==='roles'?'role':'user'}`,
       kind==='roles' ? (editing?"Rename this role and adjust what it may reach.":"Define a role and the modules it may reach.")
@@ -5985,8 +5985,6 @@ function openUrDialog(kind, idx){
           <input id="ur-name" placeholder="e.g. Anita Rao" value="${row?esc(row.n):''}"></div>
         <div class="field"><label for="ur-email">Email</label>
           <input id="ur-email" type="email" placeholder="name@organisation.org" value="${row?esc(row.email):''}"></div>
-        <div class="field"><label for="ur-org">Organization</label>
-          <div class="selw"><select id="ur-org">${orgOpts(row?row.org:'')}</select>${ic('chevron-down','cv')}</div></div>
         <div class="field"><label for="ur-role">Role</label>
           <div class="selw"><select id="ur-role">${
             ["Org. Administrator","Org. Moderator","Registered User"].concat(ROLES_LIST.map(r=>r.n))
@@ -6039,7 +6037,7 @@ function saveUrDialog(){
     if(idx===null) ROLES_LIST.unshift(row); else ROLES_LIST[idx]=row;
     toast(idx===null?"Role added":"Role updated");
   } else {
-    const row = {n:name, role:v('ur-role')||"Registered User", org:v('ur-org')||ORGS[0],
+    const row = {n:name, role:v('ur-role')||"Registered User",
       email:v('ur-email')||"—", last: idx===null?isoToday():USERS[idx].last, st:v('ur-status')||"pending"};
     if(idx===null) USERS.unshift(row); else USERS[idx]=row;
     toast(idx===null?"User added":"User updated");
@@ -6158,7 +6156,7 @@ function setDateToday(){
   const d=new Date(), M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   return `${String(d.getDate()).padStart(2,'0')} ${M[d.getMonth()]} ${d.getFullYear()}`;
 }
-function setBy(name){ return `<span class="set-by"><span class="pw-av sm">${initials(name)}</span>${name}</span>`; }
+function setBy(name){ return `<span class="set-by"><span class="pw-av sm" style="background:${avatarTint(name)}">${initials(name)}</span>${name}</span>`; }
 function setRows(kind, sub){ return sub ? SETTINGS[kind][sub] : SETTINGS[kind]; }
 /* one table for themes, categories, tags and types */
 function setTable(kind, sub){

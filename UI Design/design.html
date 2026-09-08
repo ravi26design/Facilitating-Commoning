@@ -1096,6 +1096,47 @@ main{min-height:60vh;animation:fade .3s ease}
 
 /* ---- Featured Resources editor + document picker ---- */
 #ov-featpick{z-index:95}
+.featband{background:none;border:0;padding:0}
+.iconbtn.on{background:var(--green);border-color:var(--green);color:#fff}
+.iconbtn.on:hover{background:var(--green-d);border-color:var(--green-d);color:#fff}
+.acct-head .acct-sub{max-width:44rem}
+.featband-h{margin:0 0 1rem}
+.feat-hint{display:flex;align-items:flex-start;gap:.75rem;margin-top:1.35rem;padding:.9rem 1.1rem;
+  background:var(--green-soft);border-left:3px solid var(--green);max-width:44rem}
+.feat-hint .fh-ic{display:grid;place-items:center;flex:none;width:1.15rem;height:1.15rem;margin-top:.1rem;color:var(--green-d)}
+.feat-hint .fh-ic i,.feat-hint .fh-ic svg.lucide{width:1.15rem;height:1.15rem}
+.feat-hint p{margin:0;font-size:.86rem;line-height:1.6;color:var(--ink-2)}
+.feat-hint b{color:var(--ink);font-weight:800}
+/* a featured card, with the control that takes it out of the band */
+.feat-slot{position:relative}
+.feat-x{position:absolute;top:.55rem;right:.55rem;z-index:3;width:2rem;height:2rem;display:grid;place-items:center;
+  border:1px solid var(--line-2);background:#fff;color:var(--red);cursor:pointer;transition:.15s}
+.feat-x:hover{background:var(--red);border-color:var(--red);color:#fff}
+.feat-x i,.feat-x svg.lucide{width:1rem;height:1rem}
+/* the empty slot that opens the picker */
+.feat-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;min-height:14rem;
+  border:2px dashed var(--line-2);background:#fff;padding:1.5rem 1.25rem;
+  font:inherit;text-align:center;color:var(--ink);cursor:pointer;transition:.15s}
+.feat-add:hover{border-color:var(--green);background:#fff}
+.feat-add .fa-plus{display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:999px;
+  background:var(--green-soft);color:var(--green-d)}
+.feat-add .fa-plus i,.feat-add .fa-plus svg.lucide{width:1.2rem;height:1.2rem}
+.feat-add b{font-size:.95rem;color:var(--ink)}
+.feat-add .fa-sub{font-size:.78rem;color:var(--muted);line-height:1.5;max-width:14rem}
+/* the paragraph, edited where it sits */
+.rownote.editing{padding:1.35rem 1.4rem;justify-content:flex-start}
+.rownote textarea{width:100%;min-height:10rem;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);
+  color:#fff;font:inherit;font-size:.92rem;line-height:1.7;padding:.75rem .85rem;resize:vertical}
+.rownote textarea:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.2)}
+.rownote textarea::placeholder{color:rgba(255,255,255,.65)}
+.fn-actions{display:flex;align-items:center;justify-content:space-between;gap:.9rem;flex-wrap:wrap;margin-top:.75rem}
+.fn-actions .feat-count{margin:0;color:rgba(255,255,255,.78)}
+.fn-actions .feat-count.near{color:#ffe0a3}
+.fn-done{background:#fff;color:var(--green-d);border:0;box-shadow:none}
+.fn-done:hover{background:#fff;color:var(--ink);transform:none;box-shadow:none}
+.fn-ghost{background:transparent;color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.45)}
+.fn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+.fn-empty{color:rgba(255,255,255,.75)!important;font-style:italic}
 .feat-count{font-size:.76rem;color:var(--muted-2);text-align:right;margin-top:.35rem}
 .feat-count.near{color:var(--amber);font-weight:700}
 .feat-empty{border:1px dashed var(--line-2);background:var(--bg-soft);padding:1.1rem;text-align:center;
@@ -2316,7 +2357,6 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
-<div class="overlay" id="ov-feat"><div class="modal" id="pn-feat" style="width:min(40rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-featpick"><div class="modal" id="pn-featpick" style="width:min(38rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -2540,6 +2580,7 @@ const FEATURED = {
   ids: ["facilitator-guide","cfr-course"]
 };
 let FEAT_DRAFT = null;   // the working copy while the editor is open
+let FEAT_EDIT = false;   // the pencil puts the whole band into edit mode
 let FEAT_PICK  = [];     // the working selection while the picker is open
 
 const RES = [
@@ -5194,6 +5235,8 @@ function accountShell(active, body){
       <div class="acct-h">My work</div>
       <button class="acct-item ${active==='contributions'?'active':''}" onclick="go('#/contributions')">${ic('file-text')} My Contributions</button>
       ${canReview()?`<button class="acct-item ${active==='approvals'?'active':''}" onclick="go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?`<span class="acct-badge">${pendingCount()}</span>`:''}</button>`:''}
+      ${isAdmin()?`<div class="acct-h">Manage</div>
+      <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>`:''}
     </nav></aside>
     <div class="acct-main">${body}</div>
   </div></main>` + footer();
@@ -5493,17 +5536,20 @@ screens.admin = () => {
 };
 
 /* ============================================================
-   FEATURED RESOURCES — admin only: a paragraph and up to two documents
+   FEATURED RESOURCES — an admin page: a paragraph and up to two documents
    ============================================================ */
-function openFeatured(){
-  if(!isAdmin()) return;
-  FEAT_DRAFT = { text: FEATURED.text, ids: FEATURED.ids.slice() };
-  renderFeatured();
-  openOverlay('ov-feat');
-  focusIn('feat-text');
+function openFeatured(){ go('#/featured'); }
+/* the page edits a draft, so nothing reaches the home band until it is saved */
+function featInit(){
+  if(!FEAT_DRAFT) FEAT_DRAFT = { text: FEATURED.text, ids: FEATURED.ids.slice() };
+  return FEAT_DRAFT;
 }
-function closeFeatured(){ closeOverlay('ov-feat'); FEAT_DRAFT = null; }
-/* keep whatever has been typed before the panel is redrawn */
+function featDirty(){
+  const d = FEAT_DRAFT; if(!d) return false;
+  return (d.text||"").trim() !== (FEATURED.text||"").trim()
+      || d.ids.join("|") !== FEATURED.ids.join("|");
+}
+/* keep whatever has been typed before the page is redrawn */
 function featSyncText(){
   const t = document.getElementById('feat-text');
   if(t && FEAT_DRAFT) FEAT_DRAFT.text = t.value;
@@ -5514,57 +5560,111 @@ function featCount(){
   if(FEAT_DRAFT) FEAT_DRAFT.text = t.value;
   c.textContent = t.value.length + " / " + FEATURED_LIMIT;
   c.classList.toggle('near', t.value.length >= FEATURED_LIMIT * 0.95);
-}
-function renderFeatured(){
-  const d = FEAT_DRAFT; if(!d) return;
-  const docs = d.ids.map(id=>resById(id)).filter(Boolean);
-  document.getElementById('pn-feat').innerHTML =
-    modalHead("Featured Resources",
-      `Shown on the home page — a short paragraph and up to ${FEATURED_MAX} documents from the Resource Library.`,
-      "closeFeatured()") +
-    `<div class="field">
-      <label for="feat-text">Paragraph</label>
-      <textarea id="feat-text" maxlength="${FEATURED_LIMIT}" oninput="featCount()"
-        placeholder="Why these resources matter right now…">${escText(d.text)}</textarea>
-      <div class="feat-count" id="feat-count"></div>
-    </div>
-    <div class="between" style="margin-bottom:.7rem">
-      <label style="font-size:.82rem;font-weight:700;color:var(--ink)">Documents
-        <span class="muted" style="font-weight:600">${docs.length} of ${FEATURED_MAX}</span></label>
-      <button class="btn btn-outline sm" onclick="openFeatPick()">${ic('list-plus')} ${docs.length?'Change documents':'Select documents'}</button>
-    </div>
-    ${docs.length ? docs.map(r=>`
-      <div class="listrow feat-doc">
-        <div class="fd-main">
-          <span class="doc-fi ${kindMeta(r.type).fi}">${ic(kindMeta(r.type).icon)}</span>
-          <div style="min-width:0">
-            <div class="lt">${r.title}</div>
-            <div class="muted" style="font-size:.8rem">${r.type} · ${r.system} · ${r.lang}</div>
-          </div>
-        </div>
-        <button class="linkbtn danger" onclick="featRemove('${escj(r.id)}')">${ic('x')} Remove</button>
-      </div>`).join("")
-      : `<div class="feat-empty">No documents chosen yet — select up to ${FEATURED_MAX} from the Resource Library.</div>`}
-    <div class="row" style="justify-content:flex-end;margin-top:1.5rem">
-      <button class="btn btn-ghost" onclick="closeFeatured()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveFeatured()">${ic('check')} Save</button>
-    </div>`;
-  icons(); featCount();
+  const save = document.getElementById('feat-save');
+  if(save) save.disabled = false;
 }
 function featRemove(id){
   featSyncText();
   FEAT_DRAFT.ids = FEAT_DRAFT.ids.filter(x=>x!==id);
-  renderFeatured();
+  render();
 }
-function saveFeatured(){
+function featSave(){
   featSyncText();
+  FEAT_EDIT = false;
   FEATURED.text = (FEAT_DRAFT.text||"").trim();
   FEATURED.ids  = FEAT_DRAFT.ids.slice();
-  closeFeatured();
   render();
   toast("Featured Resources updated");
 }
-/* ---- the picker, opened on top of the editor ---- */
+function featDiscard(){
+  FEAT_DRAFT = { text: FEATURED.text, ids: FEATURED.ids.slice() };
+  FEAT_EDIT = false;
+  render();
+  toast("Changes discarded");
+}
+/* one document, as it appears in the editor list */
+function featDocRow(r, removable){
+  const m = kindMeta(r.type);
+  return `<div class="listrow feat-doc">
+    <div class="fd-main">
+      <span class="doc-fi ${m.fi}">${ic(m.icon)}</span>
+      <div style="min-width:0">
+        <div class="lt">${r.title}</div>
+        <div class="muted" style="font-size:.8rem">${r.type} · ${r.system} · ${r.lang}</div>
+      </div>
+    </div>
+    ${removable
+      ? `<button class="linkbtn danger" onclick="featRemove('${escj(r.id)}')">${ic('x')} Remove</button>`
+      : `<button class="linkbtn" onclick="go('#/resource/${r.id}')">View</button>`}
+  </div>`;
+}
+screens.featured = () => {
+  if(!isAdmin()) return gateScreen("Featured Resources","Sign in as the Platform Super Admin to manage the home page.");
+  const d = featInit();
+  const docs = d.ids.map(id=>resById(id)).filter(Boolean);
+  const dirty = featDirty();
+  const left = FEATURED_MAX - docs.length;
+  const editing = FEAT_EDIT;
+
+  /* out of edit mode the band reads exactly as it will on the home page */
+  const note = editing
+    ? `<div class="rownote long editing">
+        <textarea id="feat-text" maxlength="${FEATURED_LIMIT}" oninput="featCount()"
+          placeholder="Why these resources matter right now…">${escText(d.text)}</textarea>
+        <div class="fn-actions"><span class="feat-count" id="feat-count"></span></div>
+      </div>`
+    : `<div class="rownote long">${d.text
+        ? `<p>${escText(d.text)}</p>`
+        : `<p class="fn-empty">No paragraph yet — press Edit to write one.</p>`}</div>`;
+
+  return accountShell('featured', `
+    <div class="acct-head">
+      <div>
+        <h1 class="acct-title">Featured Resources</h1>
+        <p class="acct-sub" style="margin:0">The paragraph and up to ${FEATURED_MAX} documents shown in the
+          Featured Resources band on the home page.</p>
+      </div>
+      <div class="row">
+        ${editing
+          ? `<button class="btn btn-outline" onclick="featCancel()">Cancel</button>
+             <button class="btn btn-primary" onclick="featSave()">${ic('check')} Save</button>`
+          : `<button class="btn btn-outline" onclick="featEditToggle()">${ic('pencil')} Edit</button>`}
+      </div>
+    </div>
+
+    <div class="featband">
+      ${editing?`<p class="muted featband-h" style="font-size:.85rem">
+        Rewrite the paragraph, remove a document with ×, or add one from the library.</p>`:''}
+      <div class="grid g4">
+        ${docs.map((r,i)=>`<div class="feat-slot">
+          ${docCard(r,i)}
+          ${editing?`<button class="feat-x" title="Remove ${esc(r.title)}" aria-label="Remove ${esc(r.title)}"
+            onclick="event.stopPropagation();featRemove('${escj(r.id)}')">${ic('x')}</button>`:''}
+        </div>`).join("")}
+        ${editing && left>0?`<button class="feat-add" onclick="openFeatPick()">
+          <span class="fa-plus">${ic('plus')}</span>
+          <b>Select documents</b>
+          <span class="fa-sub">${left} of ${FEATURED_MAX} slot${left!==1?'s':''} free · choose from the Resource Library</span>
+        </button>`:''}
+        ${note}
+      </div>
+    </div>
+    ${editing || dirty ? `<div class="feat-hint">
+      <span class="fh-ic">${ic('info')}</span>
+      <p>Nothing reaches the home page until you press <b>Save</b>${dirty && !editing?` — this band has unsaved changes`:''}.</p>
+    </div>` : ''}
+  `);
+};
+/* ---- the pencil: edit the band in place ---- */
+function featEditToggle(){
+  if(FEAT_EDIT){ featEditDone(); return; }
+  FEAT_EDIT = true;
+  render();
+  focusIn('feat-text');
+}
+function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
+function featCancel(){ featDiscard(); }
+/* ---- the document picker: a modal over the Featured Resources page ---- */
 function openFeatPick(){
   featSyncText();
   FEAT_PICK = FEAT_DRAFT.ids.slice();
@@ -5613,7 +5713,7 @@ function featPickList(){
 function featPickDone(){
   FEAT_DRAFT.ids = FEAT_PICK.slice();
   closeFeatPick();
-  renderFeatured();
+  render();
 }
 /* ============================================================
    ADMIN MUTATIONS — themes, topics, subtopics, files, documents
@@ -6454,6 +6554,7 @@ function render(){
   icons();
   closeMobNav();
   syncMobileFilters();
+  featCount();          // the character counter on the Featured Resources page
   /* only jump to the top on a genuine page change, not on a tab or filter switch */
   if(path!==_lastPath){ window.scrollTo(0,0); _lastPath=path; }
   syncNavShadow();

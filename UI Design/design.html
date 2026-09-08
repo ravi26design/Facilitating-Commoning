@@ -1178,6 +1178,41 @@ main{min-height:60vh;animation:fade .3s ease}
 .pk-t{display:block;font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35}
 .pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.1rem}
 
+/* ---- upload chooser ---- */
+.uplchoice{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.uplopt{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;padding:1.25rem;text-align:left;
+  border:1px solid var(--line-2);background:#fff;font:inherit;cursor:pointer;transition:.15s}
+.uplopt:hover{border-color:var(--green);background:var(--bg-soft)}
+.uplopt .uo-ic{display:grid;place-items:center;width:2.6rem;height:2.6rem;background:var(--green-soft);color:var(--green-d)}
+.uplopt .uo-ic i,.uplopt .uo-ic svg.lucide{width:1.2rem;height:1.2rem}
+.uplopt b{font-size:.98rem;color:var(--ink)}
+.uplopt span:not(.uo-ic){font-size:.85rem;color:var(--muted);line-height:1.55}
+@media(max-width:620px){.uplchoice{grid-template-columns:1fr}}
+/* ---- bulk upload ---- */
+.bulkbox{max-width:52rem;padding:1.5rem 1.6rem 1.75rem}
+.bulktabs{display:inline-flex;border:1px solid var(--line-2);margin-bottom:1.15rem;flex-wrap:wrap}
+.bt-tab{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.1rem;border:0;background:#fff;
+  font:inherit;font-size:.88rem;font-weight:700;color:var(--muted-2);cursor:pointer;transition:.15s}
+.bt-tab+.bt-tab{border-left:1px solid var(--line-2)}
+.bt-tab:hover{background:var(--bg-soft);color:var(--ink)}
+.bt-tab.on{background:var(--green);color:#fff}
+.bt-tab i,.bt-tab svg.lucide{width:1rem;height:1rem}
+.bulklist{margin-top:1.15rem;border:1px solid var(--line);background:#fff}
+.bl-head{padding:.75rem 1rem;border-bottom:1px solid var(--line);background:var(--bg-soft)}
+.bl-head b{font-size:.88rem;color:var(--ink)}
+.bl-row{padding:.7rem 1rem}
+.bl-row .fd-main{display:flex;align-items:center;gap:.7rem;min-width:0}
+.bulkvis{margin-top:1.35rem}
+/* a segmented choice, used for visibility */
+.segchoice{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2)}
+.sc-btn{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.75rem .8rem;border:0;background:#fff;
+  font:inherit;font-size:.85rem;font-weight:700;color:var(--muted-2);cursor:pointer;transition:.15s}
+.sc-btn+.sc-btn{border-left:1px solid var(--line-2)}
+.sc-btn:hover{background:var(--bg-soft);color:var(--ink)}
+.sc-btn.on{background:var(--green);color:#fff}
+.sc-btn i,.sc-btn svg.lucide{width:1rem;height:1rem}
+.bulkvis .segchoice{grid-template-columns:repeat(3,1fr)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
 /* ---- Settings ---- */
 .tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
 .settable{box-shadow:none}
@@ -2474,6 +2509,8 @@ table.admin th:last-child,table.admin td:last-child,
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
+<div class="overlay" id="ov-upl"><div class="modal" id="pn-upl" style="width:min(38rem,100%)"></div></div>
+<div class="overlay" id="ov-bulkhist"><div class="modal" id="pn-bulkhist" style="width:min(40rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-ur"><div class="modal" id="pn-ur" style="width:min(42rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-set"><div class="modal" id="pn-set" style="width:min(32rem,100%)"></div></div>
 <div class="overlay" id="ov-featpick"><div class="modal" id="pn-featpick" style="width:min(38rem,100%);max-height:88vh;overflow:auto"></div></div>
@@ -2691,6 +2728,32 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
+/* ---- Bulk upload: many files, a folder, or a zip, in one go ---- */
+const BULK_MODES = [
+  {id:"files",  label:"Files",    icon:"upload",
+   title:"Drag and drop files here, or click to browse", hint:"Select any number of files"},
+  {id:"folder", label:"Folder",   icon:"folder",
+   title:"Click to select a folder",                     hint:"All files inside the folder will be uploaded"},
+  {id:"zip",    label:"Zip file", icon:"file-archive",
+   title:"Drag and drop a .zip file here, or click to browse", hint:"A single .zip archive"}
+];
+const BULK_VIS = [["public","Public","globe"],["private","Private","lock"],["org","Organisation","building-2"]];
+/* what a picked batch looks like, so the prototype can show a real list */
+const BULK_SAMPLE = {
+  files:[["Grazing_calendar_2026.pdf","1.8 MB"],["Water_budget_Anand.xlsx","640 KB"],
+         ["Gram_Sabha_minutes_Aug.pdf","920 KB"],["Fodder_plot_photos.zip","6.2 MB"]],
+  folder:[["Pastureland_training/01_intro.pdf","1.1 MB"],["Pastureland_training/02_rules.pdf","870 KB"],
+          ["Pastureland_training/03_calendar.xlsx","410 KB"],["Pastureland_training/photos/plot-1.jpg","2.4 MB"],
+          ["Pastureland_training/photos/plot-2.jpg","2.1 MB"]],
+  zip:[["Commoning_toolkit_v3.zip","18.4 MB"]]
+};
+let BULK = {mode:"files", vis:"public", picked:[], busy:false};
+const BULK_HISTORY = [
+  {on:"04 Sep 2026", mode:"Folder",   count:12, vis:"Public",       by:"Priya Sharma"},
+  {on:"28 Aug 2026", mode:"Files",    count:5,  vis:"Organisation", by:"Priya Sharma"},
+  {on:"19 Aug 2026", mode:"Zip file", count:31, vis:"Private",      by:"Kavita Menon"}
+];
+
 /* ---- Users & Roles ---- */
 const USER_STATUS = {active:{label:"Active", cls:"ok"}, pending:{label:"Pending", cls:"warn"}, inactive:{label:"Inactive", cls:"off"}};
 const USERS = [
@@ -4687,7 +4750,7 @@ screens.library = (params) => {
       <div class="searchwrap">${ic('search','ico')}
         <input placeholder="Search by topic, process, tool, tag or keyword…" onfocus="go('#/search')" onclick="go('#/search')">
         <button class="searchgo" onclick="go('#/search')">Search</button></div>
-      ${isRegistered()?`<button class="btn btn-primary" onclick="openUploadDoc()">${ic('upload')} ${isAdmin()?'Upload document':'Upload a file'}</button>`:''}
+      ${isRegistered()?`<button class="btn btn-primary" onclick="openUploadChoice()">${ic('upload')} ${isAdmin()?'Upload document':'Upload a file'}</button>`:''}
     </div>`, "tight") +
     section(`<div class="layout-side">
       ${filterSidebar()}
@@ -5915,6 +5978,113 @@ function featEditToggle(){
 }
 function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
 function featCancel(){ featDiscard(); }
+/* ============================================================
+   UPLOAD — one file at a time, or a whole batch
+   ============================================================ */
+function openUploadChoice(){
+  if(!isRegistered()) return;
+  document.getElementById('pn-upl').innerHTML =
+    modalHead("Upload","How much are you adding? Everything you upload goes for review before it is published.",
+      "closeUploadChoice()") +
+    `<div class="uplchoice">
+      <button class="uplopt" onclick="closeUploadChoice();openUploadDoc()">
+        <span class="uo-ic">${ic('file-plus-2')}</span>
+        <b>Single file upload</b>
+        <span>One document, with its title, purpose and the rest of its metadata.</span>
+      </button>
+      <button class="uplopt" onclick="closeUploadChoice();go('#/bulk-upload')">
+        <span class="uo-ic">${ic('layers')}</span>
+        <b>Bulk upload</b>
+        <span>Several files, a whole folder, or a zip archive in one go.</span>
+      </button>
+    </div>`;
+  openOverlay('ov-upl');
+}
+function closeUploadChoice(){ closeOverlay('ov-upl'); }
+
+/* ---- the bulk upload page ---- */
+function bulkMode(){ return BULK_MODES.find(m=>m.id===BULK.mode) || BULK_MODES[0]; }
+function bulkSet(mode){ BULK.mode = mode; BULK.picked = []; render(); }
+function bulkVis(v){ BULK.vis = v; render(); }
+function bulkPick(){
+  BULK.picked = (BULK_SAMPLE[BULK.mode]||[]).map(f=>({n:f[0], size:f[1]}));
+  render();
+  toast(`${BULK.picked.length} file${BULK.picked.length!==1?'s':''} ready to upload`);
+}
+function bulkDrop(i){ BULK.picked.splice(i,1); render(); }
+function bulkClear(){ BULK.picked = []; render(); }
+function bulkStart(){
+  if(!BULK.picked.length || BULK.busy) return;
+  BULK.busy = true; render();
+  const n = BULK.picked.length;
+  setTimeout(()=>{
+    const visLabel = (BULK_VIS.find(v=>v[0]===BULK.vis)||[])[1] || "Public";
+    BULK.picked.forEach(f=>submitForReview({title:f.n, purpose:"Added in a bulk upload.",
+      system:"All Systems", type:"Format", lang:"English", visibility:visLabel}, true));
+    BULK_HISTORY.unshift({on:setDateToday(), mode:bulkMode().label, count:n, vis:visLabel, by:USER.name});
+    BULK.picked = []; BULK.busy = false;
+    render();
+    toast(`${n} file${n!==1?'s':''} sent for review`);
+    go('#/contributions');
+  }, 900);
+}
+function openBulkHistory(){
+  document.getElementById('pn-bulkhist').innerHTML =
+    modalHead("Bulk upload history","Batches sent for review from this account.","closeBulkHistory()") +
+    (BULK_HISTORY.length
+      ? `<div class="scrollx settable" style="border:1px solid var(--line)"><table class="admin">
+          <thead><tr><th>Date</th><th>Kind</th><th>Files</th><th>Visibility</th><th>By</th></tr></thead>
+          <tbody>${BULK_HISTORY.map(h=>`<tr>
+            <td class="nowrap">${h.on}</td><td>${h.mode}</td><td>${h.count}</td>
+            <td>${h.vis}</td><td>${h.by}</td></tr>`).join("")}</tbody>
+        </table></div>`
+      : `<p class="muted" style="font-size:.88rem">No bulk uploads yet.</p>`);
+  openOverlay('ov-bulkhist');
+}
+function closeBulkHistory(){ closeOverlay('ov-bulkhist'); }
+screens["bulk-upload"] = () => {
+  if(!isRegistered()) return gateScreen("Bulk upload","Sign in to add documents to the repository.");
+  const m = bulkMode(), picked = BULK.picked;
+  return shell("#/library",
+    [{label:"Home",href:"#/home"},{label:"Resource Library",href:"#/library"},{label:"Bulk upload"}],
+    pagehead("Upload","Bulk <em>upload</em>","Several files, a whole folder, or a zip archive at once — every file goes for review before it is published.",
+      `<button class="btn btn-outline" onclick="openBulkHistory()">${ic('history')} History</button>`) +
+    section(`<div class="panel bulkbox">
+      <div class="bulktabs">${BULK_MODES.map(x=>
+        `<button class="bt-tab${x.id===BULK.mode?' on':''}" onclick="bulkSet('${x.id}')">${ic(x.icon)} ${x.label}</button>`).join("")}</div>
+
+      ${dropzone(m.icon, m.title, m.hint, "bulkPick()")}
+
+      ${picked.length?`<div class="bulklist">
+        <div class="between bl-head">
+          <b>${picked.length} file${picked.length!==1?'s':''} ready</b>
+          <button class="linkbtn" onclick="bulkClear()">Clear all</button>
+        </div>
+        ${picked.map((f,i)=>`<div class="listrow bl-row">
+          <div class="fd-main">
+            <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
+            <div style="min-width:0"><div class="lt">${f.n}</div>
+              <div class="muted" style="font-size:.8rem">${f.size}</div></div>
+          </div>
+          <button class="iconbtn danger" title="Remove ${esc(f.n)}" aria-label="Remove ${esc(f.n)}"
+            onclick="bulkDrop(${i})">${ic('x')}</button>
+        </div>`).join("")}
+      </div>`:''}
+
+      <div class="field bulkvis">
+        <label>Visibility</label>
+        <div class="segchoice">${BULK_VIS.map(v=>
+          `<button type="button" class="sc-btn ${BULK.vis===v[0]?'on':''}" onclick="bulkVis('${v[0]}')">${ic(v[2])} ${v[1]}</button>`).join("")}</div>
+      </div>
+
+      <div class="row" style="justify-content:flex-end;margin-top:1.4rem">
+        <button class="btn btn-ghost" onclick="go('#/library')">Cancel</button>
+        <button class="btn btn-primary" ${picked.length&&!BULK.busy?'':'disabled'} onclick="bulkStart()">
+          ${ic(BULK.busy?'loader':'cloud-upload')} ${BULK.busy?'Uploading…':'Start bulk upload'}</button>
+      </div>
+    </div>`)
+  );
+};
 /* ============================================================
    USERS & ROLES
    ============================================================ */

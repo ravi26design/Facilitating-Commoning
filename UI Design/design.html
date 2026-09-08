@@ -248,6 +248,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .btn-outline{background:#fff;border-color:var(--line-2);color:var(--cta)}
 .btn-outline:hover{background:var(--cta);color:#fff;border-color:var(--cta)}
 .btn-outline.danger{color:var(--red);border-color:#e8c4b6}
+.iconbtn.danger{color:var(--red)}
+.iconbtn.danger:hover{border-color:var(--red);background:#fbeee9}
 .btn-outline.danger:hover{background:var(--red);border-color:var(--red);color:#fff}
 .btn-outline.danger i,.btn-outline.danger svg.lucide{color:currentColor}
 .btn-ghost{background:transparent;color:var(--muted);padding:.55rem .8rem}
@@ -1204,6 +1206,33 @@ main{min-height:60vh;animation:fade .3s ease}
   border:1px solid var(--line);color:var(--muted-2)}
 .st-file .doc-fi i,.st-file .doc-fi svg.lucide{width:1rem;height:1rem}
 .st-name{font-size:.9rem;color:var(--ink);overflow-wrap:anywhere}
+.permhead{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  margin:1.35rem 0 .6rem}
+.permwrap{border:1px solid var(--line-2);overflow-x:auto}
+.permtable{width:100%;border-collapse:collapse;font-size:.85rem}
+.permtable th{background:var(--bg-soft);border-bottom:1px solid var(--line-2);padding:.6rem .5rem;text-align:center}
+.permtable th.pm-mod{text-align:left;padding-left:.9rem;font-size:.72rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint)}
+.permtable td{padding:.55rem .5rem;border-top:1px solid var(--line);text-align:center;vertical-align:middle}
+.permtable tbody tr:first-child td{border-top:0}
+.permtable td.pm-mod{text-align:left;padding-left:.9rem;color:var(--ink);white-space:nowrap}
+.pm-ic{display:inline-grid;place-items:center;width:1.4rem;height:1.4rem;margin-right:.5rem;
+  vertical-align:-.3rem;color:var(--muted-2)}
+.pm-ic i,.pm-ic svg.lucide{width:1rem;height:1rem}
+.pm-col{display:inline-flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer}
+.pm-col span{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
+.permtable input[type=checkbox]{width:1.05rem;height:1.05rem;accent-color:var(--green);cursor:pointer}
+.pm-na{color:var(--line-2)}
+.permtable tbody tr:hover td{background:var(--bg-soft)}
+.rolepill{display:inline-flex;align-items:center;background:var(--chip);color:var(--ink);
+  padding:.28rem .8rem;font-size:.82rem;font-weight:700;border-radius:999px;white-space:nowrap}
+.stpill{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .65rem;border-radius:999px;
+  font-size:.76rem;font-weight:700;white-space:nowrap}
+.stpill.ok{background:var(--green-soft);color:var(--green-d)}
+.stpill.warn{background:#fbf4e7;color:#8a6417}
+.stpill.off{background:var(--chip);color:var(--muted-2)}
+.ur-mail{color:var(--muted-2);text-decoration:none}
+.ur-mail:hover{color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
 .deptpill{display:inline-flex;align-items:center;background:var(--chip);color:var(--ink-2);
   padding:.25rem .7rem;font-size:.78rem;font-weight:600;border-radius:999px;white-space:nowrap}
 /* the table footer: how many rows, which page */
@@ -2445,6 +2474,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
+<div class="overlay" id="ov-ur"><div class="modal" id="pn-ur" style="width:min(42rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-set"><div class="modal" id="pn-set" style="width:min(32rem,100%)"></div></div>
 <div class="overlay" id="ov-featpick"><div class="modal" id="pn-featpick" style="width:min(38rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
@@ -2661,6 +2691,53 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
+/* ---- Users & Roles ---- */
+const ORGS = ["Foundation for Ecological Security","Aarohi Grameen Vikas Sansthan","Vanvasi Chetna Ashram",
+  "Prakruti Seva Samiti","Deccan Development Society"];
+const USER_STATUS = {active:{label:"Active", cls:"ok"}, pending:{label:"Pending", cls:"warn"}, inactive:{label:"Inactive", cls:"off"}};
+const USERS = [
+  {n:"Rajesh Nair",   role:"Org. Administrator", org:ORGS[0], email:"rajesh@fes.org.in",        last:"2026-05-27", st:"active"},
+  {n:"Kavita Menon",  role:"Org. Moderator",     org:ORGS[0], email:"kavita@fes.org.in",        last:"2026-05-26", st:"active"},
+  {n:"Priya Sharma",  role:"Registered User",    org:ORGS[0], email:"priya@fes.org.in",         last:"2026-05-25", st:"active"},
+  {n:"Sarah Johnson", role:"Registered User",    org:ORGS[1], email:"sarah@mpforest.gov.in",    last:"2026-05-24", st:"active"},
+  {n:"Michael Chen",  role:"Registered User",    org:ORGS[2], email:"mchen@atree.org",          last:"2026-05-23", st:"active"},
+  {n:"Emma Davis",    role:"Org. Moderator",     org:ORGS[3], email:"edavis@pccf.odisha.gov.in",last:"2026-05-21", st:"active"},
+  {n:"Robert Wilson", role:"Registered User",    org:ORGS[4], email:"rwilson@jtri.ac.in",       last:"2026-05-19", st:"pending"},
+  {n:"Lisa Park",     role:"Registered User",    org:ORGS[2], email:"lpark@greensoil.in",       last:"2026-04-30", st:"inactive"}
+];
+/* what a role may be granted, and which actions make sense for each module */
+const ROLE_MODULES = [
+  {id:"dashboard",  label:"Admin dashboard",           icon:"layout-dashboard", acts:["view"]},
+  {id:"approvals",  label:"Approvals",                 icon:"circle-check-big", acts:["view","edit","delete"]},
+  {id:"contribute", label:"Contributions",             icon:"upload",           acts:["view","add","edit","delete"]},
+  {id:"library",    label:"Resource Library",          icon:"library",          acts:["view","add","edit","delete"]},
+  {id:"search",     label:"Search",                    icon:"search",           acts:["view"]},
+  {id:"systems",    label:"Resource Systems & Themes", icon:"layers",           acts:["view","add","edit","delete"]},
+  {id:"featured",   label:"Featured Resources",        icon:"star",             acts:["view","edit"]},
+  {id:"settings",   label:"Settings",                  icon:"settings",         acts:["view","edit"]},
+  {id:"users",      label:"Users & Roles",             icon:"users",            acts:["view","add","edit","delete"]}
+];
+const ROLE_ACTS = ["view","add","edit","delete"];
+function rolePerms(spec){        // {moduleId:"vaed"} → a full permission map
+  const p = {};
+  ROLE_MODULES.forEach(m=>{
+    const letters = (spec&&spec[m.id])||"";
+    p[m.id] = {};
+    m.acts.forEach(a=>{ p[m.id][a] = letters.includes(a[0]); });
+  });
+  return p;
+}
+function permCount(p){ return Object.keys(p||{}).reduce((n,k)=>n+Object.keys(p[k]).filter(a=>p[k][a]).length,0); }
+const ROLES_LIST = [
+  {n:"Administrator", users:3,  on:"2024-01-01", perms:rolePerms({dashboard:"v",approvals:"ved",contribute:"vaed",library:"vaed",search:"v",systems:"vaed",featured:"ve",settings:"ve",users:"vaed"})},
+  {n:"Legal Manager", users:12, on:"2024-01-01", perms:rolePerms({approvals:"ved",contribute:"vae",library:"vae",search:"v",systems:"v"})},
+  {n:"Approver",      users:24, on:"2024-02-15", perms:rolePerms({approvals:"ved",contribute:"v",library:"v",search:"v"})},
+  {n:"Contributor",   users:98, on:"2024-02-15", perms:rolePerms({contribute:"vae",library:"v",search:"v"})},
+  {n:"Reviewer",      users:54, on:"2024-03-01", perms:rolePerms({approvals:"ve",contribute:"v",library:"v",search:"v"})},
+  {n:"Viewer",        users:25, on:"2024-03-01", perms:rolePerms({library:"v",search:"v"})}
+];
+let UR_DRAFT = null;   // the user or role being added / edited
+
 /* ---- Archive and Trash: documents out of circulation ---- */
 const ARCHIVE_FILES = [
   {n:"Old_MOU_Watershed_2018.pdf",           dept:"Legal",      on:"12 Apr 2024"},
@@ -3482,6 +3559,8 @@ function docCard(r, idx){
       <div class="dc-actions">
         <button class="btn btn-primary sm" onclick="event.stopPropagation();go('#/resource/${r.id}')">${ic('eye')} View</button>
         <button class="btn btn-outline sm" onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')} Download</button>
+        ${isAdmin()?`<button class="btn btn-outline sm danger" title="Delete this resource"
+          onclick="event.stopPropagation();adminDeleteResource('${escj(r.id)}')">${ic('trash-2')}</button>`:''}
       </div>
     </div>
     <div class="dc-body">
@@ -3515,6 +3594,8 @@ function listCard(r, idx){
     <div class="lc-act">
       <button class="btn btn-primary sm" onclick="event.stopPropagation();go('#/resource/${r.id}')">${ic('eye')} View</button>
       <button class="iconbtn" title="Download" onclick="event.stopPropagation();download('${esc(r.title)}')">${ic('download')}</button>
+      ${isAdmin()?`<button class="iconbtn danger" title="Delete this resource"
+        onclick="event.stopPropagation();adminDeleteResource('${escj(r.id)}')">${ic('trash-2')}</button>`:''}
     </div>
   </article>`;
 }
@@ -5391,10 +5472,9 @@ function accountShell(active, body){
   return header(null) + `<main><div class="acctwrap">
     <aside class="acct-side"><nav class="acct-nav">
       <button class="acct-item ${active==='profile'?'active':''}" onclick="go('#/profile')">${ic('user-round')} My Profile</button>
-      <div class="acct-h">My work</div>
       <button class="acct-item ${active==='contributions'?'active':''}" onclick="go('#/contributions')">${ic('file-text')} My Contributions</button>
       ${canReview()?`<button class="acct-item ${active==='approvals'?'active':''}" onclick="go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?`<span class="acct-badge">${pendingCount()}</span>`:''}</button>`:''}
-      ${isAdmin()?`<div class="acct-h">Manage</div>
+      ${isAdmin()?`<button class="acct-item ${active==='users'?'active':''}" onclick="go('#/users')">${ic('users')} Users &amp; Roles</button>
       <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>
       <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>
       <div class="acct-h">Storage</div>
@@ -5828,6 +5908,160 @@ function featEditToggle(){
 function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
 function featCancel(){ featDiscard(); }
 /* ============================================================
+   USERS & ROLES
+   ============================================================ */
+function urTable(tab){
+  if(tab==="roles"){
+    return `<div class="scrollx settable"><table class="admin">
+      <thead><tr><th>Role Name</th><th>Permissions</th><th>Users</th><th>Created</th><th class="ta-r">Actions</th></tr></thead>
+      <tbody>${ROLES_LIST.length?ROLES_LIST.map((r,i)=>`<tr>
+        <td><span class="rolepill">${r.n}</span></td>
+        <td class="nowrap muted">${permCount(r.perms)} permission${permCount(r.perms)!==1?'s':''}</td>
+        <td class="nowrap">${r.users}</td>
+        <td class="nowrap">${r.on}</td>
+        <td class="ta-r"><div class="set-act">
+          <button class="iconbtn" title="Edit ${esc(r.n)}" aria-label="Edit ${esc(r.n)}"
+            onclick="openUrDialog('roles',${i})">${ic('pencil')}</button>
+          <button class="iconbtn danger" title="Delete ${esc(r.n)}" aria-label="Delete ${esc(r.n)}"
+            onclick="urDelete('roles',${i})">${ic('trash-2')}</button>
+        </div></td>
+      </tr>`).join(""):`<tr><td colspan="5" class="set-empty">No roles yet — add the first one.</td></tr>`}</tbody>
+    </table></div>`;
+  }
+  return `<div class="scrollx settable"><table class="admin">
+    <thead><tr><th>Name</th><th>Role</th><th>Organization</th><th>Email</th><th>Last Active</th><th>Status</th><th class="ta-r">Actions</th></tr></thead>
+    <tbody>${USERS.length?USERS.map((u,i)=>{const st=USER_STATUS[u.st]||USER_STATUS.active; return `<tr>
+      <td><span class="set-by"><span class="pw-av sm">${initials(u.n)}</span>${u.n}</span></td>
+      <td>${u.role}</td>
+      <td>${u.org}</td>
+      <td class="nowrap"><a class="ur-mail" href="mailto:${esc(u.email)}">${u.email}</a></td>
+      <td class="nowrap">${u.last}</td>
+      <td><span class="stpill ${st.cls}">${st.label}</span></td>
+      <td class="ta-r"><div class="set-act">
+        <button class="iconbtn" title="Edit ${esc(u.n)}" aria-label="Edit ${esc(u.n)}"
+          onclick="openUrDialog('users',${i})">${ic('pencil')}</button>
+        <button class="iconbtn danger" title="Remove ${esc(u.n)}" aria-label="Remove ${esc(u.n)}"
+          onclick="urDelete('users',${i})">${ic('trash-2')}</button>
+      </div></td>
+    </tr>`;}).join(""):`<tr><td colspan="7" class="set-empty">No users yet.</td></tr>`}</tbody>
+  </table></div>`;
+}
+screens.users = (params) => {
+  if(!isAdmin()) return gateScreen("Users & Roles","Sign in as the Platform Super Admin to manage people and their roles.");
+  const tab = params.tab==="roles" ? "roles" : "users";
+  return accountShell('users', `
+    <div class="acct-head">
+      <div>
+        <h1 class="acct-title">Users &amp; Roles</h1>
+        <p class="acct-sub" style="margin:0">People who can reach the repository, and what each of them may do.</p>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" onclick="openUrDialog('${tab}')">${ic('plus')} ${tab==='roles'?'Add role':'Add user'}</button>
+      </div>
+    </div>
+    <div class="tabs-c plain">
+      <button class="tab-c ${tab==='users'?'active':''}" onclick="go('#/users')">Users <span class="cnt">${USERS.length}</span></button>
+      <button class="tab-c ${tab==='roles'?'active':''}" onclick="go('#/users?tab=roles')">Roles <span class="cnt">${ROLES_LIST.length}</span></button>
+    </div>
+    ${urTable(tab)}
+  `);
+};
+/* ---- add and edit ---- */
+function openUrDialog(kind, idx){
+  const editing = idx!==undefined && idx!==null;
+  const row = editing ? (kind==='roles'?ROLES_LIST:USERS)[idx] : null;
+  UR_DRAFT = {kind, idx: editing?idx:null};
+  const orgOpts = (sel)=>ORGS.map(o=>`<option ${sel===o?'selected':''}>${o}</option>`).join("");
+  document.getElementById('pn-ur').innerHTML =
+    modalHead(`${editing?'Edit':'Add'} ${kind==='roles'?'role':'user'}`,
+      kind==='roles' ? (editing?"Rename this role and adjust what it may reach.":"Define a role and the modules it may reach.")
+                     : (editing?"Update this person's access.":"Invite someone and set what they may do."),
+      "closeUrDialog()") +
+    (kind==='roles'
+      ? `<div class="field"><label for="ur-name">Role name</label>
+          <input id="ur-name" placeholder="e.g. Senior Approver" value="${row?esc(row.n):''}"></div>
+        <div class="permhead">Module permissions</div>
+        ${permMatrix(row?row.perms:rolePerms({}))}`
+      : `<div class="field"><label for="ur-name">Full name</label>
+          <input id="ur-name" placeholder="e.g. Anita Rao" value="${row?esc(row.n):''}"></div>
+        <div class="field"><label for="ur-email">Email</label>
+          <input id="ur-email" type="email" placeholder="name@organisation.org" value="${row?esc(row.email):''}"></div>
+        <div class="field"><label for="ur-org">Organization</label>
+          <div class="selw"><select id="ur-org">${orgOpts(row?row.org:'')}</select>${ic('chevron-down','cv')}</div></div>
+        <div class="field"><label for="ur-role">Role</label>
+          <div class="selw"><select id="ur-role">${
+            ["Org. Administrator","Org. Moderator","Registered User"].concat(ROLES_LIST.map(r=>r.n))
+              .filter((v,i,arr)=>arr.indexOf(v)===i)
+              .map(r=>`<option ${row&&row.role===r?'selected':''}>${r}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
+        <div class="field"><label for="ur-status">Status</label>
+          <div class="selw"><select id="ur-status">${Object.keys(USER_STATUS).map(k=>
+            `<option value="${k}" ${row&&row.st===k?'selected':''}>${USER_STATUS[k].label}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>`) +
+    `<div class="row" style="justify-content:flex-end;margin-top:1.4rem">
+      <button class="btn btn-ghost" onclick="closeUrDialog()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUrDialog()">${ic(editing?'check':'plus')} ${editing?'Save':(kind==='roles'?'Add role':'Add user')}</button>
+    </div>`;
+  openOverlay('ov-ur');
+  focusIn('ur-name');
+}
+/* the grid of module rights inside the role dialog */
+function permMatrix(perms){
+  const head = ROLE_ACTS.map(a=>`<th><label class="pm-col">
+    <input type="checkbox" onchange="permColumn('${a}',this.checked)" aria-label="Grant ${a} everywhere">
+    <span>${a}</span></label></th>`).join("");
+  return `<div class="permwrap"><table class="permtable">
+    <thead><tr><th class="pm-mod">Module</th>${head}</tr></thead>
+    <tbody>${ROLE_MODULES.map(m=>`<tr>
+      <td class="pm-mod"><span class="pm-ic">${ic(m.icon)}</span>${m.label}</td>
+      ${ROLE_ACTS.map(a=>m.acts.includes(a)
+        ? `<td><input type="checkbox" class="pm-box" data-mod="${m.id}" data-act="${a}"
+             ${perms&&perms[m.id]&&perms[m.id][a]?'checked':''} aria-label="${a} ${esc(m.label)}"></td>`
+        : `<td class="pm-na">—</td>`).join("")}
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+function permColumn(act, on){
+  document.querySelectorAll(`#pn-ur .pm-box[data-act="${act}"]`).forEach(b=>{ b.checked = on; });
+}
+function permRead(){
+  const p = {};
+  ROLE_MODULES.forEach(m=>{ p[m.id] = {}; m.acts.forEach(a=>{ p[m.id][a] = false; }); });
+  document.querySelectorAll('#pn-ur .pm-box').forEach(b=>{ p[b.dataset.mod][b.dataset.act] = b.checked; });
+  return p;
+}
+function closeUrDialog(){ closeOverlay('ov-ur'); UR_DRAFT = null; }
+function saveUrDialog(){
+  const v=id=>((document.getElementById(id)||{}).value||"").trim();
+  const name=v('ur-name');
+  if(!name){ (document.getElementById('ur-name')||{}).focus&&document.getElementById('ur-name').focus(); toast("Give it a name first"); return; }
+  const {kind, idx} = UR_DRAFT;
+  if(kind==='roles'){
+    const row = {n:name, users: idx===null?0:ROLES_LIST[idx].users,
+      on: idx===null?isoToday():ROLES_LIST[idx].on, perms: permRead()};
+    if(idx===null) ROLES_LIST.unshift(row); else ROLES_LIST[idx]=row;
+    toast(idx===null?"Role added":"Role updated");
+  } else {
+    const row = {n:name, role:v('ur-role')||"Registered User", org:v('ur-org')||ORGS[0],
+      email:v('ur-email')||"—", last: idx===null?isoToday():USERS[idx].last, st:v('ur-status')||"pending"};
+    if(idx===null) USERS.unshift(row); else USERS[idx]=row;
+    toast(idx===null?"User added":"User updated");
+  }
+  closeUrDialog();
+  render();
+}
+function isoToday(){ const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function urDelete(kind, idx){
+  const list = kind==='roles'?ROLES_LIST:USERS, row = list[idx];
+  confirmDialog({
+    title: kind==='roles' ? "Delete role?" : "Remove user?",
+    body: kind==='roles'
+      ? `“${row.n}” will no longer be available to assign.`
+      : `${row.n} will lose access to the repository.`,
+    confirmLabel: kind==='roles' ? "Delete" : "Remove", icon:"trash-2",
+    onConfirm:()=>{ list.splice(idx,1); render(); toast(kind==='roles'?"Role deleted":"User removed"); }
+  });
+}
+/* ============================================================
    ARCHIVE and TRASH
    ============================================================ */
 function storeFiles(kind){ return kind==='archive' ? ARCHIVE_FILES : TRASH_FILES; }
@@ -6171,6 +6405,25 @@ function openAddTheme(editId){
   openOverlay('ov-theme'); focusIn('th-name');
 }
 function closeAddTheme(){ closeOverlay('ov-theme'); TH_EDIT = null; }
+/* an admin may remove a resource from the library; it lands in the trash */
+function adminDeleteResource(id){
+  if(!isAdmin()) return;
+  const i = RES.findIndex(r=>r.id===id); if(i<0) return;
+  const r = RES[i];
+  confirmDialog({
+    title:"Delete this resource?",
+    body:`“${r.title}” will be taken out of the Resource Library and moved to the trash, where it can still be restored.`,
+    confirmLabel:"Delete", icon:"trash-2",
+    onConfirm:()=>{
+      RES.splice(i,1);
+      FEATURED.ids = FEATURED.ids.filter(x=>x!==id);
+      if(FEAT_DRAFT) FEAT_DRAFT.ids = FEAT_DRAFT.ids.filter(x=>x!==id);
+      TRASH_FILES.unshift({n:r.title, dept:r.system, on:setDateToday()});
+      render();
+      toast("Moved to trash — "+r.title);
+    }
+  });
+}
 function adminAddTheme(){
   if(!isAdmin()) return;
   const v=id=>(document.getElementById(id)||{}).value||"";

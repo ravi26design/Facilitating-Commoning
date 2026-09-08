@@ -1231,9 +1231,10 @@ main{min-height:60vh;animation:fade .3s ease}
 .la-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:0;align-items:stretch;
   background:#fff;border:1px solid var(--line)}
 .la-row:nth-child(even) .la-fig{order:2;border-left:1px solid var(--line);border-right:0}
-.la-fig{border-right:1px solid var(--line);padding:1.5rem;display:flex;background:var(--bg-soft)}
-.la-fig .la-img{margin:0;flex:1;display:flex;align-items:center;justify-content:center}
-.la-fig .la-img img{width:100%;height:auto;display:block}
+.la-fig{border-right:1px solid var(--line);display:flex;background:var(--bg-soft)}
+.la-fig.missing{padding:1.5rem}
+.la-fig .la-img{margin:0;flex:1;min-width:0;display:block;overflow:hidden}
+.la-fig .la-img img{width:100%;height:100%;object-fit:cover;display:block}
 .la-fig .la-ph{display:none}
 .la-fig.missing .la-ph{display:flex}
 .la-ph{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;

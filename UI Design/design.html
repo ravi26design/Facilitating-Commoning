@@ -1194,26 +1194,11 @@ main{min-height:60vh;animation:fade .3s ease}
 .set-act .iconbtn:hover,.set-act .iconbtn:focus-visible{border-color:var(--line-2);background:#fff;color:var(--ink)}
 .set-act .iconbtn.danger:hover,.set-act .iconbtn.danger:focus-visible{border-color:var(--red);color:var(--red);background:#fbeee9}
 .set-empty{text-align:center;color:var(--muted);padding:2rem 1rem!important}
-.th-cell{display:flex;align-items:center;gap:.8rem;min-width:0}
-.th-cell b{font-size:.92rem;color:var(--ink);line-height:1.35}
-.th-thumb{flex:none;display:grid;place-items:center;width:3.6rem;height:2.4rem;overflow:hidden;
-  background:var(--bg-soft);border:1px solid var(--line);color:var(--faint)}
-.th-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.th-thumb i,.th-thumb svg.lucide{width:1.05rem;height:1.05rem}
-.th-desc{color:var(--muted);max-width:34rem;line-height:1.55}
 .th-current{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
 .th-current img{width:5rem;height:3rem;object-fit:cover;border:1px solid var(--line)}
 .th-current span{font-size:.8rem;color:var(--muted-2)}
 .tagpill{display:inline-flex;align-items:center;background:var(--green);color:#fff;
   padding:.28rem .7rem;font-size:.78rem;font-weight:700;border-radius:999px}
-/* the required / not required choice */
-.segchoice{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2)}
-.sc-btn{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.7rem .8rem;border:0;background:#fff;
-  font:inherit;font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--muted-2);cursor:pointer;transition:.15s}
-.sc-btn+.sc-btn{border-left:1px solid var(--line-2)}
-.sc-btn:hover{background:var(--bg-soft);color:var(--ink)}
-.sc-btn.on{background:var(--green);color:#fff}
-.sc-btn i,.sc-btn svg.lucide{width:.9rem;height:.9rem}
 /* archive rules */
 .arcbox{padding:0;max-width:44rem;overflow:hidden}
 .arc-head{display:flex;align-items:flex-start;gap:.9rem;padding:1.35rem 1.5rem;border-bottom:1px solid var(--line)}
@@ -2653,19 +2638,9 @@ const FAQS = [
 
 /* resources — full metadata set from the wireframe */
 /* ---- Settings: categories, tags, types and archive rules ---- */
-const SET_TABS = [["themes","Themes"],["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
-const SET_LABEL = {categories:"Category", tags:"Tag", types:"Type"};
+const SET_TABS = [["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
+const SET_LABEL = {tags:"Tag", types:"Type"};
 const SETTINGS = {
-  categories:[
-    {n:"Policy Document",   by:"Vikram Anand", on:"12 Jan 2026", req:true},
-    {n:"Field Report",      by:"Vikram Anand", on:"14 Jan 2026", req:true},
-    {n:"Research Paper",    by:"Neha Kapoor",  on:"18 Jan 2026", req:false},
-    {n:"Training Material", by:"Neha Kapoor",  on:"02 Feb 2026", req:false},
-    {n:"Legal Agreement",   by:"Vikram Anand", on:"21 Feb 2026", req:true},
-    {n:"Survey Data",       by:"Neha Kapoor",  on:"09 Mar 2026", req:false},
-    {n:"Case Study",        by:"Neha Kapoor",  on:"15 Mar 2026", req:false},
-    {n:"Meeting Minutes",   by:"Vikram Anand", on:"28 Mar 2026", req:false}
-  ],
   tags:{
     system:[
       {n:"Watershed",         by:"Vikram Anand", on:"12 Jan 2026"},
@@ -5809,47 +5784,20 @@ function setRows(kind, sub){ return sub ? SETTINGS[kind][sub] : SETTINGS[kind]; 
 /* one table for themes, categories, tags and types */
 function setTable(kind, sub){
   const rows = setRows(kind, sub);
-  const isTag = kind==="tags", isCat = kind==="categories";
-  const canEdit = isCat;   // tags and types are created and removed, not renamed
+  const isTag = kind==="tags";
   return `<div class="scrollx settable"><table class="admin">
     <thead><tr>
-      <th>${SET_LABEL[kind]}</th><th>Created By</th><th>Created Date</th>
-      ${isCat?`<th>Needs Approval</th>`:''}<th class="ta-r">Actions</th>
+      <th>${SET_LABEL[kind]}</th><th>Created By</th><th>Created Date</th><th class="ta-r">Actions</th>
     </tr></thead>
     <tbody>${rows.length?rows.map((r,i)=>`<tr>
       <td>${isTag?`<span class="tagpill">${r.n}</span>`:r.n}</td>
       <td>${setBy(r.by)}</td>
       <td class="nowrap">${r.on}</td>
-      ${isCat?`<td><button class="switch ${r.req?'on':''}" role="switch" aria-checked="${r.req}"
-        aria-label="Needs approval for ${esc(r.n)}" onclick="setToggleApproval(${i})"></button></td>`:''}
       <td class="ta-r"><div class="set-act">
-        ${canEdit?`<button class="iconbtn" title="Edit ${esc(r.n)}" aria-label="Edit ${esc(r.n)}"
-          onclick="openSetDialog('${kind}','${sub||''}',${i})">${ic('pencil')}</button>`:''}
         <button class="iconbtn danger" title="Delete ${esc(r.n)}" aria-label="Delete ${esc(r.n)}"
           onclick="setDelete('${kind}','${sub||''}',${i})">${ic('trash-2')}</button>
       </div></td>
-    </tr>`).join(""):`<tr><td colspan="${isCat?5:4}" class="set-empty">Nothing here yet — add the first one.</td></tr>`}</tbody>
-  </table></div>`;
-}
-/* themes come from the repository itself, so the picture and wording stay in step */
-function setThemeTable(){
-  return `<div class="scrollx settable"><table class="admin">
-    <thead><tr><th>Theme</th><th>Short description</th><th class="ta-r">Actions</th></tr></thead>
-    <tbody>${THEME_LIST.length?THEME_LIST.map(t=>`<tr>
-      <td><div class="th-cell">
-        <span class="th-thumb">${t.img
-          ? `<img src="${t.img}" alt="" loading="lazy" onerror="this.remove()">`
-          : ic(t.icon||'tag')}</span>
-        <b>${t.name}</b>
-      </div></td>
-      <td class="th-desc">${t.desc||''}</td>
-      <td class="ta-r"><div class="set-act">
-        <button class="iconbtn" title="Edit ${esc(t.name)}" aria-label="Edit ${esc(t.name)}"
-          onclick="openAddTheme('${escj(t.id)}')">${ic('pencil')}</button>
-        <button class="iconbtn danger" title="Delete ${esc(t.name)}" aria-label="Delete ${esc(t.name)}"
-          onclick="adminDeleteTheme('${escj(t.id)}')">${ic('trash-2')}</button>
-      </div></td>
-    </tr>`).join(""):`<tr><td colspan="3" class="set-empty">No themes yet — add the first one.</td></tr>`}</tbody>
+    </tr>`).join(""):`<tr><td colspan="4" class="set-empty">Nothing here yet — add the first one.</td></tr>`}</tbody>
   </table></div>`;
 }
 function setArchivePanel(){
@@ -5877,18 +5825,18 @@ function setArchivePanel(){
 }
 screens.settings = (params) => {
   if(!isAdmin()) return gateScreen("Settings","Sign in as the Platform Super Admin to manage the repository settings.");
-  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "themes";
+  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "tags";
   const kind = params.kind==="user" ? "user" : "system";
   const q = (k)=>`#/settings?tab=${k}`;
-  const addLabel = {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
+  const addLabel = {tags:"Add tag", types:"Add type"}[tab];
   return accountShell('settings', `
     <div class="acct-head">
       <div>
         <h1 class="acct-title">Settings</h1>
-        <p class="acct-sub" style="margin:0">Manage themes, categories, tags, types and archive rules across the repository.</p>
+        <p class="acct-sub" style="margin:0">Manage tags, types and archive rules across the repository.</p>
       </div>
       ${tab!=="archive"?`<div class="row">
-        <button class="btn btn-primary" onclick="${tab==='themes'?'openAddTheme()':`openSetDialog('${tab}','${tab==='tags'?kind:''}')`}">${ic('plus')} ${addLabel}</button>
+        <button class="btn btn-primary" onclick="openSetDialog('${tab}','${tab==='tags'?kind:''}')">${ic('plus')} ${addLabel}</button>
       </div>`:''}
     </div>
 
@@ -5901,7 +5849,6 @@ screens.settings = (params) => {
     </div>`:''}
 
     ${tab==="archive" ? setArchivePanel()
-      : tab==="themes" ? setThemeTable()
       : tab==="tags"   ? setTable('tags', kind)
       : setTable(tab)}
   `);
@@ -5910,24 +5857,17 @@ screens.settings = (params) => {
 function openSetDialog(kind, sub, idx){
   const editing = idx!==undefined && idx!==null;
   const row = editing ? setRows(kind, sub||null)[idx] : null;
-  SET_DRAFT = {kind, sub:sub||null, idx: editing?idx:null, req: row? !!row.req : true};
+  SET_DRAFT = {kind, sub:sub||null, idx: editing?idx:null};
   const label = SET_LABEL[kind];
   document.getElementById('pn-set').innerHTML =
     modalHead(`${editing?'Edit':'Add'} ${label.toLowerCase()}`,
-      editing?`Rename this ${label.toLowerCase()}.`:`Create a new ${kind==='categories'?'document category':label.toLowerCase()}.`,
+      editing?`Rename this ${label.toLowerCase()}.`:`Create a new ${label.toLowerCase()}.`,
       "closeSetDialog()") +
     `<div class="field">
       <label for="set-name">${label} name</label>
       <input id="set-name" placeholder="Enter ${label.toLowerCase()} name" value="${row?esc(row.n):''}"
         onkeydown="if(event.key==='Enter'){event.preventDefault();saveSetDialog();}">
     </div>
-    ${kind==='categories'?`<div class="field">
-      <label>Needs approval</label>
-      <div class="segchoice">
-        <button type="button" class="sc-btn ${SET_DRAFT.req?'on':''}" onclick="setDraftReq(true)">${ic('check')} Required</button>
-        <button type="button" class="sc-btn ${SET_DRAFT.req?'':'on'}" onclick="setDraftReq(false)">${ic('x')} Not required</button>
-      </div>
-    </div>`:''}
     <div class="row" style="justify-content:flex-end;margin-top:1.4rem">
       <button class="btn btn-ghost" onclick="closeSetDialog()">Cancel</button>
       <button class="btn btn-primary" onclick="saveSetDialog()">${ic(editing?'check':'plus')} ${editing?'Save':addNoun(kind)}</button>
@@ -5935,25 +5875,19 @@ function openSetDialog(kind, sub, idx){
   openOverlay('ov-set');
   focusIn('set-name');
 }
-function addNoun(kind){ return {categories:"Add category", tags:"Add tag", types:"Add type"}[kind]; }
+function addNoun(kind){ return {tags:"Add tag", types:"Add type"}[kind]; }
 function closeSetDialog(){ closeOverlay('ov-set'); SET_DRAFT = null; }
-function setDraftReq(v){
-  SET_DRAFT.req = v;
-  const btns = document.querySelectorAll('#pn-set .sc-btn');
-  btns[0].classList.toggle('on', v); btns[1].classList.toggle('on', !v);
-}
 function saveSetDialog(){
   const input = document.getElementById('set-name');
   const name = (input.value||"").trim();
   if(!name){ input.focus(); toast("Give it a name first"); return; }
-  const {kind, sub, idx, req} = SET_DRAFT;
+  const {kind, sub, idx} = SET_DRAFT;
   const rows = setRows(kind, sub);
   if(idx===null){
-    rows.unshift({n:name, by:USER.name, on:setDateToday(), ...(kind==='categories'?{req}:{})});
+    rows.unshift({n:name, by:USER.name, on:setDateToday()});
     toast(`${SET_LABEL[kind]} added`);
   } else {
     rows[idx].n = name;
-    if(kind==='categories') rows[idx].req = req;
     toast(`${SET_LABEL[kind]} updated`);
   }
   closeSetDialog();
@@ -5967,12 +5901,6 @@ function setDelete(kind, sub, idx){
     confirmLabel:"Delete", icon:"trash-2",
     onConfirm:()=>{ rows.splice(idx,1); render(); toast(`${SET_LABEL[kind]} deleted`); }
   });
-}
-function setToggleApproval(idx){
-  const row = SETTINGS.categories[idx];
-  row.req = !row.req;
-  render();
-  toast(`${row.n} — approval ${row.req?'required':'not required'}`);
 }
 /* ---- archive rules ---- */
 function setArchiveDays(v){
@@ -6121,22 +6049,6 @@ function adminAddTheme(){
   closeAddTheme(); toast("Theme added — "+name.trim());
   if(onSettings) render(); else go('#/resource-systems');
 }
-function adminDeleteTheme(id){
-  if(!isAdmin()) return;
-  const t = THEMES[id]; if(!t) return;
-  confirmDialog({
-    title:"Delete theme?",
-    body:`“${t.name}” will be removed from Resource Systems &amp; Themes and from the settings list.`,
-    confirmLabel:"Delete", icon:"trash-2",
-    onConfirm:()=>{
-      delete THEMES[id];
-      const i = THEME_LIST.findIndex(x=>x.id===id);
-      if(i>-1) THEME_LIST.splice(i,1);
-      render(); toast("Theme deleted — "+t.name);
-    }
-  });
-}
-
 /* ---- add / edit a topic ---- */
 function openAddTopic(sysId, group, editId){
   if(!isAdmin()) return;

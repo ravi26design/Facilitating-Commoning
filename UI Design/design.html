@@ -2639,20 +2639,10 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
-/* ---- Settings: themes, categories, tags, types and archive rules ---- */
-const SET_TABS = [["themes","Themes"],["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
-const SET_LABEL = {themes:"Theme", categories:"Category", tags:"Tag", types:"Type"};
+/* ---- Settings: categories, tags, types and archive rules ---- */
+const SET_TABS = [["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
+const SET_LABEL = {categories:"Category", tags:"Tag", types:"Type"};
 const SETTINGS = {
-  themes:[
-    {n:"NRM",         by:"Vikram Anand", on:"12 Jan 2026"},
-    {n:"Forest",      by:"Vikram Anand", on:"12 Jan 2026"},
-    {n:"Livelihood",  by:"Neha Kapoor",  on:"18 Jan 2026"},
-    {n:"Water",       by:"Neha Kapoor",  on:"02 Feb 2026"},
-    {n:"Land Rights", by:"Vikram Anand", on:"21 Feb 2026"},
-    {n:"Agriculture", by:"Neha Kapoor",  on:"09 Mar 2026"},
-    {n:"Governance",  by:"Vikram Anand", on:"15 Mar 2026"},
-    {n:"Climate",     by:"Neha Kapoor",  on:"28 Mar 2026"}
-  ],
   categories:[
     {n:"Policy Document",   by:"Vikram Anand", on:"12 Jan 2026", req:true},
     {n:"Field Report",      by:"Vikram Anand", on:"14 Jan 2026", req:true},
@@ -5795,7 +5785,7 @@ function featEditToggle(){
 function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
 function featCancel(){ featDiscard(); }
 /* ============================================================
-   SETTINGS — themes, categories, tags, types and archive rules
+   SETTINGS — categories, tags, types and archive rules
    ============================================================ */
 function setDateToday(){
   const d=new Date(), M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -5807,7 +5797,7 @@ function setRows(kind, sub){ return sub ? SETTINGS[kind][sub] : SETTINGS[kind]; 
 function setTable(kind, sub){
   const rows = setRows(kind, sub);
   const isTag = kind==="tags", isCat = kind==="categories";
-  const canEdit = kind==="themes" || isCat;   // tags and types are created and removed, not renamed
+  const canEdit = isCat;   // tags and types are created and removed, not renamed
   return `<div class="scrollx settable"><table class="admin">
     <thead><tr>
       <th>${SET_LABEL[kind]}</th><th>Created By</th><th>Created Date</th>
@@ -5853,15 +5843,15 @@ function setArchivePanel(){
 }
 screens.settings = (params) => {
   if(!isAdmin()) return gateScreen("Settings","Sign in as the Platform Super Admin to manage the repository settings.");
-  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "themes";
+  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "categories";
   const kind = params.kind==="user" ? "user" : "system";
   const q = (k)=>`#/settings?tab=${k}`;
-  const addLabel = {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
+  const addLabel = {categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
   return accountShell('settings', `
     <div class="acct-head">
       <div>
         <h1 class="acct-title">Settings</h1>
-        <p class="acct-sub" style="margin:0">Manage themes, categories, tags, types and archive rules across the repository.</p>
+        <p class="acct-sub" style="margin:0">Manage categories, tags, types and archive rules across the repository.</p>
       </div>
       ${tab!=="archive"?`<div class="row">
         <button class="btn btn-primary" onclick="openSetDialog('${tab}','${tab==='tags'?kind:''}')">${ic('plus')} ${addLabel}</button>
@@ -5910,7 +5900,7 @@ function openSetDialog(kind, sub, idx){
   openOverlay('ov-set');
   focusIn('set-name');
 }
-function addNoun(kind){ return {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[kind]; }
+function addNoun(kind){ return {categories:"Add category", tags:"Add tag", types:"Add type"}[kind]; }
 function closeSetDialog(){ closeOverlay('ov-set'); SET_DRAFT = null; }
 function setDraftReq(v){
   SET_DRAFT.req = v;

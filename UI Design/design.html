@@ -1093,6 +1093,29 @@ main{min-height:60vh;animation:fade .3s ease}
   footer.site .social a{padding:.45rem}
 }
 
+
+/* ---- Featured Resources editor + document picker ---- */
+#ov-featpick{z-index:95}
+.feat-count{font-size:.76rem;color:var(--muted-2);text-align:right;margin-top:.35rem}
+.feat-count.near{color:var(--amber);font-weight:700}
+.feat-empty{border:1px dashed var(--line-2);background:var(--bg-soft);padding:1.1rem;text-align:center;
+  font-size:.87rem;color:var(--muted);line-height:1.6}
+.feat-doc .fd-main{display:flex;align-items:flex-start;gap:.7rem;min-width:0}
+.feat-doc .doc-fi{flex:none}
+.linkbtn.danger{color:var(--red)}
+.pk-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:.9rem 0 .7rem}
+.pk-count{font-size:.82rem;font-weight:800;color:var(--ink)}
+.pk-count em{font-style:normal;font-weight:600;color:var(--muted-2)}
+.pk-list{max-height:24rem;overflow-y:auto;padding-right:.15rem;scrollbar-width:thin}
+.pickrow{display:flex;align-items:flex-start;gap:.75rem;padding:.7rem .8rem;margin-bottom:.4rem;
+  border:1px solid var(--line);background:#fff;cursor:pointer;transition:background .15s,border-color .15s}
+.pickrow:hover{background:var(--bg-soft);border-color:var(--line-2)}
+.pickrow.on{border-color:var(--green);background:var(--green-soft)}
+.pickrow.off{opacity:.45;cursor:not-allowed}
+.pickrow input[type=checkbox]{width:1rem;height:1rem;margin-top:.15rem;flex:none;accent-color:var(--green);cursor:inherit}
+.pk-tx{min-width:0}
+.pk-t{display:block;font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35}
+.pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.15rem}
 /* ---- account: profile page ---- */
 .acct-head{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .acct-head .btn{flex:none}
@@ -2293,6 +2316,8 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
+<div class="overlay" id="ov-feat"><div class="modal" id="pn-feat" style="width:min(40rem,100%);max-height:88vh;overflow:auto"></div></div>
+<div class="overlay" id="ov-featpick"><div class="modal" id="pn-featpick" style="width:min(38rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
 <div class="toast" id="toast"></div>
@@ -2507,6 +2532,16 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
+/* ---- Featured Resources: an admin picks the paragraph and up to two documents ---- */
+const FEATURED_MAX   = 2;     // the most documents the band can hold
+const FEATURED_LIMIT = 700;   // character limit for the paragraph (admin configuration)
+const FEATURED = {
+  text: "September is an important preparatory period for the October Gram Sabha, during which annual action plans mandated by the Rural Development and Panchayati Raj (RD&PR) Department are discussed and developed. The month is an important period for to capacitate and mobilize communities, identify and prioritize local needs, review available resources, and prepare proposals for inclusion in the Gram Panchayat Development Plan and other relevant annual plans. Meaningful preparation can help ensure that the priorities of women, marginalized groups, and Commons-dependent communities are reflected in local planning and decision-making.",
+  ids: ["facilitator-guide","cfr-course"]
+};
+let FEAT_DRAFT = null;   // the working copy while the editor is open
+let FEAT_PICK  = [];     // the working selection while the picker is open
+
 const RES = [
   {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forests", stage:"Secure Tenure", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
@@ -2807,6 +2842,8 @@ function phFallback(img, label, extra){
   if(parent) parent.appendChild(box);
 }
 function esc(s){ return (s||"").replace(/"/g,"&quot;"); }
+// free text that a person typed, safe to drop into markup
+function escText(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 // safe inside a single-quoted JS string that sits in a double-quoted attribute
 function escj(s){ return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
 function initials(nm){
@@ -3466,11 +3503,24 @@ function introCard(c){
 }
 /* All three home rows share one four-column track, so a card is the same
    size in every section however many that section holds. */
-function docRow(title, sub, ids, cols, note, cls){
+function docRow(title, sub, ids, cols, note, cls, right){
   const rows = ids.map(id=>resById(id)).filter(Boolean);
   return section(
-    sechead(null, title, sub)
+    sechead(null, title, sub, right)
     + `<div class="grid g${cols||3}">${rows.map(docCard).join("")}${note||""}</div>`, cls);
+}
+/* the home band — read-only for everyone but an admin, who edits it in place */
+function featuredRow(){
+  const admin = isAdmin();
+  if(!admin && !FEATURED.ids.length && !FEATURED.text) return "";
+  const note = FEATURED.text ? `<div class="rownote long"><p>${escText(FEATURED.text)}</p></div>` : "";
+  const edit = admin ? `<button class="btn btn-outline sm" onclick="openFeatured()">${ic('pencil')} Edit featured</button>` : "";
+  if(admin && !FEATURED.ids.length && !FEATURED.text)
+    return section(sechead(null,"Featured Resources","Nothing is featured yet.",
+      `<button class="btn btn-primary sm" onclick="openFeatured()">${ic('plus')} Add featured</button>`) +
+      `<div class="feat-empty">Add a short paragraph and up to ${FEATURED_MAX} documents from the Resource Library.</div>`, "cream");
+  return docRow("Featured Resources","Hand-picked resources to get you started.",
+    FEATURED.ids, 4, note, "cream", edit);
 }
 
 screens.home = () => shell("#/home", null, `
@@ -3491,10 +3541,7 @@ screens.home = () => shell("#/home", null, `
   <div class="ehero-after">
   ${section(`<div class="grid g3">${HOME_INTRO.map(introCard).join("")}</div>`)}
 
-  ${docRow("Featured Resources","Hand-picked resources to get you started.",["facilitator-guide","cfr-course"], 4,
-    `<div class="rownote long">
-      <p>September is an important preparatory period for the October Gram Sabha, during which annual action plans mandated by the Rural Development and Panchayati Raj (RD&amp;PR) Department are discussed and developed. The month is an important period for to capacitate and mobilize communities, identify and prioritize local needs, review available resources, and prepare proposals for inclusion in the Gram Panchayat Development Plan and other relevant annual plans. Meaningful preparation can help ensure that the priorities of women, marginalized groups, and Commons-dependent communities are reflected in local planning and decision-making.</p>
-    </div>`, "cream")}
+  ${featuredRow()}
   ${docRow("What People Are Reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 
@@ -5383,6 +5430,23 @@ screens.admin = () => {
       <div class="stat kpi">${tile('tag','blue','lg')}<div><b>${THEME_LIST.length}</b><span>Themes</span></div></div>
       <div class="stat kpi">${tile('users','','lg')}<div><b>128</b><span>Registered users</span></div></div>
     </div>`, "tight") +
+    section(sechead(null,"Homepage · Featured Resources",
+      `The paragraph and up to ${FEATURED_MAX} documents shown in the Featured Resources band on the home page.`,
+      `<button class="btn btn-primary sm" onclick="openFeatured()">${ic('pencil')} ${FEATURED.text||FEATURED.ids.length?'Edit featured':'Add featured'}</button>`) +
+      `<div class="panel">
+        <p class="muted" style="font-size:.9rem;line-height:1.7;margin:0 0 ${FEATURED.ids.length?'1.1rem':'0'}">
+          ${FEATURED.text ? escText(FEATURED.text) : 'No paragraph yet.'}</p>
+        ${FEATURED.ids.map(id=>{const r=resById(id); return r?`
+          <div class="listrow feat-doc">
+            <div class="fd-main">
+              <span class="doc-fi ${kindMeta(r.type).fi}">${ic(kindMeta(r.type).icon)}</span>
+              <div style="min-width:0"><div class="lt">${r.title}</div>
+                <div class="muted" style="font-size:.8rem">${r.type} · ${r.system} · ${r.lang}</div></div>
+            </div>
+            <button class="linkbtn" onclick="go('#/resource/${r.id}')">View</button>
+          </div>`:''}).join("")}
+        ${FEATURED.ids.length?'':`<p class="muted" style="font-size:.87rem;margin-top:.8rem">No documents selected.</p>`}
+      </div>`, "tight") +
     section(sechead(null,"Content management",
       "Add, edit, upload and publish resources. Every resource follows the required metadata structure.") +
       `<div class="scrollx"><table class="admin">
@@ -5427,6 +5491,129 @@ screens.admin = () => {
   );
 };
 
+/* ============================================================
+   FEATURED RESOURCES — admin only: a paragraph and up to two documents
+   ============================================================ */
+function openFeatured(){
+  if(!isAdmin()) return;
+  FEAT_DRAFT = { text: FEATURED.text, ids: FEATURED.ids.slice() };
+  renderFeatured();
+  openOverlay('ov-feat');
+  focusIn('feat-text');
+}
+function closeFeatured(){ closeOverlay('ov-feat'); FEAT_DRAFT = null; }
+/* keep whatever has been typed before the panel is redrawn */
+function featSyncText(){
+  const t = document.getElementById('feat-text');
+  if(t && FEAT_DRAFT) FEAT_DRAFT.text = t.value;
+}
+function featCount(){
+  const t = document.getElementById('feat-text'), c = document.getElementById('feat-count');
+  if(!t || !c) return;
+  if(FEAT_DRAFT) FEAT_DRAFT.text = t.value;
+  c.textContent = t.value.length + " / " + FEATURED_LIMIT;
+  c.classList.toggle('near', t.value.length >= FEATURED_LIMIT * 0.95);
+}
+function renderFeatured(){
+  const d = FEAT_DRAFT; if(!d) return;
+  const docs = d.ids.map(id=>resById(id)).filter(Boolean);
+  document.getElementById('pn-feat').innerHTML =
+    modalHead("Featured Resources",
+      `Shown on the home page — a short paragraph and up to ${FEATURED_MAX} documents from the Resource Library.`,
+      "closeFeatured()") +
+    `<div class="field">
+      <label for="feat-text">Paragraph</label>
+      <textarea id="feat-text" maxlength="${FEATURED_LIMIT}" oninput="featCount()"
+        placeholder="Why these resources matter right now…">${escText(d.text)}</textarea>
+      <div class="feat-count" id="feat-count"></div>
+    </div>
+    <div class="between" style="margin-bottom:.7rem">
+      <label style="font-size:.82rem;font-weight:700;color:var(--ink)">Documents
+        <span class="muted" style="font-weight:600">${docs.length} of ${FEATURED_MAX}</span></label>
+      <button class="btn btn-outline sm" onclick="openFeatPick()">${ic('list-plus')} ${docs.length?'Change documents':'Select documents'}</button>
+    </div>
+    ${docs.length ? docs.map(r=>`
+      <div class="listrow feat-doc">
+        <div class="fd-main">
+          <span class="doc-fi ${kindMeta(r.type).fi}">${ic(kindMeta(r.type).icon)}</span>
+          <div style="min-width:0">
+            <div class="lt">${r.title}</div>
+            <div class="muted" style="font-size:.8rem">${r.type} · ${r.system} · ${r.lang}</div>
+          </div>
+        </div>
+        <button class="linkbtn danger" onclick="featRemove('${escj(r.id)}')">${ic('x')} Remove</button>
+      </div>`).join("")
+      : `<div class="feat-empty">No documents chosen yet — select up to ${FEATURED_MAX} from the Resource Library.</div>`}
+    <div class="row" style="justify-content:flex-end;margin-top:1.5rem">
+      <button class="btn btn-ghost" onclick="closeFeatured()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFeatured()">${ic('check')} Save</button>
+    </div>`;
+  icons(); featCount();
+}
+function featRemove(id){
+  featSyncText();
+  FEAT_DRAFT.ids = FEAT_DRAFT.ids.filter(x=>x!==id);
+  renderFeatured();
+}
+function saveFeatured(){
+  featSyncText();
+  FEATURED.text = (FEAT_DRAFT.text||"").trim();
+  FEATURED.ids  = FEAT_DRAFT.ids.slice();
+  closeFeatured();
+  render();
+  toast("Featured Resources updated");
+}
+/* ---- the picker, opened on top of the editor ---- */
+function openFeatPick(){
+  featSyncText();
+  FEAT_PICK = FEAT_DRAFT.ids.slice();
+  document.getElementById('pn-featpick').innerHTML =
+    modalHead("Select documents", `Choose up to ${FEATURED_MAX} documents from the Resource Library.`, "closeFeatPick()") +
+    `<div class="field" style="margin-bottom:.2rem">
+      <input id="featq" placeholder="Search by title, type, system or language…" oninput="featPickList()"
+        onkeydown="if(event.key==='Enter')event.preventDefault()">
+    </div>
+    <div class="pk-bar"><span class="pk-count" id="featpick-count"></span>
+      <button class="linkbtn" onclick="featPickClear()">Clear selection</button></div>
+    <div class="pk-list" id="featpick-list"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:1.35rem">
+      <button class="btn btn-ghost" onclick="closeFeatPick()">Cancel</button>
+      <button class="btn btn-primary" onclick="featPickDone()">${ic('check')} Done</button>
+    </div>`;
+  featPickList();
+  openOverlay('ov-featpick');
+  focusIn('featq');
+}
+function closeFeatPick(){ closeOverlay('ov-featpick'); }
+function featPickClear(){ FEAT_PICK = []; featPickList(); }
+function featPickToggle(id){
+  if(FEAT_PICK.includes(id)) FEAT_PICK = FEAT_PICK.filter(x=>x!==id);
+  else if(FEAT_PICK.length < FEATURED_MAX) FEAT_PICK.push(id);
+  featPickList();
+}
+function featPickList(){
+  const list = document.getElementById('featpick-list'); if(!list) return;
+  const q = ((document.getElementById('featq')||{}).value||"").trim().toLowerCase();
+  const rows = RES.filter(r=>!q ||
+    (r.title+" "+r.purpose+" "+r.type+" "+r.system+" "+r.lang).toLowerCase().includes(q));
+  const full = FEAT_PICK.length >= FEATURED_MAX;
+  list.innerHTML = rows.length ? rows.map(r=>{
+    const on = FEAT_PICK.includes(r.id), off = !on && full;
+    return `<label class="pickrow${on?' on':''}${off?' off':''}">
+      <input type="checkbox" ${on?'checked':''} ${off?'disabled':''} onchange="featPickToggle('${escj(r.id)}')">
+      <span class="pk-tx">
+        <span class="pk-t">${r.title}</span>
+        <span class="pk-m">${r.type} · ${r.system} · ${r.lang}</span>
+      </span></label>`;}).join("")
+    : `<p class="muted" style="font-size:.87rem;padding:.7rem .2rem">Nothing in the library matches “${escText(q)}”.</p>`;
+  const c = document.getElementById('featpick-count');
+  if(c) c.innerHTML = `${FEAT_PICK.length} of ${FEATURED_MAX} selected${full?` <em>· the limit is reached</em>`:''}`;
+}
+function featPickDone(){
+  FEAT_DRAFT.ids = FEAT_PICK.slice();
+  closeFeatPick();
+  renderFeatured();
+}
 /* ============================================================
    ADMIN MUTATIONS — themes, topics, subtopics, files, documents
    ============================================================ */

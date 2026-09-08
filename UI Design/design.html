@@ -1178,7 +1178,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.1rem}
 
 /* ---- Settings ---- */
-.tabs-c.plain{border-bottom:0;padding-bottom:0;margin:1.1rem 0 1.25rem}
 .tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
 .settable{box-shadow:none}
 /* keep the columns readable — the frame scrolls rather than the words breaking up */
@@ -1438,7 +1437,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .detail-f .v{color:var(--ink);font-weight:600;text-align:right}
 
 /* ---- count tabs ---- */
-.tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:.85rem;margin:1.1rem 0 1.25rem}
+.tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.1rem 0 1.25rem}
 .tab-c{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;font-size:.82rem;font-weight:600;
   cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;color:var(--ink);transition:.15s}
 .tab-c:hover{border-color:var(--green);color:var(--green-d)}
@@ -5959,7 +5958,7 @@ screens.users = (params) => {
         <button class="btn btn-primary" onclick="openUrDialog('${tab}')">${ic('plus')} ${tab==='roles'?'Add role':'Add user'}</button>
       </div>
     </div>
-    <div class="tabs-c plain">
+    <div class="tabs-c">
       <button class="tab-c ${tab==='users'?'active':''}" onclick="go('#/users')">Users <span class="cnt">${USERS.length}</span></button>
       <button class="tab-c ${tab==='roles'?'active':''}" onclick="go('#/users?tab=roles')">Roles <span class="cnt">${ROLES_LIST.length}</span></button>
     </div>
@@ -6220,7 +6219,7 @@ screens.settings = (params) => {
       </div>`:''}
     </div>
 
-    <div class="tabs-c plain">${SET_TABS.map(([k,label])=>
+    <div class="tabs-c">${SET_TABS.map(([k,label])=>
       `<button class="tab-c ${tab===k?'active':''}" onclick="go('${q(k)}')">${label}</button>`).join("")}</div>
 
     ${tab==="tags"?`<div class="tabs-c sub">

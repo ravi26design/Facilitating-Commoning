@@ -1174,6 +1174,54 @@ main{min-height:60vh;animation:fade .3s ease}
 .pk-tx{min-width:0}
 .pk-t{display:block;font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35}
 .pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.1rem}
+
+/* ---- Settings ---- */
+.tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
+.settable{box-shadow:none}
+.settable table.admin th{background:var(--bg-soft);color:var(--ink);border-bottom:1px solid var(--line-2)}
+.settable table.admin tr:nth-child(even) td{background:#fff}
+.settable table.admin tr:hover td{background:var(--bg-soft)}
+.settable td,.settable th{vertical-align:middle}
+.settable .ta-r{text-align:right}
+.settable .nowrap{white-space:nowrap;color:var(--muted-2)}
+.set-by{display:inline-flex;align-items:center;gap:.55rem;white-space:nowrap}
+.set-by .pw-av{width:1.7rem;height:1.7rem;font-size:.62rem}
+.set-act{display:inline-flex;gap:.45rem;justify-content:flex-end}
+.set-act .iconbtn{width:2.1rem;height:2.1rem;display:grid;place-items:center}
+.set-act .iconbtn.danger:hover{border-color:var(--red);color:var(--red);background:#fbeee9}
+.set-empty{text-align:center;color:var(--muted);padding:2rem 1rem!important}
+.tagpill{display:inline-flex;align-items:center;background:var(--green);color:#fff;
+  padding:.28rem .7rem;font-size:.78rem;font-weight:700;border-radius:999px}
+/* the required / not required choice */
+.segchoice{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2)}
+.sc-btn{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.7rem .8rem;border:0;background:#fff;
+  font:inherit;font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--muted-2);cursor:pointer;transition:.15s}
+.sc-btn+.sc-btn{border-left:1px solid var(--line-2)}
+.sc-btn:hover{background:var(--bg-soft);color:var(--ink)}
+.sc-btn.on{background:var(--green);color:#fff}
+.sc-btn i,.sc-btn svg.lucide{width:.9rem;height:.9rem}
+/* archive rules */
+.arcbox{padding:0;max-width:44rem;overflow:hidden}
+.arc-head{display:flex;align-items:flex-start;gap:.9rem;padding:1.35rem 1.5rem;border-bottom:1px solid var(--line)}
+.arc-ic{display:grid;place-items:center;flex:none;width:2.4rem;height:2.4rem;background:var(--green-soft);color:var(--green-d)}
+.arc-ic i,.arc-ic svg.lucide{width:1.15rem;height:1.15rem}
+.arc-head b{display:block;font-size:1.02rem;color:var(--ink)}
+.arc-head p{margin:.2rem 0 0;font-size:.87rem;color:var(--muted)}
+.arc-body{padding:1.5rem}
+.arc-in{display:inline-flex;align-items:stretch;border:1px solid var(--line-2);background:#fff;margin-bottom:1rem}
+.arc-in input{width:6.5rem;border:0;padding:.7rem .9rem;font:inherit;font-size:1.05rem;font-weight:800;color:var(--ink)}
+.arc-in input:focus{outline:none}
+.arc-in span{display:grid;place-items:center;padding:0 1rem;background:var(--bg-soft);border-left:1px solid var(--line-2);
+  font-size:.85rem;color:var(--muted-2)}
+.arc-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+.arc-chip{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .9rem;
+  font:inherit;font-size:.82rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s}
+.arc-chip:hover{border-color:var(--green);color:var(--green-d)}
+.arc-chip.on{background:var(--green);border-color:var(--green);color:#fff}
+.arc-note{border-left:3px solid var(--green);background:var(--green-soft);padding:.9rem 1.1rem;
+  font-size:.87rem;line-height:1.65;color:var(--ink-2)}
+.arc-note b{color:var(--ink);font-weight:800}
+@media(max-width:620px){.set-by span:not(.pw-av){display:none}.arc-in input{width:5rem}}
 /* ---- account: profile page ---- */
 .acct-head{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .acct-head .btn{flex:none}
@@ -2374,6 +2422,7 @@ table.admin tr:nth-child(even) td{background:var(--bg-soft)}
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
+<div class="overlay" id="ov-set"><div class="modal" id="pn-set" style="width:min(32rem,100%)"></div></div>
 <div class="overlay" id="ov-featpick"><div class="modal" id="pn-featpick" style="width:min(38rem,100%);max-height:88vh;overflow:auto"></div></div>
 <div class="overlay" id="ov-theme"><div class="modal" id="pn-theme" style="width:min(38rem,100%);max-height:86vh;overflow:auto"></div></div>
 
@@ -2589,6 +2638,66 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
+/* ---- Settings: themes, categories, tags, types and archive rules ---- */
+const SET_TABS = [["themes","Themes"],["categories","Categories"],["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
+const SET_LABEL = {themes:"Theme", categories:"Category", tags:"Tag", types:"Type"};
+const SETTINGS = {
+  themes:[
+    {n:"NRM",         by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Forest",      by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Livelihood",  by:"Neha Kapoor",  on:"18 Jan 2026"},
+    {n:"Water",       by:"Neha Kapoor",  on:"02 Feb 2026"},
+    {n:"Land Rights", by:"Vikram Anand", on:"21 Feb 2026"},
+    {n:"Agriculture", by:"Neha Kapoor",  on:"09 Mar 2026"},
+    {n:"Governance",  by:"Vikram Anand", on:"15 Mar 2026"},
+    {n:"Climate",     by:"Neha Kapoor",  on:"28 Mar 2026"}
+  ],
+  categories:[
+    {n:"Policy Document",   by:"Vikram Anand", on:"12 Jan 2026", req:true},
+    {n:"Field Report",      by:"Vikram Anand", on:"14 Jan 2026", req:true},
+    {n:"Research Paper",    by:"Neha Kapoor",  on:"18 Jan 2026", req:false},
+    {n:"Training Material", by:"Neha Kapoor",  on:"02 Feb 2026", req:false},
+    {n:"Legal Agreement",   by:"Vikram Anand", on:"21 Feb 2026", req:true},
+    {n:"Survey Data",       by:"Neha Kapoor",  on:"09 Mar 2026", req:false},
+    {n:"Case Study",        by:"Neha Kapoor",  on:"15 Mar 2026", req:false},
+    {n:"Meeting Minutes",   by:"Vikram Anand", on:"28 Mar 2026", req:false}
+  ],
+  tags:{
+    system:[
+      {n:"Watershed",         by:"Vikram Anand", on:"12 Jan 2026"},
+      {n:"Afforestation",     by:"Vikram Anand", on:"15 Jan 2026"},
+      {n:"Livelihood Survey", by:"Neha Kapoor",  on:"18 Jan 2026"},
+      {n:"Groundwater",       by:"Neha Kapoor",  on:"02 Feb 2026"},
+      {n:"Land Title",        by:"Vikram Anand", on:"21 Feb 2026"},
+      {n:"Crop Cycle",        by:"Neha Kapoor",  on:"09 Mar 2026"},
+      {n:"Gram Sabha",        by:"Vikram Anand", on:"15 Mar 2026"}
+    ],
+    user:[
+      {n:"Drought Relief", by:"Priya Sharma",  on:"03 Apr 2026"},
+      {n:"Soil Health",    by:"Kavita Menon",  on:"07 Apr 2026"},
+      {n:"Women SHG",      by:"Sarah Johnson", on:"12 Apr 2026"},
+      {n:"Rainfall Data",  by:"Michael Chen",  on:"18 Apr 2026"},
+      {n:"Village Map",    by:"Rajesh Nair",   on:"22 Apr 2026"},
+      {n:"Tree Census",    by:"Emma Davis",    on:"28 Apr 2026"}
+    ]
+  },
+  types:[
+    {n:"Personal Document",   by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Legal Document",      by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Financial Document",  by:"Neha Kapoor",  on:"18 Jan 2026"},
+    {n:"HR Document",         by:"Neha Kapoor",  on:"02 Feb 2026"},
+    {n:"Technical Document",  by:"Vikram Anand", on:"21 Feb 2026"},
+    {n:"Project Document",    by:"Neha Kapoor",  on:"09 Mar 2026"},
+    {n:"Compliance Document", by:"Vikram Anand", on:"15 Mar 2026"},
+    {n:"Policy Document",     by:"Neha Kapoor",  on:"28 Mar 2026"},
+    {n:"Training Material",   by:"Vikram Anand", on:"03 Apr 2026"},
+    {n:"Marketing Material",  by:"Neha Kapoor",  on:"07 Apr 2026"}
+  ],
+  archiveDays:90
+};
+const ARCHIVE_DEFAULT = 90;
+let SET_DRAFT = null;   // the row being added or edited
+
 /* ---- Featured Resources: an admin picks the paragraph and up to two documents ---- */
 const FEATURED_MAX   = 2;     // the most documents the band can hold
 const FEATURED_LIMIT = 700;   // character limit for the paragraph (admin configuration)
@@ -2598,7 +2707,8 @@ const FEATURED = {
 };
 let FEAT_DRAFT = null;   // the working copy while the editor is open
 let FEAT_EDIT = false;   // the pencil puts the whole band into edit mode
-let FEAT_PICK  = [];     // the working selection while the picker is open
+let FEAT_PICK  = [];     // the documents chosen while the picker is open
+let FEAT_SLOTS = 1;      // how many free slots that picker is filling
 
 const RES = [
   {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
@@ -3045,7 +3155,8 @@ function header(active){
         <button class="pw-item" onclick="pwClose();go('#/profile')">${ic('user-round')} ${tr('nav.profile')}</button>
         <button class="pw-item" onclick="pwClose();go('#/contributions')">${ic('file-text')} My Contributions</button>
         ${canReview()?`<button class="pw-item" onclick="pwClose();go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?` <span class="pw-badge">${pendingCount()}</span>`:''}</button>`:''}
-        ${isAdmin()?`<button class="pw-item" onclick="pwClose();openFeatured()">${ic('star')} Featured Resources</button>`:''}
+        ${isAdmin()?`<button class="pw-item" onclick="pwClose();openFeatured()">${ic('star')} Featured Resources</button>
+        <button class="pw-item" onclick="pwClose();go('#/settings')">${ic('settings')} Settings</button>`:''}
         <button class="pw-item" onclick="pwClose();openChangePassword()">${ic('key-round')} ${tr('nav.password')}</button>
         <div class="pw-div"></div>
         <button class="pw-item danger" onclick="signOut()">${ic('log-out')} ${tr('nav.signout')}</button>
@@ -5253,7 +5364,8 @@ function accountShell(active, body){
       <button class="acct-item ${active==='contributions'?'active':''}" onclick="go('#/contributions')">${ic('file-text')} My Contributions</button>
       ${canReview()?`<button class="acct-item ${active==='approvals'?'active':''}" onclick="go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?`<span class="acct-badge">${pendingCount()}</span>`:''}</button>`:''}
       ${isAdmin()?`<div class="acct-h">Manage</div>
-      <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>`:''}
+      <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>
+      <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>`:''}
     </nav></aside>
     <div class="acct-main">${body}</div>
   </div></main>` + footer();
@@ -5681,19 +5793,183 @@ function featEditToggle(){
 }
 function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
 function featCancel(){ featDiscard(); }
+/* ============================================================
+   SETTINGS — themes, categories, tags, types and archive rules
+   ============================================================ */
+function setDateToday(){
+  const d=new Date(), M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${String(d.getDate()).padStart(2,'0')} ${M[d.getMonth()]} ${d.getFullYear()}`;
+}
+function setBy(name){ return `<span class="set-by"><span class="pw-av sm">${initials(name)}</span>${name}</span>`; }
+function setRows(kind, sub){ return sub ? SETTINGS[kind][sub] : SETTINGS[kind]; }
+/* one table for themes, categories, tags and types */
+function setTable(kind, sub){
+  const rows = setRows(kind, sub);
+  const isTag = kind==="tags", isCat = kind==="categories";
+  const canEdit = kind==="themes" || isCat;   // tags and types are created and removed, not renamed
+  return `<div class="scrollx settable"><table class="admin">
+    <thead><tr>
+      <th>${SET_LABEL[kind]}</th><th>Created By</th><th>Created Date</th>
+      ${isCat?`<th>Needs Approval</th>`:''}<th class="ta-r">Actions</th>
+    </tr></thead>
+    <tbody>${rows.length?rows.map((r,i)=>`<tr>
+      <td>${isTag?`<span class="tagpill">${r.n}</span>`:r.n}</td>
+      <td>${setBy(r.by)}</td>
+      <td class="nowrap">${r.on}</td>
+      ${isCat?`<td><button class="switch ${r.req?'on':''}" role="switch" aria-checked="${r.req}"
+        aria-label="Needs approval for ${esc(r.n)}" onclick="setToggleApproval(${i})"></button></td>`:''}
+      <td class="ta-r"><div class="set-act">
+        ${canEdit?`<button class="iconbtn" title="Edit ${esc(r.n)}" aria-label="Edit ${esc(r.n)}"
+          onclick="openSetDialog('${kind}','${sub||''}',${i})">${ic('pencil')}</button>`:''}
+        <button class="iconbtn danger" title="Delete ${esc(r.n)}" aria-label="Delete ${esc(r.n)}"
+          onclick="setDelete('${kind}','${sub||''}',${i})">${ic('trash-2')}</button>
+      </div></td>
+    </tr>`).join(""):`<tr><td colspan="${isCat?5:4}" class="set-empty">Nothing here yet — add the first one.</td></tr>`}</tbody>
+  </table></div>`;
+}
+function setArchivePanel(){
+  const d = SETTINGS.archiveDays;
+  const chip = (v,label)=>`<button class="arc-chip${d===v?' on':''}" onclick="setArchiveDays(${v})">${label}</button>`;
+  return `<div class="panel arcbox">
+    <div class="arc-head">
+      <span class="arc-ic">${ic('archive')}</span>
+      <div><b>Archive Timeline</b><p>Control when inactive documents are moved to Archive.</p></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-in">
+        <input id="arc-days" type="number" min="1" max="3650" value="${d}" onchange="setArchiveDays(this.value)">
+        <span>days</span>
+      </div>
+      <div class="arc-chips">${chip(30,'30 days')}${chip(60,'60 days')}${chip(90,'90 days')}${chip(180,'180 days')}${chip(365,'1 year')}</div>
+      <div class="arc-note">Documents that are <b>not viewed, edited, or downloaded</b> within the selected number of days
+        will be <b>automatically moved to the Archive</b> section.</div>
+      <div class="row" style="margin-top:1.35rem">
+        <button class="btn btn-primary" onclick="setArchiveSave()">${ic('check')} Save settings</button>
+        <button class="btn btn-outline" onclick="setArchiveReset()">Reset to default</button>
+      </div>
+    </div>
+  </div>`;
+}
+screens.settings = (params) => {
+  if(!isAdmin()) return gateScreen("Settings","Sign in as the Platform Super Admin to manage the repository settings.");
+  const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "themes";
+  const kind = params.kind==="user" ? "user" : "system";
+  const q = (k)=>`#/settings?tab=${k}`;
+  const addLabel = {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[tab];
+  return accountShell('settings', `
+    <div class="acct-head">
+      <div>
+        <h1 class="acct-title">Settings</h1>
+        <p class="acct-sub" style="margin:0">Manage themes, categories, tags, types and archive rules across the repository.</p>
+      </div>
+      ${tab!=="archive"?`<div class="row">
+        <button class="btn btn-primary" onclick="openSetDialog('${tab}','${tab==='tags'?kind:''}')">${ic('plus')} ${addLabel}</button>
+      </div>`:''}
+    </div>
+
+    <div class="tabs-c">${SET_TABS.map(([k,label])=>
+      `<button class="tab-c ${tab===k?'active':''}" onclick="go('${q(k)}')">${label}</button>`).join("")}</div>
+
+    ${tab==="tags"?`<div class="tabs-c sub">
+      <button class="tab-c ${kind==='system'?'active':''}" onclick="go('#/settings?tab=tags&kind=system')">System defined tags</button>
+      <button class="tab-c ${kind==='user'?'active':''}" onclick="go('#/settings?tab=tags&kind=user')">User defined tags</button>
+    </div>`:''}
+
+    ${tab==="archive" ? setArchivePanel()
+      : tab==="tags"  ? setTable('tags', kind)
+      : setTable(tab)}
+  `);
+};
+/* ---- add, rename and remove ---- */
+function openSetDialog(kind, sub, idx){
+  const editing = idx!==undefined && idx!==null;
+  const row = editing ? setRows(kind, sub||null)[idx] : null;
+  SET_DRAFT = {kind, sub:sub||null, idx: editing?idx:null, req: row? !!row.req : true};
+  const label = SET_LABEL[kind];
+  document.getElementById('pn-set').innerHTML =
+    modalHead(`${editing?'Edit':'Add'} ${label.toLowerCase()}`,
+      editing?`Rename this ${label.toLowerCase()}.`:`Create a new ${kind==='categories'?'document category':label.toLowerCase()}.`,
+      "closeSetDialog()") +
+    `<div class="field">
+      <label for="set-name">${label} name</label>
+      <input id="set-name" placeholder="Enter ${label.toLowerCase()} name" value="${row?esc(row.n):''}"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();saveSetDialog();}">
+    </div>
+    ${kind==='categories'?`<div class="field">
+      <label>Needs approval</label>
+      <div class="segchoice">
+        <button type="button" class="sc-btn ${SET_DRAFT.req?'on':''}" onclick="setDraftReq(true)">${ic('check')} Required</button>
+        <button type="button" class="sc-btn ${SET_DRAFT.req?'':'on'}" onclick="setDraftReq(false)">${ic('x')} Not required</button>
+      </div>
+    </div>`:''}
+    <div class="row" style="justify-content:flex-end;margin-top:1.4rem">
+      <button class="btn btn-ghost" onclick="closeSetDialog()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSetDialog()">${ic(editing?'check':'plus')} ${editing?'Save':addNoun(kind)}</button>
+    </div>`;
+  openOverlay('ov-set');
+  focusIn('set-name');
+}
+function addNoun(kind){ return {themes:"Add theme", categories:"Add category", tags:"Add tag", types:"Add type"}[kind]; }
+function closeSetDialog(){ closeOverlay('ov-set'); SET_DRAFT = null; }
+function setDraftReq(v){
+  SET_DRAFT.req = v;
+  const btns = document.querySelectorAll('#pn-set .sc-btn');
+  btns[0].classList.toggle('on', v); btns[1].classList.toggle('on', !v);
+}
+function saveSetDialog(){
+  const input = document.getElementById('set-name');
+  const name = (input.value||"").trim();
+  if(!name){ input.focus(); toast("Give it a name first"); return; }
+  const {kind, sub, idx, req} = SET_DRAFT;
+  const rows = setRows(kind, sub);
+  if(idx===null){
+    rows.unshift({n:name, by:USER.name, on:setDateToday(), ...(kind==='categories'?{req}:{})});
+    toast(`${SET_LABEL[kind]} added`);
+  } else {
+    rows[idx].n = name;
+    if(kind==='categories') rows[idx].req = req;
+    toast(`${SET_LABEL[kind]} updated`);
+  }
+  closeSetDialog();
+  render();
+}
+function setDelete(kind, sub, idx){
+  const rows = setRows(kind, sub||null), row = rows[idx];
+  confirmDialog({
+    title:`Delete ${SET_LABEL[kind].toLowerCase()}?`,
+    body:`“${row.n}” will be removed from the repository settings.`,
+    confirmLabel:"Delete", icon:"trash-2",
+    onConfirm:()=>{ rows.splice(idx,1); render(); toast(`${SET_LABEL[kind]} deleted`); }
+  });
+}
+function setToggleApproval(idx){
+  const row = SETTINGS.categories[idx];
+  row.req = !row.req;
+  render();
+  toast(`${row.n} — approval ${row.req?'required':'not required'}`);
+}
+/* ---- archive rules ---- */
+function setArchiveDays(v){
+  const n = Math.max(1, Math.min(3650, parseInt(v,10)||ARCHIVE_DEFAULT));
+  SETTINGS.archiveDays = n;
+  render();
+}
+function setArchiveSave(){ toast(`Documents will archive after ${SETTINGS.archiveDays} days of inactivity`); }
+function setArchiveReset(){ SETTINGS.archiveDays = ARCHIVE_DEFAULT; render(); toast("Archive timeline reset to 90 days"); }
 /* ---- the document picker: a modal over the Featured Resources page ---- */
 function openFeatPick(){
   featSyncText();
-  FEAT_PICK = FEAT_DRAFT.ids.slice();
+  FEAT_PICK = [];
+  FEAT_SLOTS = Math.max(1, FEATURED_MAX - FEAT_DRAFT.ids.length);
   document.getElementById('pn-featpick').innerHTML =
-    modalHead("Select documents", `Choose up to ${FEATURED_MAX} documents from the Resource Library.`, "closeFeatPick()") +
+    modalHead("Select documents",
+      FEAT_SLOTS===1 ? "Choose one document from the Resource Library."
+                     : `Choose up to ${FEAT_SLOTS} documents from the Resource Library.`, "closeFeatPick()") +
     `<div class="pk-search">
       <span class="ico">${ic('search')}</span>
       <input id="featq" placeholder="Search by title, type, system or language…" oninput="featPickList()"
         onkeydown="if(event.key==='Enter')event.preventDefault()">
     </div>
-    <div class="pk-bar"><span class="pk-count" id="featpick-count"></span>
-      <button class="linkbtn" onclick="featPickClear()">Clear selection</button></div>
     <div class="pk-list" id="featpick-list"></div>
     <div class="row" style="justify-content:flex-end;margin-top:1.35rem">
       <button class="btn btn-ghost" onclick="closeFeatPick()">Cancel</button>
@@ -5706,8 +5982,9 @@ function openFeatPick(){
 function closeFeatPick(){ closeOverlay('ov-featpick'); }
 function featPickClear(){ FEAT_PICK = []; featPickList(); }
 function featPickToggle(id){
+  if(FEAT_DRAFT && FEAT_DRAFT.ids.includes(id)) return;   // already in the band
   if(FEAT_PICK.includes(id)) FEAT_PICK = FEAT_PICK.filter(x=>x!==id);
-  else if(FEAT_PICK.length < FEATURED_MAX) FEAT_PICK.push(id);
+  else if(FEAT_PICK.length < FEAT_SLOTS) FEAT_PICK.push(id);
   featPickList();
 }
 function featPickList(){
@@ -5715,22 +5992,21 @@ function featPickList(){
   const q = ((document.getElementById('featq')||{}).value||"").trim().toLowerCase();
   const rows = RES.filter(r=>!q ||
     (r.title+" "+r.purpose+" "+r.type+" "+r.system+" "+r.lang).toLowerCase().includes(q));
-  const full = FEAT_PICK.length >= FEATURED_MAX;
+  const full = FEAT_PICK.length >= FEAT_SLOTS;
   list.innerHTML = rows.length ? rows.map(r=>{
-    const on = FEAT_PICK.includes(r.id), off = !on && full, m = kindMeta(r.type);
+    const already = FEAT_DRAFT && FEAT_DRAFT.ids.includes(r.id);
+    const on = FEAT_PICK.includes(r.id), off = already || (!on && full), m = kindMeta(r.type);
     return `<label class="pickrow${on?' on':''}${off?' off':''}">
       <input type="checkbox" ${on?'checked':''} ${off?'disabled':''} onchange="featPickToggle('${escj(r.id)}')">
       <span class="doc-fi ${m.fi}">${ic(m.icon)}</span>
       <span class="pk-tx">
         <span class="pk-t">${r.title}</span>
-        <span class="pk-m">${r.type} · ${r.system} · ${r.lang}</span>
+        <span class="pk-m">${r.type} · ${r.system} · ${r.lang}${already?' · already featured':''}</span>
       </span></label>`;}).join("")
     : `<p class="muted" style="font-size:.87rem;padding:.7rem .2rem">Nothing in the library matches “${escText(q)}”.</p>`;
-  const c = document.getElementById('featpick-count');
-  if(c) c.innerHTML = `${FEAT_PICK.length} of ${FEATURED_MAX} selected${full?` <em>· the limit is reached</em>`:''}`;
 }
 function featPickDone(){
-  FEAT_DRAFT.ids = FEAT_PICK.slice();
+  FEAT_PICK.forEach(id=>{ if(FEAT_DRAFT.ids.length < FEATURED_MAX && !FEAT_DRAFT.ids.includes(id)) FEAT_DRAFT.ids.push(id); });
   closeFeatPick();
   render();
 }

@@ -1247,6 +1247,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .la-tx h3{font-size:1.1rem;margin:0 0 .7rem}
 .la-tx p + h3{margin-top:1.35rem}
 .la-tx p{margin:0;font-size:.92rem;line-height:1.85;color:var(--muted)}
+.la-tx p + p{margin-top:1rem}
 @media(max-width:880px){
   .la-row{grid-template-columns:1fr}
   .la-row:nth-child(even) .la-fig{order:0;border-left:0}
@@ -4081,8 +4082,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
     "Facilitating commoning is built and strengthened through an ongoing process of learning, field application, reflection, and continued support. The learning processes, therefore, extend beyond information transfer to foster lasting changes in knowledge, skills, attitudes, practices, and relationships.") +
 
   /* ---- translating learning into action: the text sits around the graphic ---- */
-  section(sechead(null,"Translating learning into action",
-    "Capacity building, in this approach, is designed as a continuous cycle that translates learning into sustained action on the ground. This cycle of learning and action rests on four interlinked elements — Enabling Environment, Training, Mobilizing Village and Community Action, and Sustaining Engagement — each feeding into and reinforcing the next.") +
+  section(sechead(null,"Translating learning into action", null) +
     `<div class="larows">
       <article class="la-row">
         <div class="la-fig">
@@ -4098,13 +4098,15 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
           </div>
         </div>
         <div class="la-tx">
-          <h3>An enabling environment comes first</h3>
+          <p>Capacity building, in this approach, is designed as a continuous cycle that translates learning into
+          sustained action on the ground. This cycle of learning and action rests on four interlinked elements —
+          Enabling Environment, Training, Mobilizing Village and Community Action, and Sustaining Engagement — each
+          feeding into and reinforcing the next.</p>
           <p>For learning to be accepted, applied, and translated into action, it must be supported by an enabling
           environment. This is particularly essential where the intended action is programmatic, more so in the context of
           laws, government programmes, and institutional processes. This involves preparing the ground before training by
           organizing campaigns, mobilising communities, engaging Panchayats and government institutions, and securing
           necessary administrative support.</p>
-          <h3 style="margin-top:1.35rem">Learning by doing, then sustaining it</h3>
           <p>Practising heuristic (learning-by-doing) approaches, embedding solutions locally with people's own vision at
           the centre and fostering lateral engagement between communities, panchayats, and government ensures the learning
           is carried forward into sustained community and institutional action. Events and creating platforms for continued

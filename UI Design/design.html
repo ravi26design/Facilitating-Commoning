@@ -1178,6 +1178,14 @@ main{min-height:60vh;animation:fade .3s ease}
 .pk-t{display:block;font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35}
 .pk-m{display:block;font-size:.78rem;color:var(--muted-2);margin-top:.1rem}
 
+/* metadata the navigation already knows */
+.autometa{border:1px solid var(--line);background:var(--bg-soft);padding:.9rem 1rem;margin-bottom:1.15rem}
+.am-h{display:block;font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:.6rem}
+.am-rows{display:grid;grid-template-columns:1fr 1fr;gap:.7rem 1.25rem}
+.am-rows b{display:block;font-size:.72rem;font-weight:700;color:var(--muted-2)}
+.am-rows span{font-size:.9rem;font-weight:700;color:var(--ink)}
+@media(max-width:560px){.am-rows{grid-template-columns:1fr}}
 /* ---- upload chooser ---- */
 .uplchoice{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
 .uplopt{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;padding:1.25rem;text-align:left;
@@ -1213,6 +1221,15 @@ main{min-height:60vh;animation:fade .3s ease}
 .sc-btn i,.sc-btn svg.lucide{width:1rem;height:1rem}
 .bulkvis .segchoice{grid-template-columns:repeat(3,1fr)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+/* ---- learning approach: text set around the graphic ---- */
+.lawrap{display:block}
+.la-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;align-items:stretch}
+@media(max-width:1000px){.la-notes{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.la-notes{grid-template-columns:1fr}}
+.la-note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--green);padding:1.1rem 1.25rem}
+.la-note b{display:block;font-size:.98rem;color:var(--ink);margin-bottom:.45rem}
+.la-note p{margin:0;font-size:.9rem;line-height:1.8;color:var(--muted)}
+@media(max-width:900px){.lawrap{grid-template-columns:1fr}}
 /* ---- Settings ---- */
 .tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
 .settable{box-shadow:none}
@@ -2018,17 +2035,9 @@ main{min-height:60vh;animation:fade .3s ease}
 .fc-x i,.fc-x svg.lucide{width:.85rem;height:.85rem}
 
 /* ---- metadata tags ---- */
-.mtag{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .75rem;border-radius:999px;
+.mtag{display:inline-flex;align-items:center;padding:.3rem .75rem;border-radius:999px;
   font-size:.79rem;font-weight:600;line-height:1.35;white-space:nowrap;
-  background:var(--chip);color:var(--muted);border:1px solid var(--line)}
-.mtag i,.mtag svg.lucide{width:.85rem;height:.85rem;opacity:.75}
-/* a resource system or theme — tinted to its own colour */
-.mtag.sys{background:var(--st-s);color:var(--st);border-color:color-mix(in srgb,var(--st) 24%,transparent);font-weight:700}
-.mtag .mdot{width:.45rem;height:.45rem;border-radius:50%;background:var(--st);flex:none;opacity:1}
-/* what kind of thing it is */
-.mtag.kind{background:var(--blue-soft);color:var(--blue);border-color:#cfe0d4;font-weight:700}
-/* language */
-.mtag.lang{background:#fff;color:var(--muted)}
+  background:var(--chip);color:var(--ink-2);border:1px solid var(--line)}
 
 /* ---- artwork with its explanation beside it ---- */
 .artrow{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;
@@ -2608,30 +2617,37 @@ const SYSTEMS = {
 };
 const STATES = ["Rajasthan","Andhra Pradesh","Karnataka"];
 /* the state and language a topic belongs to — the topic list filters on these */
-const TOPIC_STATES = ["All States"].concat(STATES);
+const TOPIC_STATES = ["All States","Andhra Pradesh","Chhattisgarh","Gujarat","Karnataka","Maharashtra","Odisha","Rajasthan"];
 /* the topic list filter — radios build a draft, Apply commits it */
-let TDRAFT  = {state:"All States", lang:"All Languages"};
-let TFILTER = {state:"All States", lang:"All Languages"};
+const TOPIC_LEARNERS = ["All Learners","First Mile/ Doer","Trainer"];
+const TOPIC_TYPES = ["All Types","Training Module","Atomised Content","Manual","Handbook","Guide"];
+let TDRAFT  = {state:"All States", learner:"All Learners", lang:"All Languages", type:"All Types"};
+let TFILTER = {state:"All States", learner:"All Learners", lang:"All Languages", type:"All Types"};
 function setTDraft(k,v){ TDRAFT[k]=v; }
 function applyTopicFilter(){ TFILTER = Object.assign({}, TDRAFT); render(); }
 function resetTopicFilter(){
-  TDRAFT  = {state:"All States", lang:"All Languages"};
+  TDRAFT  = {state:"All States", learner:"All Learners", lang:"All Languages", type:"All Types"};
   TFILTER = Object.assign({}, TDRAFT); render();
 }
-function topicFilterOn(){ return TFILTER.state!=="All States" || TFILTER.lang!=="All Languages"; }
+function topicFilterOn(){ return TFILTER.state!=="All States" || TFILTER.lang!=="All Languages"
+  || TFILTER.learner!=="All Learners" || TFILTER.type!=="All Types"; }
 function topicMatches(t){
   const okS = TFILTER.state==="All States" || t.state===TFILTER.state || t.state==="All States";
   const okL = TFILTER.lang==="All Languages" || t.lang===TFILTER.lang || t.lang==="All Languages";
-  return okS && okL;
+  const okC = TFILTER.learner==="All Learners" || t.learner===TFILTER.learner || !t.learner;
+  const okT = TFILTER.type==="All Types" || t.type===TFILTER.type || !t.type;
+  return okS && okL && okC && okT;
 }
 /* every topic carries a state and a language so the filter has something to match */
 function seedTopicMeta(){
   TOPICS.forEach((t,i)=>{
+    if(!t.learner) t.learner = LEARNER_OPTS[i % LEARNER_OPTS.length];
+    if(!t.type) t.type = TYPE_OPTS[i % TYPE_OPTS.length];
     if(!t.state) t.state = STATES[i % STATES.length];
     if(!t.lang)  t.lang  = (i % 3 === 2) ? "Hindi" : "English";
   });
 }
-const TOPIC_LANGS  = ["All Languages","English","Hindi"];
+const TOPIC_LANGS  = ["All Languages","Hindi","English","Telugu","Kannada","Odia","Marathi"];
 
 const THEMES = {
   map:{id:"map", kind:"theme", name:"Multi-Actor Platforms", icon:"network", accent:"map", img:"assets/img/theme-map.jpg",
@@ -2656,15 +2672,8 @@ const NAME_ACCENT = {"Forests":"forests","Pastureland":"pastureland","Water":"wa
   "Multi-Actor Platforms":"map","Local Economic Opportunities":"leo",
   "Sustainable Agriculture Practices":"agri"};
 /* a metadata tag, tinted by what it represents rather than all one grey */
-function metaTag(value){
-  if(NAME_ACCENT[value])
-    return `<span class="mtag sys" style="${systagVars(value)}"><i class="mdot"></i>${value}</span>`;
-  if(_fg('type').opts.indexOf(value) >= 0 || /^(PDF|Video|Image|Audio|Document)$/i.test(value))
-    return `<span class="mtag kind">${value}</span>`;
-  if(_fg('lang').opts.indexOf(value) >= 0)
-    return `<span class="mtag lang">${ic('languages')}${value}</span>`;
-  return `<span class="mtag">${value}</span>`;
-}
+/* every piece of metadata reads as the same kind of chip */
+function metaTag(value){ return `<span class="mtag">${value}</span>`; }
 function systagVars(name){
   const a = NAME_ACCENT[name];
   return a ? `--st:var(--s-${a});--st-s:var(--s-${a}-s)` : `--st:var(--ink);--st-s:var(--chip)`;
@@ -2880,45 +2889,45 @@ let FEAT_PICK  = [];     // the documents chosen while the picker is open
 let FEAT_SLOTS = 1;      // how many free slots that picker is filling
 
 const RES = [
-  {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forests", stage:"Secure Tenure", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"cfr-claim", title:"CFR Claim Process", purpose:"Step-by-step course on preparing and filing a CFR claim.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"ifr-module", title:"IFR Claim Process", purpose:"Modular training on the Individual Forest Rights claim process.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"fra-history", title:"Background and History of FRA", purpose:"Short video on the background and history of the Forest Rights Act.", system:"Forests", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"English", version:"v1.0 · 2026", attribution:"Contributed by a partner organisation"},
-  {id:"what-is-tenure", title:"What is Tenurial Security?", purpose:"Atomised topic explaining why secure tenure matters and forms of recognition.", system:"Forests", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"gram-sabha-atom", title:"Role of the Gram Sabha", purpose:"Atomised topic on the powers and duties of the Gram Sabha.", system:"Forests", stage:"Build Institutions", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"tenure-claim-tool", title:"Community Rights Claim Toolkit", purpose:"Field tool to prepare and file a community rights claim.", system:"Forests", stage:"Secure Tenure", stake:"Field Practitioner", design:"Both", type:"Tool", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"fra-handbook", title:"FRA Facilitators' Handbook", purpose:"Reference handbook and SoPs for facilitators working on forest rights.", system:"Forests", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Handbook", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"context-mapping", title:"Context Mapping Worksheet", purpose:"Worksheet to map the resource, community and existing institutions.", system:"All Systems", stage:"Understand Context", stake:"Field Practitioner", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"institution-basics", title:"Building Community Institutions", purpose:"Modular course on forming a legitimate, inclusive community institution.", system:"All Systems", stage:"Build Institutions", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water", stage:"Plan", stake:"Facilitator", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-intro-video", title:"Introduction to Water Commons", purpose:"Short video introducing community-managed water commons.", system:"Water", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-access-atom", title:"Equitable Access — Key Ideas", purpose:"Atomised topic on equitable access to shared water sources.", system:"Water", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-stewardship-audio", title:"Water Stewardship — Audio Guide", purpose:"Audio guide on day-to-day stewardship of water systems.", system:"Water", stage:"Restore & Manage", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-institutions", title:"Water User Institutions", purpose:"Course on forming and running water user institutions.", system:"Water", stage:"Build Institutions", stake:"Facilitator", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-planning-module", title:"Water Management Planning", purpose:"Module on preparing a collective water management plan.", system:"Water", stage:"Plan", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-handbook", title:"Water Stewardship Handbook", purpose:"Reference handbook for community water stewardship.", system:"Water", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Handbook", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-monitoring-format", title:"Water Monitoring Format", purpose:"Editable format to track water access and system health.", system:"Water", stage:"Monitor & Adapt", stake:"Field Practitioner", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-facil-guide", title:"Water Facilitators' Guide", purpose:"Facilitators' guide for running water commoning sessions.", system:"Water", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pastureland", stage:"Restore & Manage", stake:"Field Practitioner", design:"Both", type:"SoP", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pastureland", stage:"All Stages", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-audio", title:"Grazing Rules — Audio Guide", purpose:"Audio guide on developing collective grazing rules.", system:"Pastureland", stage:"Plan", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-pdf", title:"Pastureland Restoration Handbook", purpose:"Downloadable PDF handbook for pastureland restoration.", system:"Pastureland", stage:"Restore & Manage", stake:"Field Practitioner", design:"Both", type:"PDF", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-legal-framework", title:"Legal Framework for Pasture Commons", purpose:"Course on the laws and rights governing pastureland commons.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rights-history", title:"History of Grazing Rights", purpose:"Video on the history and evolution of community grazing rights.", system:"Pastureland", stage:"Understand Context", stake:"Learner", design:"LDHF", type:"Video", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-tenure-defs", title:"Key Definitions — Pasture Tenure", purpose:"Atomised topic covering key tenure definitions for pasturelands.", system:"Pastureland", stage:"Secure Tenure", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rights-audio", title:"Pasture Rights — Audio Explainer", purpose:"Short audio explainer on pastureland rights and recognition.", system:"Pastureland", stage:"Secure Tenure", stake:"Community Member", design:"LDHF", type:"Audio", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-committee", title:"Forming a Pasture Management Committee", purpose:"Course on setting up an inclusive pasture management committee.", system:"Pastureland", stage:"Build Institutions", stake:"Facilitator", design:"Modular", type:"Course", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-gramsabha", title:"Gram Sabha in Pasture Governance", purpose:"Atomised topic on the Gram Sabha's role in pasture governance.", system:"Pastureland", stage:"Build Institutions", stake:"Learner", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-claim-module", title:"Claiming Pastureland Rights", purpose:"Training module on preparing and filing pastureland rights claims.", system:"Pastureland", stage:"Secure Tenure", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-evidence-pdf", title:"Evidence & Documentation for Pasture Claims", purpose:"PDF checklist and formats for pasture claim documentation.", system:"Pastureland", stage:"Secure Tenure", stake:"Field Practitioner", design:"Both", type:"PDF", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pastureland", stage:"Plan", stake:"Facilitator", design:"Both", type:"Format", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pastureland", stage:"Plan", stake:"Field Practitioner", design:"Modular", type:"Training Module", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pastureland", stage:"All Stages", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms", stage:"", stake:"Facilitator", design:"Both", type:"Facilitators' Guide", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"leo-course", title:"Livelihoods from the Commons", purpose:"Atomised topics on building local economic opportunities from the commons.", system:"Local Economic Opportunities", stage:"", stake:"Community Member", design:"LDHF", type:"Atomised Course", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture Practices", stage:"", stake:"Farmer", design:"Modular", type:"Training Module", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
+  {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-claim", title:"CFR Claim Process", purpose:"Step-by-step course on preparing and filing a CFR claim.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"ifr-module", title:"IFR Claim Process", purpose:"Modular training on the Individual Forest Rights claim process.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-history", title:"Background and History of FRA", purpose:"Short video on the background and history of the Forest Rights Act.", system:"Forest", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Maharashtra", group:"atomized", lang:"English", version:"v1.0 · 2026", attribution:"Contributed by a partner organisation"},
+  {id:"what-is-tenure", title:"What is Tenurial Security?", purpose:"Atomised topic explaining why secure tenure matters and forms of recognition.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"gram-sabha-atom", title:"Role of the Gram Sabha", purpose:"Atomised topic on the powers and duties of the Gram Sabha.", system:"Forest", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"tenure-claim-tool", title:"Community Rights Claim Toolkit", purpose:"Field tool to prepare and file a community rights claim.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-handbook", title:"FRA Facilitators' Handbook", purpose:"Reference handbook and SoPs for facilitators working on forest rights.", system:"Forest", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"context-mapping", title:"Context Mapping Worksheet", purpose:"Worksheet to map the resource, community and existing institutions.", system:"All Systems", stage:"Understand Context", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Gujarat", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"institution-basics", title:"Building Community Institutions", purpose:"Modular course on forming a legitimate, inclusive community institution.", system:"All Systems", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water", stage:"Plan", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-intro-video", title:"Introduction to Water Commons", purpose:"Short video introducing community-managed water commons.", system:"Water", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-access-atom", title:"Equitable Access — Key Ideas", purpose:"Atomised topic on equitable access to shared water sources.", system:"Water", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-stewardship-audio", title:"Water Stewardship — Audio Guide", purpose:"Audio guide on day-to-day stewardship of water systems.", system:"Water", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-institutions", title:"Water User Institutions", purpose:"Course on forming and running water user institutions.", system:"Water", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-planning-module", title:"Water Management Planning", purpose:"Module on preparing a collective water management plan.", system:"Water", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-handbook", title:"Water Stewardship Handbook", purpose:"Reference handbook for community water stewardship.", system:"Water", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-monitoring-format", title:"Water Monitoring Format", purpose:"Editable format to track water access and system health.", system:"Water", stage:"Monitor & Adapt", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-facil-guide", title:"Water Facilitators' Guide", purpose:"Facilitators' guide for running water commoning sessions.", system:"Water", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Odisha", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pastureland", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Rajasthan", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pastureland", stage:"All Stages", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Andhra Pradesh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Chhattisgarh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-audio", title:"Grazing Rules — Audio Guide", purpose:"Audio guide on developing collective grazing rules.", system:"Pastureland", stage:"Plan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-pdf", title:"Pastureland Restoration Handbook", purpose:"Downloadable PDF handbook for pastureland restoration.", system:"Pastureland", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-legal-framework", title:"Legal Framework for Pasture Commons", purpose:"Course on the laws and rights governing pastureland commons.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-history", title:"History of Grazing Rights", purpose:"Video on the history and evolution of community grazing rights.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-tenure-defs", title:"Key Definitions — Pasture Tenure", purpose:"Atomised topic covering key tenure definitions for pasturelands.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-audio", title:"Pasture Rights — Audio Explainer", purpose:"Short audio explainer on pastureland rights and recognition.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-committee", title:"Forming a Pasture Management Committee", purpose:"Course on setting up an inclusive pasture management committee.", system:"Pastureland", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-gramsabha", title:"Gram Sabha in Pasture Governance", purpose:"Atomised topic on the Gram Sabha's role in pasture governance.", system:"Pastureland", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-claim-module", title:"Claiming Pastureland Rights", purpose:"Training module on preparing and filing pastureland rights claims.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-evidence-pdf", title:"Evidence & Documentation for Pasture Claims", purpose:"PDF checklist and formats for pasture claim documentation.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pastureland", stage:"Plan", learner:"Trainer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Odisha", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pastureland", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Rajasthan", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pastureland", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms", stage:"", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"leo-course", title:"Livelihoods from the Commons", purpose:"Atomised topics on building local economic opportunities from the commons.", system:"Local Economic Opportunities", stage:"", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture Practices", stage:"", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
 ];
 function resById(id){ return RES.find(r=>r.id===id); }
 function resFor(name, group){
@@ -3585,7 +3594,7 @@ function seedResourceHistory(){
   });
 }
 function resTags(r){
-  const all = [r.system, r.type, r.stage, r.lang, r.design].concat(r.tags||[])
+  const all = [r.system, r.state, r.type, r.format, r.lang, r.design, r.learner].concat(r.tags||[])
     .filter(x=>x && x!=="" && x!=="All Stages");
   return all.filter((x,i)=>all.indexOf(x)===i);   /* a tag may repeat a field */
 }
@@ -3728,22 +3737,32 @@ function fileCard(f, courseId, topicId, idx, docCtx){
    the detail pages read from this, so a field is always named the same way
    wherever it appears — and the detail page lists them in filter order. */
 const META = [
-  {key:"system", label:"Resource System",    get:r=>r.system},
-  {key:"stage",  label:"Stage of Commoning", get:r=>r.stage},
-  {key:"stake",  label:"Stakeholder",        get:r=>r.stake},
-  {key:"design", label:"Learning Design",    get:r=>r.design},
-  {key:"type",   label:"Resource Type",      get:r=>r.type},
-  {key:"lang",   label:"Language",           get:r=>r.lang}
+  {key:"system",  label:"Resource System & Themes", get:r=>r.system},
+  {key:"state",   label:"State",                    get:r=>r.state},
+  {key:"design",  label:"Learning Design",          get:r=>r.design},
+  {key:"learner", label:"Learner Category",         get:r=>r.learner},
+  {key:"lang",    label:"Language",                 get:r=>r.lang},
+  {key:"type",    label:"Resource Type",            get:r=>r.type},
+  {key:"format",  label:"Format",                   get:r=>r.format}
 ];
 const metaLabel = k => (META.find(m=>m.key===k)||{}).label || k;
 
+const SYSTEM_OPTS  = ["Pastureland","Forest","Water","Multi-Actor Platform","Local Economic Opportunities","Sustainable Agriculture"];
+const STATE_OPTS   = ["Andhra Pradesh","Chhattisgarh","Gujarat","Karnataka","Maharashtra","Odisha","Rajasthan"];
+const DESIGN_OPTS  = ["Atomised Course (Low Dose High Frequency)","Modular Learning","Supporting Resources"];
+const LEARNER_OPTS = ["First Mile/ Doer","Trainer"];
+const LANG_OPTS    = ["Hindi","English","Telugu","Kannada","Odia","Marathi"];
+const TYPE_OPTS    = ["Training Module","Atomised Content","Manual","Handbook","Guide"];
+const FORMAT_OPTS  = ["PDF","Video","Audio","Image"];
+
 const FILTER_GROUPS = [
-  {key:"system", label:metaLabel("system"), opts:["Pastureland","Forests","Water"], match:(r,v)=> r.system===v || r.system==="All Systems"},
-  {key:"stage",  label:metaLabel("stage"), opts:STAGES.map(s=>s.name), match:(r,v)=> r.stage===v},
-  {key:"stake",  label:metaLabel("stake"), opts:["Facilitator","Learner","Field Practitioner","Community Member","Mentor"], match:(r,v)=> r.stake===v},
-  {key:"design", label:metaLabel("design"), opts:["Modular","LDHF","Both"], match:(r,v)=> r.design===v},
-  {key:"type",   label:metaLabel("type"), opts:["Course","Training Module","Atomised Course","Video","Audio","PDF","Handbook","Facilitators' Guide","Format","Tool"], match:(r,v)=> r.type===v},
-  {key:"lang",   label:metaLabel("lang"), opts:["English","Hindi"], match:(r,v)=> r.lang===v}
+  {key:"system",  label:metaLabel("system"),  opts:SYSTEM_OPTS,  match:(r,v)=> r.system===v || r.system==="All Systems"},
+  {key:"state",   label:metaLabel("state"),   opts:STATE_OPTS,   match:(r,v)=> r.state===v || r.state==="All States"},
+  {key:"design",  label:metaLabel("design"),  opts:DESIGN_OPTS,  match:(r,v)=> r.design===v},
+  {key:"learner", label:metaLabel("learner"), opts:LEARNER_OPTS, match:(r,v)=> r.learner===v},
+  {key:"lang",    label:metaLabel("lang"),    opts:LANG_OPTS,    match:(r,v)=> r.lang===v},
+  {key:"type",    label:metaLabel("type"),    opts:TYPE_OPTS,    match:(r,v)=> r.type===v},
+  {key:"format",  label:metaLabel("format"),  opts:FORMAT_OPTS,  match:(r,v)=> r.format===v}
 ];
 /* look a filter group up by key — the forms reuse the filters' option lists */
 function _fg(key){ return FILTER_GROUPS.find(g=>g.key===key) || {opts:[]}; }
@@ -4032,18 +4051,60 @@ screens.commoning = () => shell("#/commoning", null,
 
 /* ---------- LEARNING APPROACH ---------- */
 screens["learning-approach"] = () => shell("#/learning-approach", null,
-  pagehead("Capacity building", "Learning Approach -<br>from information to <em>action</em>",
-    "Commoning is a continuous process that requires ongoing learning, field application, reflection and handholding — rather than a one-time transfer of information.") +
+  pagehead("Capacity building", "Learning Approach &amp; <em>Design</em>",
+    "Facilitating commoning is built and strengthened through an ongoing process of learning, field application, reflection, and continued support. The learning processes, therefore, extend beyond information transfer to foster lasting changes in knowledge, skills, attitudes, practices, and relationships.") +
+
+  /* ---- translating learning into action: the text sits around the graphic ---- */
+  section(sechead(null,"Translating learning into action",
+    "Capacity building, in this approach, is designed as a continuous cycle that translates learning into sustained action on the ground. This cycle of learning and action rests on four interlinked elements — Enabling Environment, Training, Mobilizing Village and Community Action, and Sustaining Engagement — each feeding into and reinforcing the next.") +
+    `<div class="lawrap">
+      <div class="la-notes">
+        <div class="la-note">
+          <b>An enabling environment comes first</b>
+          <p>For learning to be accepted, applied, and translated into action, it must be supported by an enabling
+          environment. This is particularly essential where the intended action is programmatic, more so in the context
+          of laws, government programmes, and institutional processes. This involves preparing the ground before training
+          by organizing campaigns, mobilising communities, engaging Panchayats and government institutions, and securing
+          necessary administrative support.</p>
+        </div>
+        <div class="la-note">
+          <b>Learning by doing, then sustaining it</b>
+          <p>Practising heuristic (learning-by-doing) approaches, embedding solutions locally with people's own vision at
+          the centre and fostering lateral engagement between communities, panchayats, and government ensures the learning
+          is carried forward into sustained community and institutional action. Events and creating platforms for continued
+          exchange and learning facilitates in sustaining action, enabling participants to share experiences, address
+          implementation challenges, and strengthen action and impact on the ground.</p>
+        </div>
+        <div class="la-note">
+          <b>The learning pathway</b>
+          <p>The learning pathway comprises a structured process coupled with action elements that lead to cumulative
+          outcomes on the ground. Rather than conducting one-off trainings, the learning is continuous and ongoing,
+          designed to enable communities, functionaries, and civil society actors to collectively manage natural resources
+          and local institutions. Therefore, this approach combines modular learning, regular mentoring and handholding,
+          peer learning, field-based practice, and digital learning processes and tools, to support participants as they
+          apply what they learn in real-life contexts.</p>
+        </div>
+      </div>
+    </div>`) +
 
   section(`<div class="stack" style="gap:1.5rem">
       <div class="panel">
-        <h3 style="font-size:1.15rem;margin-bottom:1rem">Modular Learning Design</h3>
+        <h3 style="font-size:1.15rem;margin-bottom:.9rem">Modular Learning Design</h3>
+        <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:.9rem">The modular design adopts a
+        learner-centred, practice-oriented approach, where the learning journey is organised into a sequence of
+        interconnected modules aligned with the commoning process.</p>
+        <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:.9rem">Each module focuses on a specific
+        stage of the process and is delivered at appropriate intervals, followed by corresponding field-level activities
+        through which participants apply the concepts and skills acquired during the training. Training on each subsequent
+        module builds on participants’ field experiences, addresses challenges encountered during implementation, and
+        introduces the knowledge and skills required for the next phase of field-level action.</p>
+        <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:1.15rem">This iterative cycle of
+        <strong>learn — apply — reflect — learn</strong> continues across all modules, ultimately contributing to improved
+        governance and restoration of Commons.</p>
         <ul class="muted" style="margin:0 0 1.15rem;padding-left:1.15rem;font-size:.9rem;line-height:1.8">
-          <li>Breaks complex learning into manageable, progressive stages — the Commoning process broken into a series of modules</li>
-          <li>In-person sessions at periodic intervals</li>
-          <li>Field activities between modules</li>
-          <li>Each module builds on prior learning and action</li>
-          <li>Cumulative field actions contribute to outcomes</li>
+          <li>Breaks complex learning into manageable, progressive stages.</li>
+          <li>Enables continuous application of learning in real-world settings.</li>
+          <li>Enhances learning retention and supports sustained behavioural change by closely integrating training with field implementation.</li>
         </ul>
         <div>${infographic('assets/img/modular-training-design.png',
           'Five training modules arranged around a central training intervention, each with its ToT focus')}</div>
@@ -4052,13 +4113,18 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
         </div>
       </div>
       <div class="panel">
-        <h3 style="font-size:1.15rem;margin-bottom:1rem">Low Dose High Frequency (LDHF)</h3>
+        <h3 style="font-size:1.15rem;margin-bottom:.9rem">Low Dose High Frequency Learning Design</h3>
+        <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:1.15rem">The Low Dose High Frequency
+        learning design breaks a larger subject or learning process into small, focused and reusable learning units
+        (or atomised content pieces), each addressing a specific concept, skill, task or field level challenges. They are
+        designed for trainees working directly at the field level to support and enable implementation on the ground. The
+        atomised contents are delivered individually or sequentially through short, frequent virtual learning and guided
+        mentoring sessions.</p>
         <ul class="muted" style="margin:0 0 1.15rem;padding-left:1.15rem;font-size:.9rem;line-height:1.8">
-          <li>Short, frequent virtual learning engagements</li>
-          <li>Atomized content focused on specific concepts or tasks</li>
-          <li>Guided mentoring between sessions</li>
-          <li>Repeated learning–application–feedback cycles</li>
-          <li>Enables timely support while action is underway</li>
+          <li>Provides frequent learning touchpoints through virtual interactions.</li>
+          <li>Makes continuous capacity building feasible at scale; shorter virtual interactions can complement in-person training and provide ongoing support to geographically dispersed learners.</li>
+          <li>Uses field experiences and challenges as inputs for subsequent learning, allowing trainers and mentors to clarify concepts, address implementation gaps and challenges, and provide contextual guidance.</li>
+          <li>Creates regular opportunities for interaction, feedback, and peer learning, helping participants learn from experts as well as from each other's field experiences.</li>
         </ul>
         <div>${infographic('assets/img/ldhf-capacity-building.png',
           'Capacity building beyond training — a frequency and intensity matrix with the gains it unlocks')}</div>
@@ -4069,8 +4135,14 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
     </div>`, "band") +
 
   section(`<div class="panel">
-    <h3 style="font-size:1.15rem;margin-bottom:1rem">Approach to Outcome-based Learning</h3>
-    <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:1.5rem">The LDHF design complements the modular approach, carrying continuous learning and reinforcement between the formal training interventions — so a training input becomes an action on the ground rather than a session that ends.</p>
+    <h3 style="font-size:1.15rem;margin-bottom:1rem">Enabling outcome-based learning</h3>
+    <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:1.5rem">The Low Dose High Frequency learning
+    design complements the modular design by enabling continuous learning and reinforcement between formal training
+    interventions. Together, the two designs provide a coherent and comprehensively structured learning journey — the
+    modular design offers the overall pathway aligned with the commoning process, while the Low Dose High Frequency
+    learning reinforces key concepts, supports progressive learning and on-ground implementation through multiple
+    interactions. Through this combined design, learners progressively build knowledge and skills, with each learning unit
+    building on prior learning and field experience.</p>
     <div>${infographic('assets/img/outcome-based-capacity-building.png',
       'Outcome-based capacity building — six steps from training of trainers to learning translated into action')}</div>
     <div class="row" style="justify-content:center;margin-top:1.5rem">
@@ -4347,12 +4419,18 @@ screens.modular = (params) => {
       section(`<div class="layout-side">
         <aside class="filterbox">
           <div class="fhead"><h2>${ic('sliders-horizontal')} Filter</h2></div>
-          <div class="fgroup"><h3>Select state</h3>
+          <div class="fgroup"><h3>${metaLabel('state')}</h3>
             ${TOPIC_STATES.map(x=>`<label><input type="radio" name="st" ${TDRAFT.state===x?'checked':''}
               onchange="setTDraft('state','${esc(x)}')"> ${x}</label>`).join("")}</div>
-          <div class="fgroup"><h3>Select language</h3>
+          <div class="fgroup"><h3>${metaLabel('learner')}</h3>
+            ${TOPIC_LEARNERS.map(x=>`<label><input type="radio" name="lc" ${TDRAFT.learner===x?'checked':''}
+              onchange="setTDraft('learner','${esc(x)}')"> ${x}</label>`).join("")}</div>
+          <div class="fgroup"><h3>${metaLabel('lang')}</h3>
             ${TOPIC_LANGS.map(x=>`<label><input type="radio" name="lg" ${TDRAFT.lang===x?'checked':''}
               onchange="setTDraft('lang','${esc(x)}')"> ${x}</label>`).join("")}</div>
+          <div class="fgroup"><h3>${metaLabel('type')}</h3>
+            ${TOPIC_TYPES.map(x=>`<label><input type="radio" name="tp" ${TDRAFT.type===x?'checked':''}
+              onchange="setTDraft('type','${esc(x)}')"> ${x}</label>`).join("")}</div>
           <div class="row" style="margin-top:1.1rem">
             <button class="btn btn-primary sm" onclick="applyTopicFilter()">Apply</button>
             <button class="btn btn-outline sm" onclick="resetTopicFilter()">Reset</button></div>
@@ -4858,7 +4936,7 @@ screens.resource = (params) => {
         ${META.map(m=>{
           const v = m.get(r);
           if(!v || v==="") return "";
-          return metaRow(m.label, m.key==="type" ? `<span class="tag blue">${v}</span>` : v);
+          return metaRow(m.label, v);
         }).join("")}
         ${metaRow("Version / Date", `<code style="font-family:var(--mono);font-size:.8rem">${r.version}</code>`)}
         <div class="detail-blk" style="margin-top:.9rem">
@@ -5074,8 +5152,8 @@ function submitContribution(){
   if(!title){ toast("Enter a title for the resource"); focusIn('cb-title'); return; }
   if(!v('cb-system')){ toast("Select a " + metaLabel('system').toLowerCase()); return; }
   if(!v('cb-type')){ toast("Select a " + metaLabel('type').toLowerCase()); return; }
-  submitForReview({title, purpose:v('cb-purpose').trim(), system:v('cb-system'), stage:v('cb-stage'),
-    stake:v('cb-stake'), design:v('cb-design'), type:v('cb-type'), lang:v('cb-lang'),
+  submitForReview({title, purpose:v('cb-purpose').trim(), system:v('cb-system'), state:v('cb-state'),
+    learner:v('cb-learner'), design:v('cb-design'), type:v('cb-type'), format:v('cb-format'), lang:v('cb-lang'),
     tags:docTags.slice()}, true);
   contributed = title;
   render();
@@ -5110,14 +5188,16 @@ screens.contribute = () => {
           <div class="grid g2" style="gap:1rem">
             <div class="field"><label>${metaLabel('system')} <span class="req">*</span></label>
               <div class="selw"><select id="cb-system">${opt(docThemeOptions(),"Select resource system")}</select>${ic('chevron-down','cv')}</div></div>
-            <div class="field"><label>${metaLabel('stage')}</label>
-              <div class="selw"><select id="cb-stage">${opt(["All Stages"].concat(STAGES.map(x=>x.name)),"Select stage")}</select>${ic('chevron-down','cv')}</div></div>
-            <div class="field"><label>${metaLabel('stake')}</label>
-              <div class="selw"><select id="cb-stake">${opt(_fg('stake').opts,"Select stakeholder")}</select>${ic('chevron-down','cv')}</div></div>
+            <div class="field"><label>${metaLabel('state')}</label>
+              <div class="selw"><select id="cb-state">${opt(["All States"].concat(STATE_OPTS),"Select state")}</select>${ic('chevron-down','cv')}</div></div>
+            <div class="field"><label>${metaLabel('learner')}</label>
+              <div class="selw"><select id="cb-learner">${opt(LEARNER_OPTS,"Select learner category")}</select>${ic('chevron-down','cv')}</div></div>
             <div class="field"><label>${metaLabel('design')}</label>
-              <div class="selw"><select id="cb-design">${opt(_fg('design').opts,"Select learning design")}</select>${ic('chevron-down','cv')}</div></div>
+              <div class="selw"><select id="cb-design">${opt(DESIGN_OPTS,"Select learning design")}</select>${ic('chevron-down','cv')}</div></div>
             <div class="field"><label>${metaLabel('type')} <span class="req">*</span></label>
-              <div class="selw"><select id="cb-type">${opt(_fg('type').opts,"Select resource type")}</select>${ic('chevron-down','cv')}</div></div>
+              <div class="selw"><select id="cb-type">${opt(TYPE_OPTS,"Select resource type")}</select>${ic('chevron-down','cv')}</div></div>
+            <div class="field"><label>${metaLabel('format')}</label>
+              <div class="selw"><select id="cb-format">${opt(FORMAT_OPTS,"Select format")}</select>${ic('chevron-down','cv')}</div></div>
             <div class="field"><label>${metaLabel('lang')}</label>
               <div class="selw"><select id="cb-lang">${opt(_fg('lang').opts,"Select language")}</select>${ic('chevron-down','cv')}</div></div>
           </div>
@@ -5167,7 +5247,7 @@ screens.contribute = () => {
 
 /* ---------- APPROVALS (admin) AND MY CONTRIBUTIONS ---------- */
 function subMeta(f){
-  return [f.system, f.type, f.stage, f.lang, f.design]
+  return [f.system, f.state, f.type, f.format, f.lang, f.design, f.learner]
     .filter(x=>x && x!=="" && x!=="All Stages");
 }
 function statusPill(st){
@@ -5496,9 +5576,7 @@ screens.submission = (params) => {
           <div class="detail-blk" style="margin:0 0 .9rem">
             ${statusPill(sub.status)}
           </div>
-          ${META.map(mm => mm.label && f[mm.key]
-            ? metaRow(mm.label, mm.key==="type" ? `<span class="tag blue">${f[mm.key]}</span>` : f[mm.key])
-            : "").join("")}
+          ${META.map(mm => mm.label && f[mm.key] ? metaRow(mm.label, f[mm.key]) : "").join("")}
           ${metaRow("Visibility", sub.status==="approved" ? "Public"
               : (own ? "Only you and the reviewers" : "Only the contributor and reviewers"))}
           ${metaRow("File size", subSize(sub))}
@@ -6626,7 +6704,12 @@ function adminAddTheme(){
 function openAddTopic(sysId, group, editId){
   if(!isAdmin()) return;
   const editing=!!editId; const t = editing ? topicById(editId) : null;
-  const where = (entityById(sysId)||{name:'this system'}).name + (group?" · "+group:"");
+  const sysName = (entityById(sysId)||{name:'This system'}).name;
+  const ld = group ? ldById(group) : null;
+  const designName = ld ? ({modular:"Modular Learning",
+      atomized:"Atomised Course (Low Dose High Frequency)",
+      supporting:"Supporting Resources"}[ld.id] || ld.name) : "Supporting Resources";
+  const where = sysName + (ld?" · "+ld.name:"");
   document.getElementById('pn-topic').innerHTML =
     modalHead(editing?"Edit course":"Add a Course",
       editing?"Update this course’s details.":"Create a new course under "+where+".","closeAddTopic()") +
@@ -6634,13 +6717,26 @@ function openAddTopic(sysId, group, editId){
       <input id="nt-name" value="${editing?esc(t.name):''}" placeholder="e.g. Water Budgeting"></div>
     <div class="field"><label>Short description</label>
       <textarea id="nt-desc" placeholder="One line describing this topic">${editing?(t.desc||""):""}</textarea></div>
+    <div class="autometa">
+      <span class="am-h">From where you are</span>
+      <div class="am-rows">
+        <div><b>${metaLabel('system')}</b><span>${sysName}</span></div>
+        <div><b>${metaLabel('design')}</b><span>${designName}</span></div>
+      </div>
+    </div>
     <div class="grid g2" style="gap:1rem">
-      <div class="field"><label>State</label>
+      <div class="field"><label>${metaLabel('state')}</label>
         <div class="selw"><select id="nt-state">${TOPIC_STATES.map(o=>
           `<option ${editing&&t.state===o?'selected':''}>${o}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
-      <div class="field"><label>Language</label>
+      <div class="field"><label>${metaLabel('lang')}</label>
         <div class="selw"><select id="nt-lang">${TOPIC_LANGS.map(o=>
           `<option ${editing&&t.lang===o?'selected':''}>${o}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('learner')}</label>
+        <div class="selw"><select id="nt-learner">${LEARNER_OPTS.map(o=>
+          `<option ${editing&&t.learner===o?'selected':''}>${o}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('type')}</label>
+        <div class="selw"><select id="nt-type">${TYPE_OPTS.map(o=>
+          `<option ${editing&&t.type===o?'selected':''}>${o}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
     </div>
     <div class="field"><label>Cover photo</label>
       ${editing?`<div class="tp-cover" style="aspect-ratio:16/7;border:1px solid var(--line);margin-bottom:.6rem">
@@ -6657,19 +6753,27 @@ function closeAddTopic(){ closeOverlay('ov-topic'); }
 function adminAddTopic(sysId, group, editId){
   if(!isAdmin()) return;
   const v=id=>(document.getElementById(id)||{}).value||"";
-  const name=v('nt-name'), desc=v('nt-desc'), state=v('nt-state'), lang=v('nt-lang');
+  const name=v('nt-name'), desc=v('nt-desc'), state=v('nt-state'), lang=v('nt-lang'),
+        learner=v('nt-learner'), type=v('nt-type');
+  const sysName = (entityById(sysId)||{name:''}).name;
+  const designName = {modular:"Modular Learning", atomized:"Atomised Course (Low Dose High Frequency)",
+    supporting:"Supporting Resources"}[group] || "Supporting Resources";
   if(!name.trim()){ toast("Enter a topic name"); return; }
   if(editId){
     const t=topicById(editId);
     if(t){ t.name=name.trim(); t.desc=desc.trim()||t.desc;
-           t.state=state||t.state; t.lang=lang||t.lang; }
+           t.state=state||t.state; t.lang=lang||t.lang;
+           t.learner=learner||t.learner; t.type=type||t.type;
+           t.system=sysName||t.system; t.design=designName; }
     closeAddTopic(); toast("Course updated — "+name.trim());
     go('#/modular/'+sysId+(group?('?g='+group):'')); return;
   }
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('topic-'+(TOPICS.length+1));
   if(TOPICS.some(t=>t.id===id)){ toast("A topic with a similar name already exists"); return; }
   TOPICS.push({id:id, name:name.trim(), desc:desc.trim()||"New topic (added by the admin).",
-    state:state||TOPIC_STATES[0], lang:lang||TOPIC_LANGS[0], count:0, custom:true});
+    state:state||TOPIC_STATES[0], lang:lang||TOPIC_LANGS[0],
+    learner:learner||LEARNER_OPTS[0], type:type||TYPE_OPTS[0],
+    system:sysName, design:designName, count:0, custom:true});
   SUBSTORE[id]=[];
   closeAddTopic(); toast("Course added — now add subtopics and files");
   /* a brand-new course opens ready to edit, so the admin can add subtopics straight away */
@@ -6895,17 +6999,19 @@ function openUploadDoc(editId){
       <input id="dc-purpose" value="${editing?esc(r.purpose):''}" placeholder="One line describing what this resource is for"></div>
     <div class="grid g2" style="gap:1rem">
       <div class="field"><label>${metaLabel('system')} <span class="req">*</span></label>
-        <div class="selw"><select id="dc-system">${opt(systems,"Select resource system", r&&r.system)}</select>${ic('chevron-down','cv')}</div></div>
-      <div class="field"><label>${metaLabel('stage')}</label>
-        <div class="selw"><select id="dc-stage">${opt(["All Stages"].concat(STAGES.map(x=>x.name)),"Select stage", r&&r.stage)}</select>${ic('chevron-down','cv')}</div></div>
-      <div class="field"><label>${metaLabel('stake')}</label>
-        <div class="selw"><select id="dc-stake">${opt(_fg('stake').opts,"Select stakeholder", r&&r.stake)}</select>${ic('chevron-down','cv')}</div></div>
+        <div class="selw"><select id="dc-system">${opt(systems,"Select resource system or theme", r&&r.system)}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('state')}</label>
+        <div class="selw"><select id="dc-state">${opt(["All States"].concat(STATE_OPTS),"Select state", r&&r.state)}</select>${ic('chevron-down','cv')}</div></div>
       <div class="field"><label>${metaLabel('design')}</label>
-        <div class="selw"><select id="dc-design">${opt(_fg('design').opts,"Select learning design", r&&r.design)}</select>${ic('chevron-down','cv')}</div></div>
+        <div class="selw"><select id="dc-design">${opt(DESIGN_OPTS,"Select learning design", r&&r.design)}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('learner')}</label>
+        <div class="selw"><select id="dc-learner">${opt(LEARNER_OPTS,"Select learner category", r&&r.learner)}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('lang')}</label>
+        <div class="selw"><select id="dc-lang">${opt(LANG_OPTS,"Select language", r&&r.lang)}</select>${ic('chevron-down','cv')}</div></div>
       <div class="field"><label>${metaLabel('type')} <span class="req">*</span></label>
         <div class="selw"><select id="dc-type">${opt(types,"Select resource type", r&&r.type)}</select>${ic('chevron-down','cv')}</div></div>
-      <div class="field"><label>${metaLabel('lang')}</label>
-        <div class="selw"><select id="dc-lang">${opt(_fg('lang').opts,"Select language", r&&r.lang)}</select>${ic('chevron-down','cv')}</div></div>
+      <div class="field"><label>${metaLabel('format')}</label>
+        <div class="selw"><select id="dc-format">${opt(FORMAT_OPTS,"Select format", r&&r.format)}</select>${ic('chevron-down','cv')}</div></div>
     </div>
     <div class="field"><label>Tags</label>
       <div class="tagbox" onclick="var i=document.getElementById('dc-tag');if(i)i.focus();">
@@ -6928,8 +7034,9 @@ function adminUploadDoc(){
   const fields = {
     title:name.trim(),
     purpose:v('dc-purpose').trim() || "Added to the Resource Library by the admin.",
-    system:system, stage:v('dc-stage'), stake:v('dc-stake')||"Learner",
-    design:v('dc-design')||"Both", type:type, lang:v('dc-lang')||"English",
+    system:system, state:v('dc-state')||"All States", learner:v('dc-learner')||"First Mile/ Doer",
+    design:v('dc-design')||"Supporting Resources", type:type,
+    format:v('dc-format')||"PDF", lang:v('dc-lang')||"English",
     tags:docTags.slice()
   };
   if(docEditId){
@@ -6962,12 +7069,12 @@ let subSeq = 0;
 [
   {title:"Grazing calendar for a village pastureland",
    purpose:"A month-by-month calendar a pastureland committee can fill in together.",
-   system:"Pastureland", stage:"Build Institutions", stake:"Facilitator", design:"Modular",
-   type:"Format", lang:"English", tags:["grazing","calendar"], status:"pending", date:"2026-08-24"},
+   system:"Pastureland", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
+   type:"Manual", format:"PDF", lang:"English", tags:["grazing","calendar"], status:"pending", date:"2026-08-24"},
   {title:"Water budgeting exercise — facilitator notes",
    purpose:"Notes from running a first water budget with a watershed committee.",
-   system:"Water", stage:"Manage Resources", stake:"Facilitator", design:"LDHF",
-   type:"Facilitators' Guide", lang:"English", tags:["water budget"], status:"pending", date:"2026-08-21",
+   system:"Water", state:"Chhattisgarh", learner:"Trainer", design:"Atomised Course (Low Dose High Frequency)",
+   type:"Guide", format:"PDF", lang:"English", tags:["water budget"], status:"pending", date:"2026-08-21",
    thread:[
      {by:"Priya Sharma", date:"2026-08-21", at:"10:50 AM",
       text:"Sending this in ahead of the September watershed round — happy to redo the worksheet if the format is wrong."},
@@ -6983,16 +7090,16 @@ let subSeq = 0;
      {who:"Priya Sharma", what:"document uploaded", when:"2026-08-18", at:"03:55 PM"}]},
   {title:"Village institution register — blank template",
    purpose:"A register a new committee can use to record membership and meetings.",
-   system:"All Systems", stage:"Build Institutions", stake:"Community Member", design:"Both",
-   type:"Format", lang:"Hindi", tags:["register","institution"], status:"pending", date:"2026-08-19"},
+   system:"All Systems", state:"Gujarat", learner:"First Mile/ Doer", design:"Supporting Resources",
+   type:"Manual", format:"PDF", lang:"Hindi", tags:["register","institution"], status:"pending", date:"2026-08-19"},
   {title:"Fodder plot demonstration — field video",
    purpose:"A short film of a fodder demonstration plot through one season.",
-   system:"Pastureland", stage:"Manage Resources", stake:"Learner", design:"LDHF",
-   type:"Video", lang:"Hindi", tags:["fodder"], status:"pending", date:"2026-08-14"},
+   system:"Pastureland", state:"Karnataka", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   type:"Atomised Content", format:"Video", lang:"Hindi", tags:["fodder"], status:"pending", date:"2026-08-14"},
   {title:"Forest rights claim — filled sample form",
    purpose:"A completed sample claim to show a committee what a good one looks like.",
-   system:"Forests", stage:"Secure Tenure", stake:"Community Member", design:"Both",
-   type:"Format", lang:"Hindi", tags:["forest rights","claim"], status:"approved", date:"2026-08-11",
+   system:"Forest", state:"Maharashtra", learner:"First Mile/ Doer", design:"Supporting Resources",
+   type:"Manual", format:"PDF", lang:"Hindi", tags:["forest rights","claim"], status:"approved", date:"2026-08-11",
    comment:"Clear and reusable — published to the Resource Library.",
    thread:[
      {by:"Arjun Kumar", date:"2026-08-12", at:"08:30 AM",
@@ -7008,18 +7115,18 @@ let subSeq = 0;
      {who:"Priya Sharma", what:"document uploaded", when:"2026-08-09", at:"09:30 AM"}]},
   {title:"Facilitator handbook — Understanding Context",
    purpose:"A handbook for the first stage of a commoning process.",
-   system:"All Systems", stage:"Understand Context", stake:"Facilitator", design:"Modular",
-   type:"Handbook", lang:"English", tags:["handbook"], status:"approved", date:"2026-08-04",
+   system:"All Systems", state:"Odisha", learner:"Trainer", design:"Modular Learning",
+   type:"Handbook", format:"PDF", lang:"English", tags:["handbook"], status:"approved", date:"2026-08-04",
    comment:"Well structured. Published as is."},
   {title:"Springshed mapping walkthrough",
    purpose:"A recorded walkthrough of mapping a springshed with the community.",
-   system:"Water", stage:"Understand Context", stake:"Field Practitioner", design:"LDHF",
-   type:"Video", lang:"English", tags:["springshed","mapping"], status:"approved", date:"2026-07-28",
+   system:"Water", state:"Rajasthan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   type:"Atomised Content", format:"Video", lang:"English", tags:["springshed","mapping"], status:"approved", date:"2026-07-28",
    comment:"Good pace and clear visuals."},
   {title:"Common land use plan — Anantapur",
    purpose:"A worked land use plan drawn up with a village committee.",
-   system:"Pastureland", stage:"Manage Resources", stake:"Facilitator", design:"Modular",
-   type:"PDF", lang:"English", tags:["land use","plan"], status:"changes", date:"2026-07-22",
+   system:"Pastureland", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
+   type:"Manual", format:"PDF", lang:"English", tags:["land use","plan"], status:"changes", date:"2026-07-22",
    comment:"Please remove the household names on pages 4-6 before this can be published, and add the year the plan was drawn.",
    thread:[
      {by:"Priya Sharma", date:"2026-07-23", at:"11:05 AM",
@@ -7035,31 +7142,31 @@ let subSeq = 0;
      {who:"Priya Sharma", what:"document submitted", when:"2026-07-21", at:"10:45 AM"}]},
   {title:"MOU with the State Irrigation Department",
    purpose:"A sample agreement between a committee and a line department.",
-   system:"Water", stage:"Secure Tenure", stake:"Mentor", design:"Both",
-   type:"PDF", lang:"English", tags:["MOU","government"], status:"changes", date:"2026-07-15",
+   system:"Water", state:"Chhattisgarh", learner:"Trainer", design:"Supporting Resources",
+   type:"Manual", format:"PDF", lang:"English", tags:["MOU","government"], status:"changes", date:"2026-07-15",
    comment:"Useful, but this needs a short note on what a committee should check before signing."},
   {title:"Photos from the Prakriti Karyashala",
    purpose:"Field photographs from the residential workshop.",
-   system:"All Systems", stage:"Understand Context", stake:"Learner", design:"Modular",
-   type:"PDF", lang:"English", tags:["workshop"], status:"rejected", date:"2026-07-08",
+   system:"All Systems", state:"Gujarat", learner:"First Mile/ Doer", design:"Modular Learning",
+   type:"Manual", format:"PDF", lang:"English", tags:["workshop"], status:"rejected", date:"2026-07-08",
    comment:"Photographs on their own do not work as a learning resource. Do send them with a short write-up of what the session covered."}
 ,
   {title:"Village water register — Bharuch block", by:"Manish Patel",
    purpose:"A filled register from one block, useful as a worked example.",
-   system:"Water", stage:"Build Institutions", stake:"Field Practitioner", design:"Modular",
-   type:"Format", lang:"English", tags:["register"], size:"760 KB", status:"pending", date:"2026-08-23"},
+   system:"All Systems", state:"Gujarat", learner:"First Mile/ Doer", design:"Modular Learning",
+   type:"Manual", format:"PDF", lang:"English", tags:["register"], size:"760 KB", status:"pending", date:"2026-08-23"},
   {title:"Grazing rights — legal primer", by:"Sunita Rao",
    purpose:"A plain-language note on what the law allows a pastureland committee to do.",
-   system:"Pastureland", stage:"Secure Tenure", stake:"Mentor", design:"Both",
-   type:"Handbook", lang:"Hindi", tags:["legal","rights"], size:"1.4 MB", status:"pending", date:"2026-08-20"},
+   system:"Pastureland", state:"Karnataka", learner:"Trainer", design:"Supporting Resources",
+   type:"Handbook", format:"PDF", lang:"Hindi", tags:["legal","rights"], size:"1.4 MB", status:"pending", date:"2026-08-20"},
   {title:"Nursery raising — audio guide", by:"Arjun Kumar",
    purpose:"A short audio guide for raising a community nursery.",
-   system:"Forests", stage:"Manage Resources", stake:"Learner", design:"LDHF",
-   type:"Audio", lang:"Hindi", tags:["nursery"], size:"3.2 MB", status:"changes", date:"2026-08-06",
+   system:"Forest", state:"Maharashtra", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   type:"Atomised Content", format:"Audio", lang:"Hindi", tags:["nursery"], size:"3.2 MB", status:"changes", date:"2026-08-06",
    comment:"Good content, but the recording clips in the second half. Please re-record from the 4 minute mark."},
   {title:"Old draft — commons handbook v1", by:"Manish Patel",
    purpose:"An early draft of the commons handbook.",
-   system:"All Systems", stage:"Understand Context", stake:"Facilitator", design:"Modular",
+   system:"All Systems", state:"Gujarat", learner:"Trainer", design:"Modular Learning",
    type:"PDF", lang:"English", tags:["draft"], size:"540 KB", status:"rejected", date:"2026-07-02",
    comment:"Superseded by the published handbook. No need to keep a draft in the library."}
 ].forEach(s => {

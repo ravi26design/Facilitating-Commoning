@@ -1179,6 +1179,8 @@ main{min-height:60vh;animation:fade .3s ease}
 .tabs-c.plain{border-bottom:0;padding-bottom:0;margin:1.1rem 0 1.25rem}
 .tabs-c.sub{border-bottom:0;padding-bottom:0;margin:-.35rem 0 1.15rem}
 .settable{box-shadow:none}
+/* keep the columns readable — the frame scrolls rather than the words breaking up */
+.settable table.admin{min-width:46rem}
 .settable table.admin th{background:var(--bg-soft);color:var(--ink);border-bottom:1px solid var(--line-2)}
 .settable table.admin tr:nth-child(even) td{background:#fff}
 .settable table.admin tr:hover td{background:var(--bg-soft)}
@@ -1197,6 +1199,28 @@ main{min-height:60vh;animation:fade .3s ease}
 .th-current{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
 .th-current img{width:5rem;height:3rem;object-fit:cover;border:1px solid var(--line)}
 .th-current span{font-size:.8rem;color:var(--muted-2)}
+.st-file{display:flex;align-items:center;gap:.75rem;min-width:0}
+.st-file .doc-fi{width:2.1rem;height:2.1rem;border-radius:.4rem;background:var(--bg-soft);
+  border:1px solid var(--line);color:var(--muted-2)}
+.st-file .doc-fi i,.st-file .doc-fi svg.lucide{width:1rem;height:1rem}
+.st-name{font-size:.9rem;color:var(--ink);overflow-wrap:anywhere}
+.deptpill{display:inline-flex;align-items:center;background:var(--chip);color:var(--ink-2);
+  padding:.25rem .7rem;font-size:.78rem;font-weight:600;border-radius:999px;white-space:nowrap}
+/* the table footer: how many rows, which page */
+.pgbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  background:#fff;border:1px solid var(--line);border-top:0;padding:.85rem 1.1rem}
+.pg-count{font-size:.85rem;color:var(--muted)}
+.pg-count b{color:var(--ink);font-weight:700}
+.pg-mid{display:flex;align-items:center;gap:.35rem}
+.pg-btn{min-width:2.1rem;height:2.1rem;display:grid;place-items:center;border:1px solid var(--line-2);
+  background:#fff;font:inherit;font-size:.85rem;font-weight:700;color:var(--ink);cursor:pointer;transition:.15s}
+.pg-btn:hover:not(:disabled){border-color:var(--green);color:var(--green-d)}
+.pg-btn.on{background:var(--green);border-color:var(--green);color:#fff}
+.pg-btn:disabled{opacity:.4;cursor:default}
+.pg-btn i,.pg-btn svg.lucide{width:.95rem;height:.95rem}
+.pg-rows{display:inline-flex;align-items:center;gap:.55rem;font-size:.82rem;color:var(--muted-2)}
+.pg-rows .selw{min-width:5rem}
+@media(max-width:620px){.pgbar{justify-content:center;text-align:center}}
 .tagpill{display:inline-flex;align-items:center;background:var(--green);color:#fff;
   padding:.28rem .7rem;font-size:.78rem;font-weight:700;border-radius:999px}
 /* archive rules */
@@ -2637,6 +2661,34 @@ const FAQS = [
 ];
 
 /* resources — full metadata set from the wireframe */
+/* ---- Archive and Trash: documents out of circulation ---- */
+const ARCHIVE_FILES = [
+  {n:"Old_MOU_Watershed_2018.pdf",           dept:"Legal",      on:"12 Apr 2024"},
+  {n:"FY22_FieldReport_Banaskantha.pdf",     dept:"Field Ops",  on:"28 May 2023"},
+  {n:"Vendor_Contract_OldVendor_FY21.pdf",   dept:"Finance",    on:"14 Mar 2022"},
+  {n:"HR_Policy_Old_v2.0.pdf",               dept:"HR",         on:"01 Feb 2024"},
+  {n:"CSR_Disclosure_FY22.xlsx",             dept:"Compliance", on:"18 Aug 2023"},
+  {n:"Board_Resolution_AGM_2020.pdf",        dept:"Legal",      on:"03 Jan 2023"},
+  {n:"Audit_Report_FY21_Internal.pdf",       dept:"Finance",    on:"22 Sep 2022"},
+  {n:"Project_Closure_Narmada_2019.pdf",     dept:"Field Ops",  on:"15 Nov 2021"},
+  {n:"Donor_Agreement_FCRA_2021.pdf",        dept:"Compliance", on:"09 Jul 2022"},
+  {n:"Staff_Appraisal_FY20_Q4.xlsx",         dept:"HR",         on:"30 Mar 2021"},
+  {n:"Grant_Utilisation_Certificate_2021.pdf",dept:"Finance",   on:"11 Jun 2022"},
+  {n:"MoU_StateGovt_WaterProject_2018.pdf",  dept:"Legal",      on:"27 Feb 2021"}
+];
+const TRASH_FILES = [
+  {n:"Old_Vendor_Agreement_FY21.pdf",   dept:"Finance",    on:"10 May 2026"},
+  {n:"Staff_Attendance_Mar2026.xlsx",   dept:"HR",         on:"08 May 2026"},
+  {n:"Draft_Compliance_Report_Q1.pdf",  dept:"Compliance", on:"05 May 2026"},
+  {n:"Field_Survey_Anand_Apr2026.pdf",  dept:"Field Ops",  on:"02 May 2026"},
+  {n:"Procurement_PO_2026_March.pdf",   dept:"Finance",    on:"29 Apr 2026"},
+  {n:"Training_Schedule_FY26.pdf",      dept:"HR",         on:"24 Apr 2026"},
+  {n:"MOU_Partner_NGO_Baroda.pdf",      dept:"Legal",      on:"20 Apr 2026"},
+  {n:"Budget_Revision_Q1_FY26.xlsx",    dept:"Finance",    on:"15 Apr 2026"}
+];
+const STORE_PAGE = {archive:1, trash:1};
+const STORE_ROWS = {archive:10, trash:10};
+
 /* ---- Settings: categories, tags, types and archive rules ---- */
 const SET_TABS = [["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
 const SET_LABEL = {tags:"Tag", types:"Type"};
@@ -5344,7 +5396,10 @@ function accountShell(active, body){
       ${canReview()?`<button class="acct-item ${active==='approvals'?'active':''}" onclick="go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?`<span class="acct-badge">${pendingCount()}</span>`:''}</button>`:''}
       ${isAdmin()?`<div class="acct-h">Manage</div>
       <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>
-      <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>`:''}
+      <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>
+      <div class="acct-h">Storage</div>
+      <button class="acct-item ${active==='archive'?'active':''}" onclick="go('#/archive')">${ic('archive')} Archive</button>
+      <button class="acct-item ${active==='trash'?'active':''}" onclick="go('#/trash')">${ic('trash-2')} Trash</button>`:''}
     </nav></aside>
     <div class="acct-main">${body}</div>
   </div></main>` + footer();
@@ -5772,6 +5827,97 @@ function featEditToggle(){
 }
 function featEditDone(){ featSyncText(); FEAT_EDIT = false; render(); }
 function featCancel(){ featDiscard(); }
+/* ============================================================
+   ARCHIVE and TRASH
+   ============================================================ */
+function storeFiles(kind){ return kind==='archive' ? ARCHIVE_FILES : TRASH_FILES; }
+function storeExt(name){ const m=(name||'').split('.').pop().toLowerCase();
+  return m==='xlsx'||m==='csv' ? 'sheet' : m==='pdf' ? 'pdf' : 'doc'; }
+function storePager(kind, total){
+  const rows = STORE_ROWS[kind], pages = Math.max(1, Math.ceil(total/rows));
+  const page = Math.min(STORE_PAGE[kind], pages);
+  const from = total ? (page-1)*rows+1 : 0, to = Math.min(page*rows, total);
+  return {rows, pages, page, from, to};
+}
+function storeFooter(kind, total){
+  const p = storePager(kind, total);
+  const btn=(n,label,dis)=>`<button class="pg-btn${n===p.page?' on':''}" ${dis?'disabled':''}
+    onclick="storeGo('${kind}',${n})">${label}</button>`;
+  return `<div class="pgbar">
+    <span class="pg-count">Showing <b>${p.from}–${p.to}</b> of <b>${total}</b> file${total!==1?'s':''}</span>
+    <div class="pg-mid">
+      ${btn(p.page-1, ic('chevron-left'), p.page===1)}
+      ${Array.from({length:p.pages},(_,i)=>btn(i+1, i+1, false)).join("")}
+      ${btn(p.page+1, ic('chevron-right'), p.page===p.pages)}
+    </div>
+    <label class="pg-rows">Rows
+      <span class="selw"><select onchange="storeRows('${kind}',this.value)">
+        ${[10,25,50].map(n=>`<option value="${n}" ${STORE_ROWS[kind]===n?'selected':''}>${n}</option>`).join("")}
+      </select>${ic('chevron-down','cv')}</span>
+    </label>
+  </div>`;
+}
+function storeGo(kind, page){
+  const p = storePager(kind, storeFiles(kind).length);
+  STORE_PAGE[kind] = Math.max(1, Math.min(page, p.pages));
+  render();
+}
+function storeRows(kind, n){ STORE_ROWS[kind] = parseInt(n,10)||10; STORE_PAGE[kind] = 1; render(); }
+function storeTable(kind){
+  const all = storeFiles(kind), p = storePager(kind, all.length);
+  const rows = all.slice((p.page-1)*p.rows, p.page*p.rows);
+  const when = kind==='archive' ? 'Archived On' : 'Trashed On';
+  return `<div class="scrollx settable"><table class="admin">
+    <thead><tr><th>File Name</th><th>Department</th><th>${when}</th><th class="ta-r">Actions</th></tr></thead>
+    <tbody>${rows.length?rows.map(f=>`<tr>
+      <td><div class="st-file">
+        <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
+        <span class="st-name">${f.n}</span>
+      </div></td>
+      <td><span class="deptpill">${f.dept}</span></td>
+      <td class="nowrap">${f.on}</td>
+      <td class="ta-r"><div class="set-act">
+        <button class="iconbtn" title="Restore ${esc(f.n)}" aria-label="Restore ${esc(f.n)}"
+          onclick="storeRestore('${kind}','${escj(f.n)}')">${ic('rotate-ccw')}</button>
+        ${kind==='archive'?`<button class="iconbtn" title="Download ${esc(f.n)}" aria-label="Download ${esc(f.n)}"
+          onclick="download('${escj(f.n)}')">${ic('download')}</button>`:''}
+      </div></td>
+    </tr>`).join(""):`<tr><td colspan="4" class="set-empty">${kind==='archive'
+        ? 'Nothing is archived — inactive documents land here automatically.'
+        : 'The trash is empty.'}</td></tr>`}</tbody>
+  </table></div>
+  ${all.length?storeFooter(kind, all.length):''}`;
+}
+function storeRestore(kind, name){
+  const list = storeFiles(kind), i = list.findIndex(f=>f.n===name);
+  if(i<0) return;
+  list.splice(i,1);
+  const p = storePager(kind, list.length);
+  STORE_PAGE[kind] = p.page;
+  render();
+  toast("Restored — "+name);
+}
+screens.archive = () => {
+  if(!isAdmin()) return gateScreen("Archive","Sign in as the Platform Super Admin to see archived documents.");
+  return accountShell('archive', `
+    <div class="acct-head"><div>
+      <h1 class="acct-title">Archive</h1>
+      <p class="acct-sub" style="margin:0">Documents moved out of circulation after
+        ${SETTINGS.archiveDays} days without a view, edit or download. Restore one to bring it back.</p>
+    </div></div>
+    ${storeTable('archive')}
+  `);
+};
+screens.trash = () => {
+  if(!isAdmin()) return gateScreen("Trash","Sign in as the Platform Super Admin to see deleted documents.");
+  return accountShell('trash', `
+    <div class="acct-head"><div>
+      <h1 class="acct-title">Trash</h1>
+      <p class="acct-sub" style="margin:0">Deleted documents, kept so they can be restored.</p>
+    </div></div>
+    ${storeTable('trash')}
+  `);
+};
 /* ============================================================
    SETTINGS — categories, tags, types and archive rules
    ============================================================ */

@@ -1222,12 +1222,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .sc-btn.on{background:var(--green);color:#fff}
 .sc-btn i,.sc-btn svg.lucide{width:1rem;height:1rem}
 .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+/* the learning pathway, set as a solid panel */
+.lapath{padding:2rem 2.25rem}
+.lapath h3{color:#fff;font-size:1.15rem;margin:0 0 .8rem}
+.lapath p{color:#fff;margin:0}
 /* ---- learning approach: a graphic and its text, alternating sides ---- */
 .larows{display:flex;flex-direction:column;gap:1.35rem}
 .la-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:0;align-items:stretch;
   background:#fff;border:1px solid var(--line)}
 .la-row:nth-child(even) .la-fig{order:2;border-left:1px solid var(--line);border-right:0}
 .la-fig{border-right:1px solid var(--line);padding:1.5rem;display:flex;background:var(--bg-soft)}
+.la-fig .la-img{margin:0;flex:1;display:flex;align-items:center;justify-content:center}
+.la-fig .la-img img{width:100%;height:auto;display:block}
+.la-fig .la-ph{display:none}
+.la-fig.missing .la-ph{display:flex}
 .la-ph{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
   min-height:13rem;border:1.5px dashed var(--line-2);background:#fff;padding:1.5rem;text-align:center}
 .la-ph .lp-ic{display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:999px;
@@ -1237,6 +1245,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .la-ph .lp-hint{font-size:.78rem;color:var(--faint)}
 .la-tx{padding:1.75rem 1.9rem;display:flex;flex-direction:column;justify-content:center}
 .la-tx h3{font-size:1.1rem;margin:0 0 .7rem}
+.la-tx p + h3{margin-top:1.35rem}
 .la-tx p{margin:0;font-size:.92rem;line-height:1.85;color:var(--muted)}
 @media(max-width:880px){
   .la-row{grid-template-columns:1fr}
@@ -4075,58 +4084,46 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
   section(sechead(null,"Translating learning into action",
     "Capacity building, in this approach, is designed as a continuous cycle that translates learning into sustained action on the ground. This cycle of learning and action rests on four interlinked elements — Enabling Environment, Training, Mobilizing Village and Community Action, and Sustaining Engagement — each feeding into and reinforcing the next.") +
     `<div class="larows">
-      ${[
-        ["An enabling environment comes first",
-         `For learning to be accepted, applied, and translated into action, it must be supported by an enabling
-          environment. This is particularly essential where the intended action is programmatic, more so in the context
-          of laws, government programmes, and institutional processes. This involves preparing the ground before training
-          by organizing campaigns, mobilising communities, engaging Panchayats and government institutions, and securing
-          necessary administrative support.`,
-         "Graphic — Enabling environment"],
-        ["Learning by doing, then sustaining it",
-         `Practising heuristic (learning-by-doing) approaches, embedding solutions locally with people's own vision at the
-          centre and fostering lateral engagement between communities, panchayats, and government ensures the learning is
-          carried forward into sustained community and institutional action. Events and creating platforms for continued
-          exchange and learning facilitates in sustaining action, enabling participants to share experiences, address
-          implementation challenges, and strengthen action and impact on the ground.`,
-         "Graphic — Learning by doing"]
-      ].map(x=>`
-        <article class="la-row">
-          <div class="la-fig">
-            <div class="la-ph">
-              <span class="lp-ic">${ic('image')}</span>
-              <b>${x[2]}</b>
-              <span class="lp-hint">Artwork to come</span>
-            </div>
-          </div>
-          <div class="la-tx">
-            <h3>${x[0]}</h3>
-            <p>${x[1]}</p>
-          </div>
-        </article>`).join("")}
-    </div>`) +
-
-  /* ---- the learning pathway, in its own section ---- */
-  section(`<div class="larows">
       <article class="la-row">
         <div class="la-fig">
+          <figure class="la-img">
+            <img src="assets/img/core-approach.png" loading="lazy"
+              alt="Core approach — enabling environment, training preparation, training of trainers, training delivery, mobilising village and community action, and sustaining engagement"
+              onerror="this.closest('.la-fig').classList.add('missing');this.remove()">
+          </figure>
           <div class="la-ph">
             <span class="lp-ic">${ic('image')}</span>
-            <b>Graphic — The learning pathway</b>
-            <span class="lp-hint">Artwork to come</span>
+            <b>Graphic — Core approach</b>
+            <span class="lp-hint">Save it as assets/img/core-approach.png</span>
           </div>
         </div>
         <div class="la-tx">
-          <h3>The learning pathway</h3>
-          <p>The learning pathway comprises a structured process coupled with action elements that lead to cumulative
-          outcomes on the ground. Rather than conducting one-off trainings, the learning is continuous and ongoing,
-          designed to enable communities, functionaries, and civil society actors to collectively manage natural resources
-          and local institutions. Therefore, this approach combines modular learning, regular mentoring and handholding,
-          peer learning, field-based practice, and digital learning processes and tools, to support participants as they
-          apply what they learn in real-life contexts.</p>
+          <h3>An enabling environment comes first</h3>
+          <p>For learning to be accepted, applied, and translated into action, it must be supported by an enabling
+          environment. This is particularly essential where the intended action is programmatic, more so in the context of
+          laws, government programmes, and institutional processes. This involves preparing the ground before training by
+          organizing campaigns, mobilising communities, engaging Panchayats and government institutions, and securing
+          necessary administrative support.</p>
+          <h3 style="margin-top:1.35rem">Learning by doing, then sustaining it</h3>
+          <p>Practising heuristic (learning-by-doing) approaches, embedding solutions locally with people's own vision at
+          the centre and fostering lateral engagement between communities, panchayats, and government ensures the learning
+          is carried forward into sustained community and institutional action. Events and creating platforms for continued
+          exchange and learning facilitates in sustaining action, enabling participants to share experiences, address
+          implementation challenges, and strengthen action and impact on the ground.</p>
         </div>
       </article>
-    </div>`, "tight contd") +
+    </div>`) +
+
+  /* ---- the learning pathway, in its own panel ---- */
+  section(`<div class="rownote long lapath">
+    <h3>The learning pathway</h3>
+    <p>The learning pathway comprises a structured process coupled with action elements that lead to cumulative outcomes
+    on the ground. Rather than conducting one-off trainings, the learning is continuous and ongoing, designed to enable
+    communities, functionaries, and civil society actors to collectively manage natural resources and local institutions.
+    Therefore, this approach combines modular learning, regular mentoring and handholding, peer learning, field-based
+    practice, and digital learning processes and tools, to support participants as they apply what they learn in real-life
+    contexts.</p>
+  </div>`, "tight contd") +
 
   section(`<div class="stack" style="gap:1.5rem">
       <div class="panel">

@@ -1779,6 +1779,9 @@ main{min-height:60vh;animation:fade .3s ease}
 .ehero.page.centred .in{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
 .ehero.page.centred .ph-lead{max-width:56rem}
 .ehero.page.centred .ph-sub{margin-left:auto;margin-right:auto}
+/* a page head that carries a quote instead of a description */
+.ehero .ph-sub .phq{display:block;font-size:1.2rem;line-height:1.55;color:var(--ink);font-weight:600}
+.ehero .ph-sub .phq-by{display:block;margin-top:.6rem;font-size:.88rem;color:var(--muted-2)}
 /* the actions sit level with the title, hard right */
 .ehero .stand>.row:first-child{margin-top:.35rem;justify-content:flex-end}
 @media(max-width:900px){.ehero .stand>.row:first-child{justify-content:flex-start}}
@@ -4113,7 +4116,7 @@ function commonsArt(key){
 screens.commoning = () => shell("#/commoning", null,
   heroBackdrop('assets/img/commoning-illustration.png','fill') +
   pagehead("The idea", "Commoning of <em>Commons</em>",
-    "The ongoing practice through which a community takes collective responsibility for a shared natural resource — securing it, governing it, restoring it and sustainably managing it together.",
+    "<span class='phq'>&ldquo;There is no Commons without commoning.&rdquo;</span><span class='phq-by'>- Peter Linebaugh</span>",
     null, null, "centred") +
   `<div class="ehero-window"></div>
   <div class="ehero-after">

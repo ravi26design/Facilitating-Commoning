@@ -4399,9 +4399,8 @@ function moduleCards(){
 /* ---------- LEARNING APPROACH — detail diagrams ---------- */
 /* ---------- RESOURCE SYSTEMS & THEMES ---------- */
 screens["resource-systems"] = () => shell("#/resource-systems", null,
-  pagehead("Choose your commons","Resource Systems &amp; <em>Themes</em>",
-    "Each pathway explains the process first, and then provides resources in the order they are likely to be used.") +
-  section(sechead(null,"Resource Systems","The three natural-resource systems the repository is built around.") +
+  pagehead("Choose your commons","Resource Systems &amp; <em>Themes</em>", null) +
+  section(sechead(null,"Resource Systems", null) +
     `<div class="grid g3">${["pastureland","forests","water"].map(k=>systemCard(SYSTEMS[k])).join("")}</div>`) +
   section(sechead(null,"Cross-Cutting Themes","Themes that cut across every resource system.",
     isAdmin()?`<button class="btn btn-primary sm" onclick="openAddTheme()">${ic('plus')} Add theme</button>`:'') +

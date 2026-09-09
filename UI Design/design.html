@@ -2861,6 +2861,18 @@ const TRASH_FILES = [
   {n:"MOU_Partner_NGO_Baroda.pdf",      dept:"Legal",      on:"20 Apr 2026"},
   {n:"Budget_Revision_Q1_FY26.xlsx",    dept:"Finance",    on:"15 Apr 2026"}
 ];
+/* a contributor sees their own documents here, not the whole repository's */
+const MY_ARCHIVE = [
+  {n:"Pasture_rules_draft_v1.pdf",            dept:"Pastureland", on:"14 Feb 2026"},
+  {n:"Village_meeting_notes_Jan2026.pdf",     dept:"Forest",      on:"02 Feb 2026"},
+  {n:"Water_budget_worksheet_old.xlsx",       dept:"Water",       on:"19 Jan 2026"},
+  {n:"Fodder_plot_photos_2025.pdf",           dept:"Pastureland", on:"08 Dec 2025"}
+];
+const MY_TRASH = [
+  {n:"Grazing_calendar_rough_draft.pdf",      dept:"Pastureland", on:"21 Aug 2026"},
+  {n:"Springshed_walkthrough_take1.pdf",      dept:"Water",       on:"12 Aug 2026"},
+  {n:"Untitled_field_notes.pdf",              dept:"Forest",      on:"03 Aug 2026"}
+];
 const STORE_PAGE = {archive:1, trash:1};
 const STORE_ROWS = {archive:10, trash:10};
 
@@ -5454,7 +5466,7 @@ screens.contributions = (params) => {
         <h1 class="acct-title">My Contributions</h1>
         <p class="acct-sub" style="margin-bottom:0">Files you have uploaded, and where each one has got to.</p>
       </div>
-      <button class="btn btn-primary" onclick="openUploadDoc()">${ic('upload')} Upload a file</button>
+      <button class="btn btn-primary" onclick="openUploadChoice()">${ic('upload')} Upload a file</button>
     </div>
     ${mine.length ? `
       <div class="tabs-c">
@@ -5484,8 +5496,12 @@ function subDocCard(sub){
     <div class="dc-thumb">
       ${docPreview(f)}
       <div class="dc-actions">
-        <button class="btn btn-primary sm dc-ic" title="View" aria-label="View ${esc(sub.title)}"
+        <button class="btn btn-primary sm dc-ic" title="View" aria-label="View ${esc(f.title)}"
           onclick="event.stopPropagation();go('#/submission/${sub.id}')">${ic('eye')}</button>
+        <button class="btn btn-outline sm dc-ic" title="Download" aria-label="Download ${esc(f.title)}"
+          onclick="event.stopPropagation();download('${escj(f.title)}')">${ic('download')}</button>
+        <button class="btn btn-outline sm dc-ic danger" title="Delete" aria-label="Delete ${esc(f.title)}"
+          onclick="event.stopPropagation();deleteSubmission('${escj(sub.id)}')">${ic('trash-2')}</button>
       </div>
     </div>
     <div class="dc-body">
@@ -5493,6 +5509,23 @@ function subDocCard(sub){
     </div>
     <div class="sub-foot">${statusPill(sub.status)}<span>${sub.date}</span></div>
   </article>`;
+}
+
+/* a contributor may take one of their own files back; it lands in their trash */
+function deleteSubmission(id){
+  const i = SUBMISSIONS.findIndex(x=>x.id===id); if(i<0) return;
+  const sub = SUBMISSIONS[i], title = sub.fields.title;
+  confirmDialog({
+    title:"Delete this file?",
+    body:`“${title}” will be taken out of My Contributions and moved to your trash, where it can still be restored.`,
+    confirmLabel:"Delete", icon:"trash-2",
+    onConfirm:()=>{
+      SUBMISSIONS.splice(i,1);
+      MY_TRASH.unshift({n:title, dept:sub.fields.system||"—", on:setDateToday()});
+      if((location.hash||"").indexOf('#/submission/')===0) go('#/contributions'); else render();
+      toast("Moved to trash — "+title);
+    }
+  });
 }
 
 /* ---------- ONE SUBMISSION ---------- */
@@ -5690,10 +5723,10 @@ function accountShell(active, body){
       ${canReview()?`<button class="acct-item ${active==='approvals'?'active':''}" onclick="go('#/approvals')">${ic('circle-check-big')} Approvals${pendingCount()?`<span class="acct-badge">${pendingCount()}</span>`:''}</button>`:''}
       ${isAdmin()?`<button class="acct-item ${active==='users'?'active':''}" onclick="go('#/users')">${ic('users')} Users &amp; Roles</button>
       <button class="acct-item ${active==='featured'?'active':''}" onclick="go('#/featured')">${ic('star')} Featured Resources</button>
-      <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>
+      <button class="acct-item ${active==='settings'?'active':''}" onclick="go('#/settings')">${ic('settings')} Settings</button>`:''}
       <div class="acct-h">Storage</div>
       <button class="acct-item ${active==='archive'?'active':''}" onclick="go('#/archive')">${ic('archive')} Archive</button>
-      <button class="acct-item ${active==='trash'?'active':''}" onclick="go('#/trash')">${ic('trash-2')} Trash</button>`:''}
+      <button class="acct-item ${active==='trash'?'active':''}" onclick="go('#/trash')">${ic('trash-2')} Trash</button>
     </nav></aside>
     <div class="acct-main">${body}</div>
   </div></main>` + footer();
@@ -6387,7 +6420,10 @@ function urDelete(kind, idx){
 /* ============================================================
    ARCHIVE and TRASH
    ============================================================ */
-function storeFiles(kind){ return kind==='archive' ? ARCHIVE_FILES : TRASH_FILES; }
+function storeFiles(kind){
+  if(!isAdmin()) return kind==='archive' ? MY_ARCHIVE : MY_TRASH;
+  return kind==='archive' ? ARCHIVE_FILES : TRASH_FILES;
+}
 function storeExt(name){ const m=(name||'').split('.').pop().toLowerCase();
   return m==='xlsx'||m==='csv' ? 'sheet' : m==='pdf' ? 'pdf' : 'doc'; }
 function storePager(kind, total){
@@ -6424,8 +6460,9 @@ function storeTable(kind){
   const all = storeFiles(kind), p = storePager(kind, all.length);
   const rows = all.slice((p.page-1)*p.rows, p.page*p.rows);
   const when = kind==='archive' ? 'Archived On' : 'Trashed On';
+  const col2 = isAdmin() ? 'Department' : 'Resource System';
   return `<div class="scrollx settable"><table class="admin">
-    <thead><tr><th>File Name</th><th>Department</th><th>${when}</th><th class="ta-r">Actions</th></tr></thead>
+    <thead><tr><th>File Name</th><th>${col2}</th><th>${when}</th><th class="ta-r">Actions</th></tr></thead>
     <tbody>${rows.length?rows.map(f=>`<tr>
       <td><div class="st-file">
         <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
@@ -6455,22 +6492,25 @@ function storeRestore(kind, name){
   toast("Restored — "+name);
 }
 screens.archive = () => {
-  if(!isAdmin()) return gateScreen("Archive","Sign in as the Platform Super Admin to see archived documents.");
+  if(!isRegistered()) return gateScreen("Archive","Sign in to see your archived documents.");
   return accountShell('archive', `
     <div class="acct-head"><div>
       <h1 class="acct-title">Archive</h1>
-      <p class="acct-sub" style="margin:0">Documents moved out of circulation after
-        ${SETTINGS.archiveDays} days without a view, edit or download. Restore one to bring it back.</p>
+      <p class="acct-sub" style="margin:0">${isAdmin()
+        ? `Documents moved out of circulation after ${SETTINGS.archiveDays} days without a view, edit or download. Restore one to bring it back.`
+        : `Your documents, moved out of circulation after ${SETTINGS.archiveDays} days without a view, edit or download. Restore one to bring it back.`}</p>
     </div></div>
     ${storeTable('archive')}
   `);
 };
 screens.trash = () => {
-  if(!isAdmin()) return gateScreen("Trash","Sign in as the Platform Super Admin to see deleted documents.");
+  if(!isRegistered()) return gateScreen("Trash","Sign in to see the documents you have deleted.");
   return accountShell('trash', `
     <div class="acct-head"><div>
       <h1 class="acct-title">Trash</h1>
-      <p class="acct-sub" style="margin:0">Deleted documents, kept so they can be restored.</p>
+      <p class="acct-sub" style="margin:0">${isAdmin()
+        ? 'Deleted documents, kept so they can be restored.'
+        : 'Documents you have deleted, kept so you can restore them.'}</p>
     </div></div>
     ${storeTable('trash')}
   `);

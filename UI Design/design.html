@@ -2601,7 +2601,6 @@ table.admin th:last-child,table.admin td:last-child,
 <div class="overlay" id="ov-file"><div class="modal" id="pn-file" style="width:min(34rem,100%)"></div></div>
 <div class="overlay" id="ov-confirm"><div class="modal" id="pn-confirm" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-reason"><div class="modal" id="pn-reason" style="width:min(32rem,100%);max-height:86vh;overflow:auto"></div></div>
-<div class="overlay" id="ov-docs"><div class="modal" id="pn-docs" style="width:min(30rem,100%)"></div></div>
 <div class="overlay" id="ov-img"><div class="modal" id="pn-img"></div></div>
 <div class="overlay" id="ov-upl"><div class="modal" id="pn-upl" style="width:min(38rem,100%)"></div></div>
 <div class="overlay" id="ov-bulk"><div class="modal" id="pn-bulk" style="width:min(42rem,100%);max-height:88vh;overflow:auto"></div></div>
@@ -2689,6 +2688,8 @@ const SYSTEMS = {
     outcome:"Secure community forest rights, functioning institutions, and restored, sustainably managed forests.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
   pastureland:{id:"pastureland", kind:"system", name:"Pasture Commons", icon:"wheat", accent:"pastureland", img:"assets/img/pastureland.jpg",
+    processImg:"assets/img/process-pastureland.jpg",
+    processAlt:"Commoning of pasturelands — six key process steps, from facilitating formation of the institution through to implementation of interventions, each with what it involves",
     blurb:"Pasture Commons, or village grazing lands, are areas designated for communal use by local communities for grazing livestock.",
     desc:"Pasture Commons, or village grazing lands, are areas designated for communal use by local communities for grazing livestock. This traditional system of shared resource management has been practiced for centuries across various parts of the world, particularly among pastoral and agro-pastoral communities reliant on livestock for sustenance and income. Rooted in the principle that resources like grazing land are more effectively managed through collective action, Pasture Commons rely on shared rules of use to ensure equitable access, prevent overexploitation, and sustain long-term viability. They remain vital to pastoral livelihoods, providing essential fodder and water, especially during scarcity or seasonal migration.",
     users:"Facilitators, field practitioners, learners and community institutions working on pasturelands.",
@@ -4422,12 +4423,11 @@ screens.system = (params) => {
     pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s), "centred") +
 
     (isTheme ? "" : section(sechead(null,"Commoning Pathway / Process",
-        "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +
-      pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`}) +
-      `<div class="row" style="margin-top:1.75rem">
-        <button class="btn btn-outline sm" onclick="openProcessDocs('${s.id}')"
-          title="Process documents for ${STATES.join(', ')}">${ic('file-text')} Process documents</button>
-      </div>`, "tight band")) +
+        s.processImg ? null
+          : "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +
+      (s.processImg ? infographic(s.processImg, s.processAlt)
+                    : pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`})) +
+      "", "tight band headmid")) +
 
     section(sechead(null,"Choose How You Want to Learn",
       "The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.") +
@@ -7684,25 +7684,6 @@ function openContact(){
 function closeContact(){ closeOverlay('ov-contact'); }
 
 /* the process document is written per state, so the CTA asks which one first */
-function stateSlug(st){ return st.toLowerCase().replace(/\s+/g,"-"); }
-function openProcessDocs(sysId){
-  const s = SYSTEMS[sysId] || entityById(sysId); if(!s) return;
-  document.getElementById('pn-docs').innerHTML =
-    modalHead("Process Documents",
-      `Choose a state to open the ${s.name} process document written for it.`, "closeProcessDocs()") +
-    `<p class="kicker" style="margin:.25rem 0 .8rem">States covered</p>
-     <div class="statelist">${STATES.map(st=>`
-       <a class="state-row" href="assets/docs/process-${sysId}-${stateSlug(st)}.pdf"
-          target="_blank" rel="noopener" onclick="closeProcessDocs()">
-         <span class="state-ic">${ic('map-pin')}</span>
-         <span class="state-tx"><b>${st}</b><span>Six stages · steps, roles and local formats</span></span>
-         <span class="state-pdf">PDF</span>
-         <span class="state-go">${ic('arrow-right')}</span>
-       </a>`).join("")}</div>
-     <p class="hint" style="margin-top:.9rem">${ic('external-link')} Each document opens in a new tab.</p>`;
-  openOverlay('ov-docs');
-}
-function closeProcessDocs(){ closeOverlay('ov-docs'); }
 /* the whole course index as a matrix — one column per topic heading */
 const INDEX_TINTS = [
   {bg:"#d5d2b6", ink:"#3b3531", key:"#8b8660"},   // khaki

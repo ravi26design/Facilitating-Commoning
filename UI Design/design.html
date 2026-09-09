@@ -1768,6 +1768,10 @@ main{min-height:60vh;animation:fade .3s ease}
 /* the standfirst sits under the title */
 .ehero .ph-lead{min-width:0}
 .ehero .ph-sub{margin:.85rem 0 0;font-size:1.02rem;line-height:1.65;color:var(--muted);max-width:44rem}
+/* a page head with nothing beside it reads better centred */
+.ehero.page.centred .in{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+.ehero.page.centred .ph-lead{max-width:56rem}
+.ehero.page.centred .ph-sub{margin-left:auto;margin-right:auto}
 /* the actions sit level with the title, hard right */
 .ehero .stand>.row:first-child{margin-top:.35rem;justify-content:flex-end}
 @media(max-width:900px){.ehero .stand>.row:first-child{justify-content:flex-start}}
@@ -3529,9 +3533,9 @@ function shell(active, crumbItems, body){
 /* page head — the same editorial hero the home page uses: title left,
    standfirst and any actions right. `kicker` is an optional small label
    above the title; `tc` sets the accent colour for a system or theme. */
-function pagehead(_kicker, title, sub, right, tc){
+function pagehead(_kicker, title, sub, right, tc, cls){
   const bare = (!sub && !right) ? " bare" : "";
-  return `<div class="ehero page${bare}"${tc?` style="${tc}"`:''}><div class="in">
+  return `<div class="ehero page${bare}${cls?' '+cls:''}"${tc?` style="${tc}"`:''}><div class="in">
     <div class="ph-lead">
       <h1>${title}</h1>
       ${sub?`<p class="ph-sub">${sub}</p>`:''}
@@ -4152,7 +4156,8 @@ screens.commoning = () => shell("#/commoning", null,
 /* ---------- LEARNING APPROACH ---------- */
 screens["learning-approach"] = () => shell("#/learning-approach", null,
   pagehead("Capacity building", "Learning Approach &amp; <em>Design</em>",
-    "Facilitating commoning is built and strengthened through an ongoing process of learning, field application, reflection, and continued support. The learning processes, therefore, extend beyond information transfer to foster lasting changes in knowledge, skills, attitudes, practices, and relationships.") +
+    "Facilitating commoning is built and strengthened through an ongoing process of learning, field application, reflection, and continued support. The learning processes, therefore, extend beyond information transfer to foster lasting changes in knowledge, skills, attitudes, practices, and relationships.",
+    null, null, "centred") +
 
   /* ---- translating learning into action: the text sits around the graphic ---- */
   section(sechead(null,"Translating Learning into Action", null) +

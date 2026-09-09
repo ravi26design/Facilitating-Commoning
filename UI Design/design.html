@@ -2736,16 +2736,16 @@ function seedTopicMeta(){
 const TOPIC_LANGS  = ["All Languages","Hindi","English","Telugu","Kannada","Odia","Marathi"];
 
 const THEMES = {
-  map:{id:"map", kind:"theme", name:"Multi-Actor Platforms", icon:"network", accent:"map", img:"assets/img/theme-map.jpg",
-    desc:"Convening and aligning multiple stakeholders around shared commons goals.",
+  map:{id:"map", kind:"theme", name:"Multi-Actor Platforms and Processes", icon:"network", accent:"map", img:"assets/img/theme-map.jpg",
+    desc:"Multi-actor platforms and processes bring diverse stakeholders together to understand shared challenges, negotiate differing interests, and coordinate collective action.",
     users:"Facilitators, partners and institutions coordinating across actors.",
     outcome:"Aligned stakeholders and shared plans that advance commoning."},
   leo:{id:"leo", kind:"theme", name:"Local Economic Opportunities", icon:"hand-coins", accent:"leo", img:"assets/img/theme-leo.jpg",
-    desc:"Livelihoods and value from the sustainable use of the commons.",
+    desc:"Local economic opportunities build livelihoods around locally available natural resources, knowledge, skills, and production systems.",
     users:"Community enterprises, facilitators and livelihood practitioners.",
     outcome:"Sustainable livelihoods anchored in the commons."},
-  agri:{id:"agri", kind:"theme", name:"Sustainable Agriculture Practices", icon:"leaf", accent:"agri", img:"assets/img/theme-agri.jpg",
-    desc:"Practices that sustain soil, water and productivity over the long term.",
+  agri:{id:"agri", kind:"theme", name:"Sustainable Agriculture", icon:"leaf", accent:"agri", img:"assets/img/theme-agri.jpg",
+    desc:"Sustainable agriculture promotes farming practices that conserve soil, water, and biodiversity while strengthening farmers’ livelihoods and resilience.",
     users:"Farmers, facilitators and field practitioners.",
     outcome:"Practices that sustain soil, water and long-term productivity."}
 };
@@ -2755,8 +2755,8 @@ function accentOf(e){ return e && e.accent ? e.accent : "map"; }
 function accentVar(e){ return "--tc:var(--s-"+accentOf(e)+")"; }
 /* the accent for a system or theme referred to by name */
 const NAME_ACCENT = {"Forest Commons":"forests","Pasture Commons":"pastureland","Water Commons":"water",
-  "Multi-Actor Platforms":"map","Local Economic Opportunities":"leo",
-  "Sustainable Agriculture Practices":"agri"};
+  "Multi-Actor Platforms and Processes":"map","Local Economic Opportunities":"leo",
+  "Sustainable Agriculture":"agri"};
 /* a metadata tag, tinted by what it represents rather than all one grey */
 /* every piece of metadata reads as the same kind of chip */
 function metaTag(value){ return `<span class="mtag">${value}</span>`; }
@@ -3049,9 +3049,9 @@ const RES = [
   {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pasture Commons", stage:"Plan", learner:"Trainer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Odisha", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pasture Commons", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Rajasthan", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pasture Commons", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms", stage:"", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms and Processes", stage:"", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"leo-course", title:"Livelihoods from the Commons", purpose:"Atomised topics on building local economic opportunities from the commons.", system:"Local Economic Opportunities", stage:"", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture Practices", stage:"", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
+  {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture", stage:"", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
 ];
 function resById(id){ return RES.find(r=>r.id===id); }
 function resFor(name, group){
@@ -3256,7 +3256,7 @@ const COURSES = [
       {name:"Monitoring indicators", type:"Image"},{name:"Stewardship handbook", type:"PDF"}
     ]}
   ]},
-  {id:"map-course", title:"Facilitating Multi-Actor Platforms", system:"Multi-Actor Platforms", lang:"English", topics:[
+  {id:"map-course", title:"Facilitating Multi-Actor Platforms", system:"Multi-Actor Platforms and Processes", lang:"English", topics:[
     {id:"convene", name:"Convening Stakeholders", files:[
       {name:"Convening guide", type:"PDF"},{name:"Stakeholder mapping", type:"Image"}
     ]},
@@ -3272,7 +3272,7 @@ const COURSES = [
       {name:"Enterprise basics", type:"Video"},{name:"Business format", type:"PDF"}
     ]}
   ]},
-  {id:"agri-course-c", title:"Sustainable Agriculture Practices", system:"Sustainable Agriculture Practices", lang:"Hindi", topics:[
+  {id:"agri-course-c", title:"Sustainable Agriculture Practices", system:"Sustainable Agriculture", lang:"Hindi", topics:[
     {id:"soil", name:"Soil &amp; Water", files:[
       {name:"Soil health guide", type:"PDF"},{name:"Practice demonstration", type:"Video"}
     ]},
@@ -3871,7 +3871,7 @@ const META = [
 ];
 const metaLabel = k => (META.find(m=>m.key===k)||{}).label || k;
 
-const SYSTEM_OPTS  = ["Pasture Commons","Forest Commons","Water Commons","Multi-Actor Platform","Local Economic Opportunities","Sustainable Agriculture"];
+const SYSTEM_OPTS  = ["Pasture Commons","Forest Commons","Water Commons","Multi-Actor Platforms and Processes","Local Economic Opportunities","Sustainable Agriculture"];
 const STATE_OPTS   = ["Andhra Pradesh","Chhattisgarh","Gujarat","Karnataka","Maharashtra","Odisha","Rajasthan"];
 const DESIGN_OPTS  = ["Atomised Course (Low Dose High Frequency)","Modular Learning","Supporting Resources"];
 const LEARNER_OPTS = ["First Mile/ Doer","Trainer"];

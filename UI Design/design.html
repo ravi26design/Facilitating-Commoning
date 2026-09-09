@@ -2682,20 +2682,20 @@ const STAGES = [
 function stageById(id){ return STAGES.find(s=>s.id===id); }
 
 const SYSTEMS = {
-  forests:{id:"forests", kind:"system", name:"Forests", icon:"trees", accent:"forests", img:"assets/img/forests.jpg",
-    blurb:"Community rights, institutions, collective governance, conservation and sustainable management.",
+  forests:{id:"forests", kind:"system", name:"Forest Commons", icon:"trees", accent:"forests", img:"assets/img/forests.jpg",
+    blurb:"Forests are vital natural resources, providing various ecological, economic, and cultural benefits to communities worldwide. The concept of Forest Commons, refers to the collective use and management of forest resources by local communities",
     desc:"Forest commons are held and used collectively, so the work begins with rights — helping a community understand what the law recognises and prepare the claims that secure it. From there the focus turns to institutions: a Gram Sabha or forest rights committee that can hold decisions, keep records and speak for the village. With rights and governance in place, communities plan how the forest is used and restored — which patches to protect, which to harvest, and how to monitor what changes over the seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on forest commons.",
     outcome:"Secure community forest rights, functioning institutions, and restored, sustainably managed forests.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
-  pastureland:{id:"pastureland", kind:"system", name:"Pastureland", icon:"wheat", accent:"pastureland", img:"assets/img/pastureland.jpg",
-    blurb:"Community institutions, tenure/recognition, collective rules, restoration and sustainable use.",
+  pastureland:{id:"pastureland", kind:"system", name:"Pasture Commons", icon:"wheat", accent:"pastureland", img:"assets/img/pastureland.jpg",
+    blurb:"Pasture Commons, or village grazing lands, are areas designated for communal use by local communities for grazing livestock.",
     desc:"Pasturelands are shared grazing grounds, and they hold up only when a community agrees how to use them. The work starts by mapping who grazes where and what the land can carry, then builds the institution that can hold those decisions and secure recognition of tenure. Once rules on grazing, rotation and fodder are set collectively, the same group plans restoration, tracks how the ground recovers, and adapts the rules as the commons changes.",
     users:"Facilitators, field practitioners, learners and community institutions working on pasturelands.",
     outcome:"Recognised tenure, functioning institutions, and restored, sustainably managed grazing commons.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
-  water:{id:"water", kind:"system", name:"Water", icon:"droplets", accent:"water", img:"assets/img/water.jpg",
-    blurb:"Collective institutions, equitable access, planning, management and stewardship.",
+  water:{id:"water", kind:"system", name:"Water Commons", icon:"droplets", accent:"water", img:"assets/img/water.jpg",
+    blurb:"Water Commons refer to shared water resources such as rivers, ponds, tanks, wetlands, and groundwater aquifers, collectively accessed, managed, and governed by local communities.",
     desc:"Water is the commons where a decision upstream is felt downstream, so equitable access is the first question. The work begins by reading the watershed with the community — springs, tanks, recharge and draw — and forming the institution that can hold those decisions across hamlets. From there the group plans allocation and use, maintains the structures it depends on, and monitors the resource so stewardship carries on between seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on water commons.",
     outcome:"Equitable access, functioning institutions, and sustainably managed and stewarded water systems.",
@@ -2754,7 +2754,7 @@ function entityById(id){ return SYSTEMS[id] || THEMES[id]; }
 function accentOf(e){ return e && e.accent ? e.accent : "map"; }
 function accentVar(e){ return "--tc:var(--s-"+accentOf(e)+")"; }
 /* the accent for a system or theme referred to by name */
-const NAME_ACCENT = {"Forests":"forests","Pastureland":"pastureland","Water":"water",
+const NAME_ACCENT = {"Forest Commons":"forests","Pasture Commons":"pastureland","Water Commons":"water",
   "Multi-Actor Platforms":"map","Local Economic Opportunities":"leo",
   "Sustainable Agriculture Practices":"agri"};
 /* a metadata tag, tinted by what it represents rather than all one grey */
@@ -2796,11 +2796,11 @@ const JOURNEY5 = [
 
 /* Commoning in Action — field stories */
 const STORIES = [
-  {id:"gram-sabha-forest", title:"How a Gram Sabha strengthened governance of its Forest Commons", system:"Forests", sys:"forests", stage:"Build Institutions", img:"assets/img/story-gram-sabha-forest.jpg",
+  {id:"gram-sabha-forest", title:"How a Gram Sabha strengthened governance of its Forest Commons", system:"Forest Commons", sys:"forests", stage:"Build Institutions", img:"assets/img/story-gram-sabha-forest.jpg",
    excerpt:"A village institution took charge of collective decisions and rules for its forest."},
-  {id:"pasture-rules", title:"How communities developed rules for managing pasturelands", system:"Pastureland", sys:"pastureland", stage:"Plan", img:"assets/img/story-pasture-rules.jpg",
+  {id:"pasture-rules", title:"How communities developed rules for managing pasturelands", system:"Pasture Commons", sys:"pastureland", stage:"Plan", img:"assets/img/story-pasture-rules.jpg",
    excerpt:"Herders agreed shared grazing rules and a seasonal rest cycle for the common pasture."},
-  {id:"water-access", title:"How a hamlet secured equitable access to a shared water source", system:"Water", sys:"water", stage:"Secure Tenure", img:"assets/img/story-water-access.jpg",
+  {id:"water-access", title:"How a hamlet secured equitable access to a shared water source", system:"Water Commons", sys:"water", stage:"Secure Tenure", img:"assets/img/story-water-access.jpg",
    excerpt:"Households negotiated fair access and a stewardship rota for the common water system."}
 ];
 function storyById(id){ return STORIES.find(s=>s.id===id); }
@@ -2923,15 +2923,15 @@ const TRASH_FILES = [
 ];
 /* a contributor sees their own documents here, not the whole repository's */
 const MY_ARCHIVE = [
-  {n:"Pasture_rules_draft_v1.pdf",            dept:"Pastureland", on:"14 Feb 2026"},
-  {n:"Village_meeting_notes_Jan2026.pdf",     dept:"Forest",      on:"02 Feb 2026"},
-  {n:"Water_budget_worksheet_old.xlsx",       dept:"Water",       on:"19 Jan 2026"},
-  {n:"Fodder_plot_photos_2025.pdf",           dept:"Pastureland", on:"08 Dec 2025"}
+  {n:"Pasture_rules_draft_v1.pdf",            dept:"Pasture Commons", on:"14 Feb 2026"},
+  {n:"Village_meeting_notes_Jan2026.pdf",     dept:"Forest Commons",      on:"02 Feb 2026"},
+  {n:"Water_budget_worksheet_old.xlsx",       dept:"Water Commons",       on:"19 Jan 2026"},
+  {n:"Fodder_plot_photos_2025.pdf",           dept:"Pasture Commons", on:"08 Dec 2025"}
 ];
 const MY_TRASH = [
-  {n:"Grazing_calendar_rough_draft.pdf",      dept:"Pastureland", on:"21 Aug 2026"},
-  {n:"Springshed_walkthrough_take1.pdf",      dept:"Water",       on:"12 Aug 2026"},
-  {n:"Untitled_field_notes.pdf",              dept:"Forest",      on:"03 Aug 2026"}
+  {n:"Grazing_calendar_rough_draft.pdf",      dept:"Pasture Commons", on:"21 Aug 2026"},
+  {n:"Springshed_walkthrough_take1.pdf",      dept:"Water Commons",       on:"12 Aug 2026"},
+  {n:"Untitled_field_notes.pdf",              dept:"Forest Commons",      on:"03 Aug 2026"}
 ];
 const STORE_PAGE = {archive:1, trash:1};
 const STORE_ROWS = {archive:10, trash:10};
@@ -3014,41 +3014,41 @@ let FEAT_SLOTS = 1;      // how many free slots that picker is filling
 
 const RES = [
   {id:"facilitator-guide", title:"Facilitator Guide for Commoning", purpose:"End-to-end guide to facilitate the Commoning process with a community.", system:"All Systems", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"cfr-claim", title:"CFR Claim Process", purpose:"Step-by-step course on preparing and filing a CFR claim.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"ifr-module", title:"IFR Claim Process", purpose:"Modular training on the Individual Forest Rights claim process.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"fra-history", title:"Background and History of FRA", purpose:"Short video on the background and history of the Forest Rights Act.", system:"Forest", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Maharashtra", group:"atomized", lang:"English", version:"v1.0 · 2026", attribution:"Contributed by a partner organisation"},
-  {id:"what-is-tenure", title:"What is Tenurial Security?", purpose:"Atomised topic explaining why secure tenure matters and forms of recognition.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"gram-sabha-atom", title:"Role of the Gram Sabha", purpose:"Atomised topic on the powers and duties of the Gram Sabha.", system:"Forest", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"tenure-claim-tool", title:"Community Rights Claim Toolkit", purpose:"Field tool to prepare and file a community rights claim.", system:"Forest", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"fra-handbook", title:"FRA Facilitators' Handbook", purpose:"Reference handbook and SoPs for facilitators working on forest rights.", system:"Forest", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-course", title:"Community Forest Resource Rights", purpose:"Course on claiming and governing Community Forest Resource rights.", system:"Forest Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"cfr-claim", title:"CFR Claim Process", purpose:"Step-by-step course on preparing and filing a CFR claim.", system:"Forest Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"ifr-module", title:"IFR Claim Process", purpose:"Modular training on the Individual Forest Rights claim process.", system:"Forest Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-history", title:"Background and History of FRA", purpose:"Short video on the background and history of the Forest Rights Act.", system:"Forest Commons", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Maharashtra", group:"atomized", lang:"English", version:"v1.0 · 2026", attribution:"Contributed by a partner organisation"},
+  {id:"what-is-tenure", title:"What is Tenurial Security?", purpose:"Atomised topic explaining why secure tenure matters and forms of recognition.", system:"Forest Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"gram-sabha-atom", title:"Role of the Gram Sabha", purpose:"Atomised topic on the powers and duties of the Gram Sabha.", system:"Forest Commons", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"tenure-claim-tool", title:"Community Rights Claim Toolkit", purpose:"Field tool to prepare and file a community rights claim.", system:"Forest Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"fra-handbook", title:"FRA Facilitators' Handbook", purpose:"Reference handbook and SoPs for facilitators working on forest rights.", system:"Forest Commons", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"context-mapping", title:"Context Mapping Worksheet", purpose:"Worksheet to map the resource, community and existing institutions.", system:"All Systems", stage:"Understand Context", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Gujarat", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"institution-basics", title:"Building Community Institutions", purpose:"Modular course on forming a legitimate, inclusive community institution.", system:"All Systems", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water", stage:"Plan", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-intro-video", title:"Introduction to Water Commons", purpose:"Short video introducing community-managed water commons.", system:"Water", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-access-atom", title:"Equitable Access — Key Ideas", purpose:"Atomised topic on equitable access to shared water sources.", system:"Water", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-stewardship-audio", title:"Water Stewardship — Audio Guide", purpose:"Audio guide on day-to-day stewardship of water systems.", system:"Water", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-institutions", title:"Water User Institutions", purpose:"Course on forming and running water user institutions.", system:"Water", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"w-planning-module", title:"Water Management Planning", purpose:"Module on preparing a collective water management plan.", system:"Water", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-handbook", title:"Water Stewardship Handbook", purpose:"Reference handbook for community water stewardship.", system:"Water", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-monitoring-format", title:"Water Monitoring Format", purpose:"Editable format to track water access and system health.", system:"Water", stage:"Monitor & Adapt", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"w-facil-guide", title:"Water Facilitators' Guide", purpose:"Facilitators' guide for running water commoning sessions.", system:"Water", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Odisha", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pastureland", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Rajasthan", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pastureland", stage:"All Stages", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Andhra Pradesh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Chhattisgarh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-audio", title:"Grazing Rules — Audio Guide", purpose:"Audio guide on developing collective grazing rules.", system:"Pastureland", stage:"Plan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"pasture-pdf", title:"Pastureland Restoration Handbook", purpose:"Downloadable PDF handbook for pastureland restoration.", system:"Pastureland", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-legal-framework", title:"Legal Framework for Pasture Commons", purpose:"Course on the laws and rights governing pastureland commons.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rights-history", title:"History of Grazing Rights", purpose:"Video on the history and evolution of community grazing rights.", system:"Pastureland", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-tenure-defs", title:"Key Definitions — Pasture Tenure", purpose:"Atomised topic covering key tenure definitions for pasturelands.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rights-audio", title:"Pasture Rights — Audio Explainer", purpose:"Short audio explainer on pastureland rights and recognition.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-committee", title:"Forming a Pasture Management Committee", purpose:"Course on setting up an inclusive pasture management committee.", system:"Pastureland", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-gramsabha", title:"Gram Sabha in Pasture Governance", purpose:"Atomised topic on the Gram Sabha's role in pasture governance.", system:"Pastureland", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-claim-module", title:"Claiming Pastureland Rights", purpose:"Training module on preparing and filing pastureland rights claims.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-evidence-pdf", title:"Evidence & Documentation for Pasture Claims", purpose:"PDF checklist and formats for pasture claim documentation.", system:"Pastureland", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pastureland", stage:"Plan", learner:"Trainer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Odisha", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
-  {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pastureland", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Rajasthan", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
-  {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pastureland", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"water-access-plan", title:"Equitable Water Access Planning", purpose:"Plan fair access and stewardship rules for a shared water system.", system:"Water Commons", stage:"Plan", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-intro-video", title:"Introduction to Water Commons", purpose:"Short video introducing community-managed water commons.", system:"Water Commons", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-access-atom", title:"Equitable Access — Key Ideas", purpose:"Atomised topic on equitable access to shared water sources.", system:"Water Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-stewardship-audio", title:"Water Stewardship — Audio Guide", purpose:"Audio guide on day-to-day stewardship of water systems.", system:"Water Commons", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-institutions", title:"Water User Institutions", purpose:"Course on forming and running water user institutions.", system:"Water Commons", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"w-planning-module", title:"Water Management Planning", purpose:"Module on preparing a collective water management plan.", system:"Water Commons", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Gujarat", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-handbook", title:"Water Stewardship Handbook", purpose:"Reference handbook for community water stewardship.", system:"Water Commons", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Handbook", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-monitoring-format", title:"Water Monitoring Format", purpose:"Editable format to track water access and system health.", system:"Water Commons", stage:"Monitor & Adapt", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"w-facil-guide", title:"Water Facilitators' Guide", purpose:"Facilitators' guide for running water commoning sessions.", system:"Water Commons", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Odisha", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"restoration-field", title:"Pasture Restoration Field Protocol", purpose:"Field protocol (SoP) for community-led pastureland restoration works.", system:"Pasture Commons", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Rajasthan", group:"supporting", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-course", title:"Commoning of Pasturelands — Course", purpose:"Modular course on the commoning of pasturelands.", system:"Pasture Commons", stage:"All Stages", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Andhra Pradesh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-video", title:"Commoning of Pasturelands — Overview", purpose:"Short video introducing the commoning of pasturelands.", system:"Pasture Commons", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Chhattisgarh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-audio", title:"Grazing Rules — Audio Guide", purpose:"Audio guide on developing collective grazing rules.", system:"Pasture Commons", stage:"Plan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"pasture-pdf", title:"Pastureland Restoration Handbook", purpose:"Downloadable PDF handbook for pastureland restoration.", system:"Pasture Commons", stage:"Restore & Manage", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Karnataka", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-legal-framework", title:"Legal Framework for Pasture Commons", purpose:"Course on the laws and rights governing pastureland commons.", system:"Pasture Commons", stage:"Understand Context", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Maharashtra", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-history", title:"History of Grazing Rights", purpose:"Video on the history and evolution of community grazing rights.", system:"Pasture Commons", stage:"Understand Context", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Video", state:"Odisha", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-tenure-defs", title:"Key Definitions — Pasture Tenure", purpose:"Atomised topic covering key tenure definitions for pasturelands.", system:"Pasture Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Rajasthan", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rights-audio", title:"Pasture Rights — Audio Explainer", purpose:"Short audio explainer on pastureland rights and recognition.", system:"Pasture Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"Audio", state:"Andhra Pradesh", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-committee", title:"Forming a Pasture Management Committee", purpose:"Course on setting up an inclusive pasture management committee.", system:"Pasture Commons", stage:"Build Institutions", learner:"Trainer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Chhattisgarh", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-gramsabha", title:"Gram Sabha in Pasture Governance", purpose:"Atomised topic on the Gram Sabha's role in pasture governance.", system:"Pasture Commons", stage:"Build Institutions", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-claim-module", title:"Claiming Pastureland Rights", purpose:"Training module on preparing and filing pastureland rights claims.", system:"Pasture Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-evidence-pdf", title:"Evidence & Documentation for Pasture Claims", purpose:"PDF checklist and formats for pasture claim documentation.", system:"Pasture Commons", stage:"Secure Tenure", learner:"First Mile/ Doer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Maharashtra", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-grazing-plan", title:"Grazing Plan Template", purpose:"Editable format to develop a collective grazing plan.", system:"Pasture Commons", stage:"Plan", learner:"Trainer", design:"Supporting Resources", type:"Manual", format:"PDF", state:"Odisha", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
+  {id:"p-rest-cycle", title:"Seasonal Rest Cycle Planning", purpose:"Module on planning seasonal rest cycles for grazing commons.", system:"Pasture Commons", stage:"Plan", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Rajasthan", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
+  {id:"p-facil-guide", title:"Pasture Facilitators' Guide", purpose:"Facilitators' guide for running pastureland commoning sessions.", system:"Pasture Commons", stage:"All Stages", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Andhra Pradesh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"map-guide", title:"Running a Multi-Actor Platform", purpose:"Guide to convening and sustaining a multi-actor platform.", system:"Multi-Actor Platforms", stage:"", learner:"Trainer", design:"Supporting Resources", type:"Guide", format:"PDF", state:"Chhattisgarh", group:"supporting", lang:"English", version:"v1.0 · 2026", attribution:""},
   {id:"leo-course", title:"Livelihoods from the Commons", purpose:"Atomised topics on building local economic opportunities from the commons.", system:"Local Economic Opportunities", stage:"", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)", type:"Atomised Content", format:"PDF", state:"Gujarat", group:"atomized", lang:"Hindi", version:"v1.0 · 2026", attribution:""},
   {id:"agri-course", title:"Sustainable Agriculture Practices — Modules", purpose:"Modular training on soil, water and productivity practices.", system:"Sustainable Agriculture Practices", stage:"", learner:"First Mile/ Doer", design:"Modular Learning", type:"Training Module", format:"PDF", state:"Karnataka", group:"modular", lang:"Hindi", version:"v1.0 · 2026", attribution:""}
@@ -3191,7 +3191,7 @@ const CURRICULUM = [
   ]}
 ];
 const COURSES = [
-  {id:"cfr", title:"Community Forest Resource Rights", system:"Forests", lang:"Hindi", topics:[
+  {id:"cfr", title:"Community Forest Resource Rights", system:"Forest Commons", lang:"Hindi", topics:[
     {id:"intro", name:"Introduction to CFR", files:[
       {name:"CFR overview", type:"PDF"},{name:"What is CFR — intro video", type:"Video"},{name:"CFR concept map", type:"Image"}
     ]},
@@ -3205,7 +3205,7 @@ const COURSES = [
       {name:"Gram Sabha roles &amp; duties", type:"PDF"},{name:"Gram Sabha meeting", type:"Image"}
     ]}
   ]},
-  {id:"pasture", title:"Commoning of Pasturelands", system:"Pastureland", lang:"Hindi", topics:[
+  {id:"pasture", title:"Commoning of Pasturelands", system:"Pasture Commons", lang:"Hindi", topics:[
     {id:"intro", name:"Introduction to Pasture Commons", files:[
       {name:"Pasture commons overview", type:"PDF"},{name:"Overview video", type:"Video"}
     ]},
@@ -3216,7 +3216,7 @@ const COURSES = [
       {name:"Restoration protocol", type:"PDF"},{name:"Before / after restoration", type:"Image"}
     ]}
   ]},
-  {id:"water", title:"Equitable Water Stewardship", system:"Water", lang:"English", topics:[
+  {id:"water", title:"Equitable Water Stewardship", system:"Water Commons", lang:"English", topics:[
     {id:"access", name:"Equitable Access", files:[
       {name:"Access planning guide", type:"PDF"},{name:"Access explainer", type:"Video"}
     ]},
@@ -3232,7 +3232,7 @@ const COURSES = [
       {name:"Model bylaws", type:"PDF"},{name:"Governance diagram", type:"Image"}
     ]}
   ]},
-  {id:"tenure", title:"Securing Tenure &amp; Recognition", system:"Forests", lang:"English", topics:[
+  {id:"tenure", title:"Securing Tenure &amp; Recognition", system:"Forest Commons", lang:"English", topics:[
     {id:"why", name:"Why Tenure Matters", files:[
       {name:"Tenure security explainer", type:"Video"},{name:"Forms of recognition", type:"PDF"}
     ]},
@@ -3240,7 +3240,7 @@ const COURSES = [
       {name:"Evidence checklist", type:"PDF"},{name:"Sample records", type:"Image"},{name:"Documentation walkthrough", type:"Video"}
     ]}
   ]},
-  {id:"restoration", title:"Ecological Restoration Practices", system:"Pastureland", lang:"Hindi", topics:[
+  {id:"restoration", title:"Ecological Restoration Practices", system:"Pasture Commons", lang:"Hindi", topics:[
     {id:"assess", name:"Assessing the Commons", files:[
       {name:"Assessment format", type:"PDF"},{name:"Field survey photos", type:"Image"}
     ]},
@@ -3248,7 +3248,7 @@ const COURSES = [
       {name:"Restoration protocol", type:"PDF"},{name:"Works demonstration", type:"Video"}
     ]}
   ]},
-  {id:"water-gov", title:"Water Governance &amp; Institutions", system:"Water", lang:"Hindi", topics:[
+  {id:"water-gov", title:"Water Governance &amp; Institutions", system:"Water Commons", lang:"Hindi", topics:[
     {id:"access", name:"Equitable Access", files:[
       {name:"Access planning guide", type:"PDF"},{name:"Access explainer", type:"Video"}
     ]},
@@ -3546,9 +3546,9 @@ function footer(){
         <li onclick="go('#/contribute')">${tr('foot.contribute')}</li>
         <li onclick="openContact()">${tr('foot.contact')}</li></ul></div>
       <div><h5>${tr('foot.systems')}</h5><ul>
-        <li onclick="go('#/system/forests')">Forests</li>
-        <li onclick="go('#/system/pastureland')">Pastureland</li>
-        <li onclick="go('#/system/water')">Water</li>
+        <li onclick="go('#/system/forests')">Forest Commons</li>
+        <li onclick="go('#/system/pastureland')">Pasture Commons</li>
+        <li onclick="go('#/system/water')">Water Commons</li>
         ${THEME_LIST.map(t=>`<li onclick="go('#/system/${t.id}')">${t.name}</li>`).join("")}</ul></div>
     </div>
     <div class="bar">
@@ -3871,7 +3871,7 @@ const META = [
 ];
 const metaLabel = k => (META.find(m=>m.key===k)||{}).label || k;
 
-const SYSTEM_OPTS  = ["Pastureland","Forest","Water","Multi-Actor Platform","Local Economic Opportunities","Sustainable Agriculture"];
+const SYSTEM_OPTS  = ["Pasture Commons","Forest Commons","Water Commons","Multi-Actor Platform","Local Economic Opportunities","Sustainable Agriculture"];
 const STATE_OPTS   = ["Andhra Pradesh","Chhattisgarh","Gujarat","Karnataka","Maharashtra","Odisha","Rajasthan"];
 const DESIGN_OPTS  = ["Atomised Course (Low Dose High Frequency)","Modular Learning","Supporting Resources"];
 const LEARNER_OPTS = ["First Mile/ Doer","Trainer"];
@@ -4402,7 +4402,7 @@ screens["resource-systems"] = () => shell("#/resource-systems", null,
   pagehead("Choose your commons","Resource Systems &amp; <em>Themes</em>", null) +
   section(sechead(null,"Resource Systems", null) +
     `<div class="grid g3">${["pastureland","forests","water"].map(k=>systemCard(SYSTEMS[k])).join("")}</div>`) +
-  section(sechead(null,"Cross-Cutting Themes","Themes that cut across every resource system.",
+  section(sechead(null,"Cross-Cutting Themes", null,
     isAdmin()?`<button class="btn btn-primary sm" onclick="openAddTheme()">${ic('plus')} Add theme</button>`:'') +
     `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band roomy") +
   section(gateway("map","Not Sure Where to Start?",
@@ -4820,7 +4820,7 @@ screens.courses = (params) => {
       <aside class="filterbox">
         <div class="fhead"><h2>${ic('sliders-horizontal')} Filter courses</h2>
           <button class="clearbtn" onclick="clearCourseFilters()">Clear</button></div>
-        <div class="fgroup"><h3>Resource System / Theme</h3>${box("sys",["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]))}</div>
+        <div class="fgroup"><h3>Resource System / Theme</h3>${box("sys",["Forest Commons","Pasture Commons","Water Commons"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]))}</div>
         <div class="fgroup"><h3>Language</h3>${box("lang",["English","Hindi"])}</div>
         <div class="fgroup"><h3>File Type</h3>${box("ftype",["Image","PDF","Video"])}</div>
       </aside>
@@ -5905,7 +5905,7 @@ screens["my-learning"] = () => {
    ADMIN — course wizard
    ============================================================ */
 let courseDraft = null;
-function newDraft(){ return {title:"",banner:"",desc:"",system:"Forests",lang:"English",topics:[],sel:0,step:1,uploadType:"Image"}; }
+function newDraft(){ return {title:"",banner:"",desc:"",system:"Forest Commons",lang:"English",topics:[],sel:0,step:1,uploadType:"Image"}; }
 function ensureDraft(){ if(!courseDraft) courseDraft=newDraft(); return courseDraft; }
 function startCourseFlow(){ courseDraft=newDraft(); go("#/course-new"); }
 function draftSet(f,v){ ensureDraft()[f]=v; }
@@ -5968,7 +5968,7 @@ function publishCourse(){
 screens["course-new"] = () => {
   if(!isAdmin()) return gateScreen("Create Course","Sign in as the Platform Super Admin to create courses.");
   const d = ensureDraft();
-  const sysOptions = ["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]);
+  const sysOptions = ["Forest Commons","Pasture Commons","Water Commons"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]);
   const totalFiles = d.topics.reduce((n,t)=>n+t.files.length,0);
   const editing = !!d.editingId;
   const pageName = editing?"Edit course":"Create a course";
@@ -7266,7 +7266,7 @@ function adminRemoveFile(topicId, subCode, idx){
 
 /* ---- upload / edit a document ---- */
 let docTags=[]; let docEditId=null;
-function docThemeOptions(){ return ["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]); }
+function docThemeOptions(){ return ["Forest Commons","Pasture Commons","Water Commons"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]); }
 function renderDocTags(){
   return docTags.map((t,i)=>`<span class="fchip">${t}<button onclick="removeDocTag(${i})">${ic('x')}</button></span>`).join("");
 }
@@ -7437,11 +7437,11 @@ let subSeq = 0;
 [
   {title:"Grazing calendar for a village pastureland",
    purpose:"A month-by-month calendar a pastureland committee can fill in together.",
-   system:"Pastureland", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
+   system:"Pasture Commons", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
    type:"Manual", format:"PDF", lang:"English", tags:["grazing","calendar"], status:"pending", date:"2026-08-24"},
   {title:"Water budgeting exercise — facilitator notes",
    purpose:"Notes from running a first water budget with a watershed committee.",
-   system:"Water", state:"Chhattisgarh", learner:"Trainer", design:"Atomised Course (Low Dose High Frequency)",
+   system:"Water Commons", state:"Chhattisgarh", learner:"Trainer", design:"Atomised Course (Low Dose High Frequency)",
    type:"Guide", format:"PDF", lang:"English", tags:["water budget"], status:"pending", date:"2026-08-21",
    thread:[
      {by:"Priya Sharma", date:"2026-08-21", at:"10:50 AM",
@@ -7462,11 +7462,11 @@ let subSeq = 0;
    type:"Manual", format:"PDF", lang:"Hindi", tags:["register","institution"], status:"pending", date:"2026-08-19"},
   {title:"Fodder plot demonstration — field video",
    purpose:"A short film of a fodder demonstration plot through one season.",
-   system:"Pastureland", state:"Karnataka", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   system:"Pasture Commons", state:"Karnataka", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
    type:"Atomised Content", format:"Video", lang:"Hindi", tags:["fodder"], status:"pending", date:"2026-08-14"},
   {title:"Forest rights claim — filled sample form",
    purpose:"A completed sample claim to show a committee what a good one looks like.",
-   system:"Forest", state:"Maharashtra", learner:"First Mile/ Doer", design:"Supporting Resources",
+   system:"Forest Commons", state:"Maharashtra", learner:"First Mile/ Doer", design:"Supporting Resources",
    type:"Manual", format:"PDF", lang:"Hindi", tags:["forest rights","claim"], status:"approved", date:"2026-08-11",
    comment:"Clear and reusable — published to the Resource Library.",
    thread:[
@@ -7488,12 +7488,12 @@ let subSeq = 0;
    comment:"Well structured. Published as is."},
   {title:"Springshed mapping walkthrough",
    purpose:"A recorded walkthrough of mapping a springshed with the community.",
-   system:"Water", state:"Rajasthan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   system:"Water Commons", state:"Rajasthan", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
    type:"Atomised Content", format:"Video", lang:"English", tags:["springshed","mapping"], status:"approved", date:"2026-07-28",
    comment:"Good pace and clear visuals."},
   {title:"Common land use plan — Anantapur",
    purpose:"A worked land use plan drawn up with a village committee.",
-   system:"Pastureland", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
+   system:"Pasture Commons", state:"Andhra Pradesh", learner:"Trainer", design:"Modular Learning",
    type:"Manual", format:"PDF", lang:"English", tags:["land use","plan"], status:"changes", date:"2026-07-22",
    comment:"Please remove the household names on pages 4-6 before this can be published, and add the year the plan was drawn.",
    thread:[
@@ -7510,7 +7510,7 @@ let subSeq = 0;
      {who:"Priya Sharma", what:"document submitted", when:"2026-07-21", at:"10:45 AM"}]},
   {title:"MOU with the State Irrigation Department",
    purpose:"A sample agreement between a committee and a line department.",
-   system:"Water", state:"Chhattisgarh", learner:"Trainer", design:"Supporting Resources",
+   system:"Water Commons", state:"Chhattisgarh", learner:"Trainer", design:"Supporting Resources",
    type:"Manual", format:"PDF", lang:"English", tags:["MOU","government"], status:"changes", date:"2026-07-15",
    comment:"Useful, but this needs a short note on what a committee should check before signing."},
   {title:"Photos from the Prakriti Karyashala",
@@ -7525,11 +7525,11 @@ let subSeq = 0;
    type:"Manual", format:"PDF", lang:"English", tags:["register"], size:"760 KB", status:"pending", date:"2026-08-23"},
   {title:"Grazing rights — legal primer", by:"Sunita Rao",
    purpose:"A plain-language note on what the law allows a pastureland committee to do.",
-   system:"Pastureland", state:"Karnataka", learner:"Trainer", design:"Supporting Resources",
+   system:"Pasture Commons", state:"Karnataka", learner:"Trainer", design:"Supporting Resources",
    type:"Handbook", format:"PDF", lang:"Hindi", tags:["legal","rights"], size:"1.4 MB", status:"pending", date:"2026-08-20"},
   {title:"Nursery raising — audio guide", by:"Arjun Kumar",
    purpose:"A short audio guide for raising a community nursery.",
-   system:"Forest", state:"Maharashtra", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
+   system:"Forest Commons", state:"Maharashtra", learner:"First Mile/ Doer", design:"Atomised Course (Low Dose High Frequency)",
    type:"Atomised Content", format:"Audio", lang:"Hindi", tags:["nursery"], size:"3.2 MB", status:"changes", date:"2026-08-06",
    comment:"Good content, but the recording clips in the second half. Please re-record from the 4 minute mark."},
   {title:"Old draft — commons handbook v1", by:"Manish Patel",

@@ -2865,8 +2865,10 @@ const STORE_PAGE = {archive:1, trash:1};
 const STORE_ROWS = {archive:10, trash:10};
 
 /* ---- Settings: categories, tags, types and archive rules ---- */
-const SET_TABS = [["tags","Tags"],["types","Types"],["archive","Archive Guidelines"]];
-const SET_LABEL = {tags:"Tag", types:"Type"};
+const SET_TABS = [["tags","Tags"],["state","State"],["learner","Learner Category"],
+  ["lang","Language"],["types","Resource Type"],["format","Format"],["archive","Archive Guidelines"]];
+const SET_LABEL = {tags:"Tag", state:"State", learner:"Learner category",
+  lang:"Language", types:"Resource type", format:"Format"};
 const SETTINGS = {
   tags:{
     system:[
@@ -2887,17 +2889,39 @@ const SETTINGS = {
       {n:"Tree Census",    by:"Emma Davis",    on:"28 Apr 2026"}
     ]
   },
+  state:[
+    {n:"Andhra Pradesh", by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Chhattisgarh",   by:"Neha Kapoor", on:"15 Jan 2026"},
+    {n:"Gujarat",        by:"Vikram Anand", on:"18 Jan 2026"},
+    {n:"Karnataka",      by:"Neha Kapoor", on:"02 Feb 2026"},
+    {n:"Maharashtra",    by:"Vikram Anand", on:"21 Feb 2026"},
+    {n:"Odisha",         by:"Neha Kapoor", on:"09 Mar 2026"},
+    {n:"Rajasthan",      by:"Vikram Anand", on:"15 Mar 2026"}
+  ],
+  learner:[
+    {n:"First Mile/ Doer", by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Trainer",          by:"Neha Kapoor", on:"15 Jan 2026"}
+  ],
+  lang:[
+    {n:"Hindi",   by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"English", by:"Neha Kapoor", on:"15 Jan 2026"},
+    {n:"Telugu",  by:"Vikram Anand", on:"18 Jan 2026"},
+    {n:"Kannada", by:"Neha Kapoor", on:"02 Feb 2026"},
+    {n:"Odia",    by:"Vikram Anand", on:"21 Feb 2026"},
+    {n:"Marathi", by:"Neha Kapoor", on:"09 Mar 2026"}
+  ],
   types:[
-    {n:"Personal Document",   by:"Vikram Anand", on:"12 Jan 2026"},
-    {n:"Legal Document",      by:"Vikram Anand", on:"12 Jan 2026"},
-    {n:"Financial Document",  by:"Neha Kapoor",  on:"18 Jan 2026"},
-    {n:"HR Document",         by:"Neha Kapoor",  on:"02 Feb 2026"},
-    {n:"Technical Document",  by:"Vikram Anand", on:"21 Feb 2026"},
-    {n:"Project Document",    by:"Neha Kapoor",  on:"09 Mar 2026"},
-    {n:"Compliance Document", by:"Vikram Anand", on:"15 Mar 2026"},
-    {n:"Policy Document",     by:"Neha Kapoor",  on:"28 Mar 2026"},
-    {n:"Training Material",   by:"Vikram Anand", on:"03 Apr 2026"},
-    {n:"Marketing Material",  by:"Neha Kapoor",  on:"07 Apr 2026"}
+    {n:"Training Module",  by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Atomised Content", by:"Neha Kapoor", on:"15 Jan 2026"},
+    {n:"Manual",           by:"Vikram Anand", on:"18 Jan 2026"},
+    {n:"Handbook",         by:"Neha Kapoor", on:"02 Feb 2026"},
+    {n:"Guide",            by:"Vikram Anand", on:"21 Feb 2026"}
+  ],
+  format:[
+    {n:"PDF",   by:"Vikram Anand", on:"12 Jan 2026"},
+    {n:"Video", by:"Neha Kapoor", on:"15 Jan 2026"},
+    {n:"Audio", by:"Vikram Anand", on:"18 Jan 2026"},
+    {n:"Image", by:"Neha Kapoor", on:"02 Feb 2026"}
   ],
   archiveDays:90
 };
@@ -6460,6 +6484,17 @@ function setDateToday(){
 }
 function setBy(name){ return `<span class="set-by"><span class="pw-av sm" style="background:${avatarTint(name)}">${initials(name)}</span>${name}</span>`; }
 function setRows(kind, sub){ return sub ? SETTINGS[kind][sub] : SETTINGS[kind]; }
+/* the metadata lists in Settings are what the filters and the upload form offer,
+   so every add or delete is written straight back into the option arrays */
+function setOpts(kind){
+  return {state:STATE_OPTS, learner:LEARNER_OPTS, lang:LANG_OPTS, types:TYPE_OPTS, format:FORMAT_OPTS}[kind] || null;
+}
+function setSync(kind){
+  const opts = setOpts(kind);
+  if(!opts) return;
+  opts.length = 0;
+  SETTINGS[kind].forEach(r=>opts.push(r.n));
+}
 /* one table for themes, categories, tags and types */
 function setTable(kind, sub){
   const rows = setRows(kind, sub);
@@ -6507,12 +6542,12 @@ screens.settings = (params) => {
   const tab  = SET_TABS.some(t=>t[0]===params.tab) ? params.tab : "tags";
   const kind = params.kind==="user" ? "user" : "system";
   const q = (k)=>`#/settings?tab=${k}`;
-  const addLabel = {tags:"Add tag", types:"Add type"}[tab];
+  const addLabel = addNoun(tab);
   return accountShell('settings', `
     <div class="acct-head">
       <div>
         <h1 class="acct-title">Settings</h1>
-        <p class="acct-sub" style="margin:0">Manage tags, types and archive rules across the repository.</p>
+        <p class="acct-sub" style="margin:0">Manage the tags, metadata lists and archive rules used across the repository.</p>
       </div>
       ${tab!=="archive"?`<div class="row">
         <button class="btn btn-primary" onclick="openSetDialog('${tab}','${tab==='tags'?kind:''}')">${ic('plus')} ${addLabel}</button>
@@ -6554,7 +6589,7 @@ function openSetDialog(kind, sub, idx){
   openOverlay('ov-set');
   focusIn('set-name');
 }
-function addNoun(kind){ return {tags:"Add tag", types:"Add type"}[kind]; }
+function addNoun(kind){ return SET_LABEL[kind] ? `Add ${SET_LABEL[kind].toLowerCase()}` : "Add"; }
 function closeSetDialog(){ closeOverlay('ov-set'); SET_DRAFT = null; }
 function saveSetDialog(){
   const input = document.getElementById('set-name');
@@ -6569,6 +6604,7 @@ function saveSetDialog(){
     rows[idx].n = name;
     toast(`${SET_LABEL[kind]} updated`);
   }
+  setSync(kind);
   closeSetDialog();
   render();
 }
@@ -6578,7 +6614,15 @@ function setDelete(kind, sub, idx){
     title:`Delete ${SET_LABEL[kind].toLowerCase()}?`,
     body:`“${row.n}” will be removed from the repository settings.`,
     confirmLabel:"Delete", icon:"trash-2",
-    onConfirm:()=>{ rows.splice(idx,1); render(); toast(`${SET_LABEL[kind]} deleted`); }
+    onConfirm:()=>{
+      rows.splice(idx,1);
+      setSync(kind);
+      /* a value that no longer exists cannot stay switched on in the filters */
+      const fk = kind==="types" ? "type" : kind;
+      if(FILTERS[fk]) FILTERS[fk] = FILTERS[fk].filter(v=>v!==row.n);
+      render();
+      toast(`${SET_LABEL[kind]} deleted`);
+    }
   });
 }
 /* ---- archive rules ---- */

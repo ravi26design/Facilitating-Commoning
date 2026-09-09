@@ -411,6 +411,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .card.click:hover h3{color:var(--cta)}
 /* the card's two links share a row */
 .ic-cta{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin-top:auto;padding-top:1.1rem}
+/* without a description there is nothing to space away from, so the links stay put */
+.imgcard.nodesc .ic-cta{margin-top:0;padding-top:.35rem}
 /* a short definition under a card's links, with its own Learn More */
 .ic-note{margin:.95rem 0 0;padding:0;background:none;font-size:.85rem;line-height:1.65;color:var(--muted)}
 .ic-note button{display:inline-flex;align-items:center;gap:.4rem;border:0;background:none;padding:0;margin-left:.35rem;
@@ -2769,9 +2771,9 @@ function storyById(id){ return STORIES.find(s=>s.id===id); }
 /* help topics */
 const HELP = [
   {id:"faq",              title:"Frequently Asked Questions",     desc:"Common questions about the repository.",          icon:"circle-help"},
-  {id:"how-to-use",       title:"How to use the repository",      desc:"Follow the guided journey or use direct access.", icon:"route"},
-  {id:"how-to-find",      title:"How to find a resource",         desc:"Use the Resource Library, search and filters.",   icon:"search"},
-  {id:"commoning-stages", title:"Understanding Commoning stages", desc:"The six-stage Commoning pathway explained.",      icon:"milestone"},
+  {id:"how-to-use",       title:"How to Use the Repository",      desc:"Follow the guided journey or use direct access.", icon:"route"},
+  {id:"how-to-find",      title:"How to Find a Resource",         desc:"Use the Resource Library, search and filters.",   icon:"search"},
+  {id:"commoning-stages", title:"Understanding Commoning Stages", desc:"The six-stage Commoning pathway explained.",      icon:"milestone"},
   {id:"modular-learning", title:"Understanding Modular Learning", desc:"Progressive modules with field activity.",        icon:"layers"},
   {id:"ldhf",             title:"Understanding LDHF",             desc:"Short, frequent, task-focused learning.",         icon:"zap"}
 ];
@@ -3936,7 +3938,7 @@ const screens = {};
 
 /* ---------- HOME ---------- */
 const HOME_INTRO = [
-  {t:"What are Commons", d:"",
+  {t:"What Are Commons", d:"",
    img:"assets/img/home-what-is-commoning.jpg", href:"#/commoning", icon:"users", video:true,
    note:{text:"Commoning is what people do together to care for, secure, govern, restore, and sustain those Commons.",
          link:{label:"Learn More", href:"#/commoning"}}},
@@ -3946,7 +3948,7 @@ const HOME_INTRO = [
    img:"assets/img/home-choose-commons.jpg", href:"#/resource-systems", icon:"layers", cta:"Explore More"}
 ];
 function introCard(c){
-  return `<article class="card imgcard click" onclick="go('${c.href}')">
+  return `<article class="card imgcard click${c.d?'':' nodesc'}" onclick="go('${c.href}')">
     <div class="ic-photo"><img src="${c.img}" alt="" loading="lazy"
       onerror="phFallback(this,'card')"></div>
     <div class="ic-body">
@@ -3967,7 +3969,7 @@ function docRow(title, sub, ids, cols, note, cls, right){
   const rows = ids.map(id=>resById(id)).filter(Boolean);
   return section(
     sechead(null, title, sub, right)
-    + `<div class="grid g${cols||3}">${rows.map(docCard).join("")}${note||""}</div>`, cls);
+    + `<div class="grid g${cols||3}">${note||""}${rows.map(docCard).join("")}</div>`, cls);
 }
 /* the home band — read-only for everyone but an admin, who edits it in place */
 function featuredRow(){
@@ -3979,7 +3981,7 @@ function featuredRow(){
     return section(sechead(null,"Featured Resources","Nothing is featured yet.",
       `<button class="btn btn-primary sm" onclick="openFeatured()">${ic('plus')} Add featured</button>`) +
       `<div class="feat-empty">Add a short paragraph and up to ${FEATURED_MAX} documents from the Resource Library.</div>`, "cream");
-  return docRow("Featured Resources","Hand-picked resources to get you started.",
+  return docRow("Featured Resources", null,
     FEATURED.ids, 4, note, "cream", edit);
 }
 
@@ -4005,7 +4007,7 @@ screens.home = () => shell("#/home", null, `
   ${docRow("What People Are Reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 
-  ${section(gateway("compass","Ready to begin?",
+  ${section(gateway("compass","Ready to Begin?",
     flowline(["Learn the approach","Understand what commoning means","Choose a resource system or Theme",
               "Follow the process","Access learning resources to facilitate training and action"]),
     `<button class="btn btn-white arrow" onclick="go('#/learning-approach')">Start learning ${ic('arrow-right')}</button>
@@ -4026,7 +4028,7 @@ screens.story = (params) => {
         <div class="tags"><span class="tag solid">${s.system}</span><span class="tag blue">${s.stage}</span></div>
         <blockquote class="pullquote" style="margin:0">${s.excerpt}</blockquote>
         <div class="panel">
-          <h3 style="font-size:1.02rem;margin-bottom:.75rem">What happened</h3>
+          <h3 style="font-size:1.02rem;margin-bottom:.75rem">What Happened</h3>
           <p class="muted" style="font-size:.92rem;line-height:1.75">The community moved through the pathway one stage at a time — reading their context, building a legitimate institution, and then acting collectively. This story sits at the <strong>${s.stage}</strong> stage, and the resources for that stage are the ones that supported it.</p>
         </div>
         <button class="btn btn-outline arrow" onclick="go('#/system/${s.sys}')">Open the ${s.system} pathway ${ic('arrow-right')}</button>
@@ -4041,9 +4043,9 @@ screens.story = (params) => {
 /* ---------- ABOUT ---------- */
 const ABOUT_BLOCKS = [
   {icon:"target", t:"Purpose", d:"This repository helps ecosystem actors understand and facilitate the Commoning of Commons. It brings learning, facilitation guides, field tools and mentoring together in one place — organised around the Commoning process rather than by file type — so users can move from understanding to action on the ground."},
-  {icon:"users", t:"Who it supports", d:"Ecosystem actors, facilitators, learners, field practitioners and stakeholders. It is designed for facilitators running sessions with communities, field practitioners carrying out on-ground tasks, learners building their understanding, and the wider stakeholders who support Commoning."},
-  {icon:"graduation-cap", t:"What you can learn", d:"What Commoning of Commons means and why it matters, how the capacity-building approach works (Modular Learning and LDHF), the six-stage Commoning pathway, and what needs to happen at each stage for the resource system you are working with."},
-  {icon:"library", t:"What resources are available", d:"At each stage you will find Learn, Facilitate, Act and Support resources — concept notes and videos, session plans and facilitation guides, field tools and tasks, and mentoring, FAQs and guidance — available in English and Hindi."}
+  {icon:"users", t:"Who It Supports", d:"Ecosystem actors, facilitators, learners, field practitioners and stakeholders. It is designed for facilitators running sessions with communities, field practitioners carrying out on-ground tasks, learners building their understanding, and the wider stakeholders who support Commoning."},
+  {icon:"graduation-cap", t:"What You Can Learn", d:"What Commoning of Commons means and why it matters, how the capacity-building approach works (Modular Learning and LDHF), the six-stage Commoning pathway, and what needs to happen at each stage for the resource system you are working with."},
+  {icon:"library", t:"What Resources Are Available", d:"At each stage you will find Learn, Facilitate, Act and Support resources — concept notes and videos, session plans and facilitation guides, field tools and tasks, and mentoring, FAQs and guidance — available in English and Hindi."}
 ];
 screens.about = () => shell(null, null,
   pagehead("About", "About the <em>Repository</em>",
@@ -4060,7 +4062,7 @@ screens.about = () => shell(null, null,
       <div class="tags" style="margin-bottom:1.35rem">${["Home","About","Commoning of Commons","Learning Approach","Resource Systems & Themes","Resource Library","Help"].map(n=>`<span class="tag blue">${n}</span>`).join("")}</div>
       ${flow([["Resource Systems","& themes"],["Pastureland · Forests · Water","choose one"],["Commoning Pathway","the process"],["Stages","what happens"],["Modules · tools · resources","act"]])}
     </div>`, "band") +
-  section(gateway("rocket","Ready to begin?","Understand the idea first, then choose the resource system you are working with.",
+  section(gateway("rocket","Ready to Begin?","Understand the idea first, then choose the resource system you are working with.",
     `<button class="btn btn-white arrow" onclick="go('#/learning-approach')">Start learning ${ic('arrow-right')}</button>
      <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`), "bleed")
 );
@@ -4100,7 +4102,7 @@ screens.commoning = () => shell("#/commoning", null,
         alt="Villagers repairing a bund, deliberating together, planting and harvesting — the cycle of commoning"
         onerror="phFallback(this,'Illustration','tall')"></figure>
       <div class="chaptext">
-        <h2>What does ‘Commoning of Commons’ mean?</h2>
+        <h2>What Does ‘Commoning of Commons’ Mean?</h2>
         <p>In simple language: Commoning is the ongoing practice through which a community takes collective responsibility for a shared natural resource — securing it, governing it, restoring it and sustainably managing it together.</p>
       </div>
     </div>
@@ -4109,7 +4111,7 @@ screens.commoning = () => shell("#/commoning", null,
         alt="Community custodianship, community agency, collective decision-making, long-term institutions and sustainable management, drawn as a cycle"
         onerror="phFallback(this,'Illustration','tall')"></figure>
       <div class="chaptext">
-        <h2>Why is Commoning important / why it matters</h2>
+        <h2>Why Is Commoning Important / Why It Matters</h2>
         <p>Communities exercise custodianship and agency over shared natural resources; collective institutions make decisions and sustain action over time.</p>
       </div>
     </div>
@@ -4126,7 +4128,7 @@ screens.commoning = () => shell("#/commoning", null,
 
   section(`<div class="artrow ${COMMONING_ART.agency.wide?'wide':'flip'}">
     <div class="arttext lead-in">
-      <h2>Community Agency is the common thread across all three</h2>
+      <h2>Community Agency Is the Common Thread Across All Three</h2>
       <p>Communities understand their rights and responsibilities, deliberate collectively, make informed decisions, act on them, reflect on what happened, and adapt. That cycle is what carries all three parts of the approach.</p>
       <p>It is also why capacity building matters — the agency, knowledge and capacity it builds are what keep the cycle turning.</p>
     </div>
@@ -4144,7 +4146,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
     "Facilitating commoning is built and strengthened through an ongoing process of learning, field application, reflection, and continued support. The learning processes, therefore, extend beyond information transfer to foster lasting changes in knowledge, skills, attitudes, practices, and relationships.") +
 
   /* ---- translating learning into action: the text sits around the graphic ---- */
-  section(sechead(null,"Translating learning into action", null) +
+  section(sechead(null,"Translating Learning into Action", null) +
     `<div class="larows">
       <article class="la-row">
         <div class="la-fig">
@@ -4180,7 +4182,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
 
   /* ---- the learning pathway, in its own panel ---- */
   section(`<div class="rownote long lapath">
-    <h3>The learning pathway</h3>
+    <h3>The Learning Pathway</h3>
     <p>The learning pathway comprises a structured process coupled with action elements that lead to cumulative outcomes
     on the ground. Rather than conducting one-off trainings, the learning is continuous and ongoing, designed to enable
     communities, functionaries, and civil society actors to collectively manage natural resources and local institutions.
@@ -4234,7 +4236,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
     </div>`, "band") +
 
   section(`<div class="panel">
-    <h3 style="font-size:1.15rem;margin-bottom:1rem">Enabling outcome-based learning</h3>
+    <h3 style="font-size:1.15rem;margin-bottom:1rem">Enabling Outcome-Based Learning</h3>
     <p class="muted" style="font-size:.92rem;line-height:1.8;margin-bottom:1.5rem">The Low Dose High Frequency learning
     design complements the modular design by enabling continuous learning and reinforcement between formal training
     interventions. Together, the two designs provide a coherent and comprehensively structured learning journey — the
@@ -4246,7 +4248,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
       'Outcome-based capacity building — six steps from training of trainers to learning translated into action')}</div>
   </div>`, "band") +
 
-  section(gateway("lightbulb","Understand what Commoning is",
+  section(gateway("lightbulb","Understand What Commoning Is",
     "Learn the concept and approach behind the Commoning of Commons before choosing your resource system.",
     `<button class="btn btn-white arrow" onclick="go('#/commoning')">Commoning of Commons ${ic('arrow-right')}</button>`), "bleed")
 );
@@ -4306,12 +4308,12 @@ function moduleCards(){
 screens["resource-systems"] = () => shell("#/resource-systems", null,
   pagehead("Choose your commons","Resource Systems &amp; <em>Themes</em>",
     "Each pathway explains the process first, and then provides resources in the order they are likely to be used.") +
-  section(sechead(null,"Resource systems","The three natural-resource systems the repository is built around.") +
+  section(sechead(null,"Resource Systems","The three natural-resource systems the repository is built around.") +
     `<div class="grid g3">${["pastureland","forests","water"].map(k=>systemCard(SYSTEMS[k])).join("")}</div>`) +
-  section(sechead(null,"Cross-cutting themes","Themes that cut across every resource system.",
+  section(sechead(null,"Cross-Cutting Themes","Themes that cut across every resource system.",
     isAdmin()?`<button class="btn btn-primary sm" onclick="openAddTheme()">${ic('plus')} Add theme</button>`:'') +
     `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band roomy") +
-  section(gateway("map","Not sure where to start?",
+  section(gateway("map","Not Sure Where to Start?",
     "Follow the five-step orientation, or go straight to the Resource Library and filter your way to what you need.",
     `<button class="btn btn-white" onclick="openTour()">${ic('compass')} Get Started</button>
      <button class="btn btn-outline" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="go('#/library')">Resource Library</button>`), "bleed")
@@ -4327,7 +4329,7 @@ screens.system = (params) => {
     [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"},{label:s.name}],
     pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s)) +
 
-    (isTheme ? "" : section(sechead(null,"Commoning pathway / process",
+    (isTheme ? "" : section(sechead(null,"Commoning Pathway / Process",
         "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +
       pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`}) +
       `<div class="row" style="margin-top:1.75rem">
@@ -4335,7 +4337,7 @@ screens.system = (params) => {
           title="Process documents for ${STATES.join(', ')}">${ic('file-text')} Process documents</button>
       </div>`, "tight band")) +
 
-    section(sechead(null,"Choose how you want to learn",
+    section(sechead(null,"Choose How You Want to Learn",
       "The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.") +
       `<div class="ldgrid">${order.map(id=>ldCard(s.id, ldById(id))).join("")}</div>`, isTheme?"band":"")
   );
@@ -4361,18 +4363,18 @@ screens.stage = (params) => {
     section(`<div class="grid" style="grid-template-columns:1.2fr 1fr;gap:2rem;align-items:start">
       <div class="panel">
         <div class="row" style="gap:.9rem;align-items:center;margin-bottom:.9rem">${tile(s.icon,'blue','lg')}
-          <h3 style="font-size:1.15rem">What needs to happen?</h3></div>
+          <h3 style="font-size:1.15rem">What Needs to Happen?</h3></div>
         <p class="lead" style="font-size:1rem">${s.what}</p>
       </div>
       <div class="panel">
-        <h3 style="font-size:1.02rem;margin-bottom:1rem">Where this sits</h3>
+        <h3 style="font-size:1.02rem;margin-bottom:1rem">Where This Sits</h3>
         <div class="wf-tl">${STAGES.map((x,i)=>`<div class="wf-ev ${i<idx?'done':(i===idx?'next':'pending')}">
           <span class="wf-ic">${i<idx?ic('check'):ic(x.icon)}</span>
           <div><div class="wf-lb">${x.num} · ${x.name}</div><div class="wf-mt">${x.short}</div></div>
         </div>`).join("")}</div>
       </div>
     </div>`, "band") +
-    section(sechead(null,"Resources for this stage",
+    section(sechead(null,"Resources for This Stage",
       "Grouped by learning design — Modular Learning, Atomized Course Curriculum (LDHF) and Supporting Resources.",
       `<div class="row" style="gap:.5rem">
         <div class="selw"><select onchange="toast('Filter by stakeholder (placeholder)')"><option>Stakeholder</option><option>Facilitator</option><option>Learner</option><option>Field Practitioner</option></select>${ic('chevron-down','cv')}</div>
@@ -4447,7 +4449,7 @@ screens.outline = (params) => {
       `<button class="btn btn-primary arrow" onclick="go('${startHref}')">Let's start learning ${ic('arrow-right')}</button>`) +
     section(`<div class="panel outlinepanel">
       <div class="outline-h">
-        <h2>Course index</h2>
+        <h2>Course Index</h2>
         <p>${indexBlurb(topic)} Open any number to go straight to its files.</p>
       </div>
       ${courseIndexGrid(topic, code => `#/modular/${params.id}?${gq}topic=${topic.id}&sub=${code}`)}
@@ -4551,7 +4553,7 @@ screens.modular = (params) => {
             </div>`:''}
           </article>`).join(""):`<div class="emptypane">
             ${tile('sliders-horizontal','blue','lg')}
-            <h3>Nothing matches that filter</h3>
+            <h3>Nothing Matches That Filter</h3>
             <p>${topicFilterOn()?"No topic here is filed under "+TFILTER.state+" in "+TFILTER.lang+". Try widening the filter."
                                :"There are no topics for this selection yet."}</p>
             ${topicFilterOn()?`<button class="btn btn-primary arrow" style="margin-top:1.5rem"
@@ -4621,7 +4623,7 @@ screens.modular = (params) => {
       <div>
         ${!activeSub?`<div class="emptypane">
           ${tile('layers','blue','lg')}
-          <h3>No subtopics yet</h3>
+          <h3>No Subtopics Yet</h3>
           <p>${canEdit?"Use “Add subtopic” on the left to create the first one, then upload resource files to it."
             :(isAdmin()?"Turn on Edit to add subtopics and upload the files that sit under them."
                        :"This topic is still being built. Files will appear here once its subtopics are added.")}</p>
@@ -4636,7 +4638,7 @@ screens.modular = (params) => {
 
           ${!activeSub.files.length?`<div class="emptypane">
             ${tile('file-plus-2','blue','lg')}
-            <h3>No files yet</h3>
+            <h3>No Files Yet</h3>
             <p>${canEdit?"Upload the resources that belong under this subtopic — a PDF, a video, an audio guide or a format."
                         :(isAdmin()?"Turn on Edit to upload the first file."
                                    :"Files will appear here once they have been added.")}</p>
@@ -4715,7 +4717,7 @@ screens.courses = (params) => {
   });
   const box=(fg,items)=>items.map(i=>`<label><input type="checkbox" data-fg="${fg}" value="${esc(i)}" onchange="applyCourseFilters()"> ${i}</label>`).join("");
   return shell("#/courses", null,
-    pagehead("Courses","Structured <em>courses</em>",
+    pagehead("Courses","Structured <em>Courses</em>",
       "Each course has a set of topics, and each topic holds multiple learning files — images, PDFs and videos.",
       isAdmin()?`<button class="btn btn-primary" onclick="startCourseFlow()">${ic('plus')} Create course</button>`:'') +
     section(`<div class="searchwrap">${ic('search','ico')}
@@ -4726,9 +4728,9 @@ screens.courses = (params) => {
       <aside class="filterbox">
         <div class="fhead"><h2>${ic('sliders-horizontal')} Filter courses</h2>
           <button class="clearbtn" onclick="clearCourseFilters()">Clear</button></div>
-        <div class="fgroup"><h3>Resource system / theme</h3>${box("sys",["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]))}</div>
+        <div class="fgroup"><h3>Resource System / Theme</h3>${box("sys",["Forests","Pastureland","Water"].concat(THEME_LIST.map(t=>t.name)).concat(["All Systems"]))}</div>
         <div class="fgroup"><h3>Language</h3>${box("lang",["English","Hindi"])}</div>
-        <div class="fgroup"><h3>File type</h3>${box("ftype",["Image","PDF","Video"])}</div>
+        <div class="fgroup"><h3>File Type</h3>${box("ftype",["Image","PDF","Video"])}</div>
       </aside>
       <div>
         <div class="toolbar">
@@ -4790,7 +4792,7 @@ screens.file = (params) => {
     section(`<div class="layout-wide">
       ${docViewer(f.name, f.type)}
       <aside class="panel">
-        <h3 style="font-size:1.05rem;margin-bottom:1rem">File details</h3>
+        <h3 style="font-size:1.05rem;margin-bottom:1rem">File Details</h3>
         <div class="detail-f"><span class="k">Course</span><span class="v"><button class="linkbtn" onclick="go('#/course/${c.id}')">${c.title}</button></span></div>
         <div class="detail-f"><span class="k">Topic</span><span class="v"><button class="linkbtn" onclick="go('#/course/${c.id}?t=${topic.id}')">${topic.name}</button></span></div>
         <div class="detail-f"><span class="k">File type</span><span class="v">${f.type}</span></div>
@@ -4886,7 +4888,7 @@ screens.doc = (params) => {
     section(`<div class="layout-wide">
       ${docViewer(f.name, f.type)}
       <aside class="panel">
-        <h3 style="font-size:1.05rem;margin-bottom:1rem">Document details</h3>
+        <h3 style="font-size:1.05rem;margin-bottom:1rem">Document Details</h3>
         ${metaRow(s&&s.kind==="theme"?"Theme":metaLabel("system"), s?s.name:"—")}
         ${metaRow("File Type", `<span class="tag blue">${f.type}</span>`)}
         ${metaRow("Category", docCategory(f.name))}
@@ -5028,7 +5030,7 @@ screens.resource = (params) => {
     section(`<div class="layout-wide">
       ${docViewer(r.title, r.type)}
       <aside class="panel">
-        <h3 style="font-size:1.05rem;margin-bottom:1rem">Resource details</h3>
+        <h3 style="font-size:1.05rem;margin-bottom:1rem">Resource Details</h3>
         ${META.map(m=>{
           const v = m.get(r);
           if(!v || v==="") return "";
@@ -5067,7 +5069,7 @@ screens.resource = (params) => {
 
 /* ---------- HELP ---------- */
 screens.help = () => shell("#/help", null,
-  pagehead("Help","Help &amp; <em>guidance</em>",
+  pagehead("Help","Help &amp; <em>Guidance</em>",
     "Guidance on using the repository, finding resources and understanding the Commoning approach. Each topic opens its own page.") +
   section(`<div class="grid g3">${HELP.map(h=>`<article class="card click" onclick="go('#/help/${h.id}')">
     ${tile(h.icon,'blue','lg')}
@@ -5075,7 +5077,7 @@ screens.help = () => shell("#/help", null,
     <p>${h.desc}</p>
     <div class="cta"><span class="f-cta">Open ${ic('arrow-right')}</span></div>
   </article>`).join("")}</div>`) +
-  section(gateway("life-buoy","Still stuck?",
+  section(gateway("life-buoy","Still Stuck?",
     "Reach the Karyashala team or a mentor for guided support on your current Commoning stage.",
     `<button class="btn btn-white arrow" onclick="openContact()">Get support ${ic('arrow-right')}</button>`), "bleed")
 );
@@ -5094,10 +5096,10 @@ screens.helptopic = (params) => {
   else if(h.id==="how-to-use"){
     body = `<p class="lead">There are two ways to use the repository. New users follow the guided journey; experienced users go straight to what they need.</p>
       <div class="grid g2" style="margin-top:1.5rem">
-        <div class="card">${tile('route','blue','lg')}<h3>Guided journey</h3>
+        <div class="card">${tile('route','blue','lg')}<h3>Guided Journey</h3>
           <p>Understand → Learn the approach → Choose a resource system → Follow the pathway → Access Learn, Facilitate, Act and Support resources at each stage.</p>
           <div class="cta"><button class="btn btn-primary sm arrow" onclick="go('#/learning-approach')">Start learning ${ic('arrow-right')}</button></div></div>
-        <div class="card">${tile('library','blue','lg')}<h3>Direct access</h3>
+        <div class="card">${tile('library','blue','lg')}<h3>Direct Access</h3>
           <p>Go to the Resource Library, search or filter, and open the resource you need.</p>
           <div class="cta"><button class="btn btn-primary sm arrow" onclick="go('#/library')">Resource Library ${ic('arrow-right')}</button></div></div>
       </div>
@@ -5112,7 +5114,7 @@ screens.helptopic = (params) => {
         <div class="card"><span class="numtile">2</span><h3>Filter</h3>
           <p>Filter by system, stage, stakeholder, learning design, type and language.</p>
           <div class="cta"><button class="btn btn-outline sm" onclick="go('#/library')">Open library</button></div></div>
-        <div class="card"><span class="numtile">3</span><h3>Browse by stage</h3>
+        <div class="card"><span class="numtile">3</span><h3>Browse by Stage</h3>
           <p>Open a resource system and pick a stage to see its resources.</p>
           <div class="cta"><button class="btn btn-outline sm" onclick="go('#/resource-systems')">Resource systems</button></div></div>
       </div>`;
@@ -5187,7 +5189,7 @@ screens.login = () => `<main class="login-full">
   <div class="loginwrap">
     <div class="lg-form"><div class="lg-inner">
       ${brand()}
-      <h1 class="lg-h1">Welcome back! 👋</h1>
+      <h1 class="lg-h1">Welcome Back! 👋</h1>
       <p class="lg-sub">Sign in to download resources, save them to My Learning and track your progress. Browsing the repository doesn\u2019t require an account.</p>
 
       <div class="lgf"><label>Sign in as (role)</label>
@@ -5263,7 +5265,7 @@ screens.contribute = () => {
   const body = contributed
     ? `<div class="gatebox">
         ${tile('circle-check-big','','lg')}
-        <h2 style="font-size:1.35rem;margin-bottom:.5rem">Thank you — it's with the team</h2>
+        <h2 style="font-size:1.35rem;margin-bottom:.5rem">Thank You — It's with the Team</h2>
         <p class="muted" style="margin-bottom:1.5rem"><strong>${contributed}</strong> has been submitted for review.
           A reviewer checks the metadata and the file before it appears in the Resource Library.</p>
         <div class="row" style="justify-content:center">
@@ -5273,7 +5275,7 @@ screens.contribute = () => {
       </div>`
     : `<div class="layout-wide">
         <div class="panel">
-          <h3 style="font-size:1.15rem;margin-bottom:1.35rem">${ic('file-text')} About the resource</h3>
+          <h3 style="font-size:1.15rem;margin-bottom:1.35rem">${ic('file-text')} About the Resource</h3>
           ${dropzone('cloud-upload','Drag and drop files here, or click to browse',
             'Supported: PDF, DOCX, XLSX, JPEG, PPTX, MP4, MP3', "toast('Choose a file (placeholder)')")}
           <div class="field" style="margin-top:1.15rem"><label>Title <span class="req">*</span></label>
@@ -5316,7 +5318,7 @@ screens.contribute = () => {
 
         <aside class="stack" style="gap:1.35rem">
           <div class="panel">
-            <h3 style="font-size:1.05rem;margin-bottom:1.1rem">What happens next</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:1.1rem">What Happens Next</h3>
             <div class="wf-tl">
               ${[["send","You submit","The resource and its metadata reach the Karyashala team."],
                  ["search-check","A reviewer checks it","Metadata, language and the file itself are verified."],
@@ -5328,7 +5330,7 @@ screens.contribute = () => {
             </div>
           </div>
           <div class="panel">
-            <h3 style="font-size:1.05rem;margin-bottom:.75rem">What makes a good contribution</h3>
+            <h3 style="font-size:1.05rem;margin-bottom:.75rem">What Makes a Good Contribution</h3>
             <ul class="muted" style="margin:0;padding-left:1.15rem;font-size:.9rem;line-height:1.85">
               <li>It helps someone act at a particular stage of the pathway</li>
               <li>The metadata is accurate — that is how people find it</li>
@@ -5340,7 +5342,7 @@ screens.contribute = () => {
       </div>`;
 
   return shell("#/contribute", null,
-    pagehead("Contribute", "Contribute a <em>resource</em>",
+    pagehead("Contribute", "Contribute a <em>Resource</em>",
       "Share a guide, tool, format or recording you have used in the field. Everything is reviewed before it joins the Resource Library.") +
     section(body));
 };
@@ -5415,7 +5417,7 @@ function askApprove(id){
     <div class="rd-head">
       <span class="rd-ic go">${ic('circle-check-big')}</span>
       <div>
-        <h3>Approve this document?</h3>
+        <h3>Approve This Document?</h3>
         <p>It will be marked Approved and published to the Resource Library, where everyone can find it.</p>
       </div>
       <button class="modal-x" style="position:static" onclick="closeReason()">${ic('x')}</button>
@@ -5500,7 +5502,7 @@ screens.contributions = (params) => {
         : `<div class="panel"><p class="muted">Nothing here yet — no file of yours is ${SUB_STATUS[tab].label.toLowerCase()}.</p></div>`}
     ` : `<div class="gatebox">
           ${tile('upload','blue','lg')}
-          <h2 style="font-size:1.2rem;margin-bottom:.5rem">Nothing sent yet</h2>
+          <h2 style="font-size:1.2rem;margin-bottom:.5rem">Nothing Sent Yet</h2>
           <p class="muted" style="margin-bottom:1.5rem">Upload a file from a Modular Learning or Supporting Resources page, or from Contribute.</p>
           <button class="btn btn-primary arrow" onclick="go('#/contribute')">Contribute a resource ${ic('arrow-right')}</button>
         </div>`}
@@ -5636,7 +5638,7 @@ function activityBlock(o){
 screens.submission = (params) => {
   if(!isRegistered()) return gateScreen("Contribution","Sign in to see the files you have sent for review.");
   const sub = subById(params.id);
-  if(!sub) return gateScreen("File not found","That contribution is no longer here.");
+  if(!sub) return gateScreen("File Not Found","That contribution is no longer here.");
   const f = sub.fields, m = kindMeta(f.type), tab = subTab(params);
   const own = sub.by === USER.name;
   const row = (k,v) => v ? `<div class="sd-row"><span class="sd-k">${k}</span><span class="sd-v">${v}</span></div>` : '';
@@ -5693,7 +5695,7 @@ screens.submission = (params) => {
       <div class="layout-wide">
         ${docViewer(f.title, f.type)}
         <aside class="panel">
-          <h3 style="font-size:1.05rem;margin-bottom:1rem">File details</h3>
+          <h3 style="font-size:1.05rem;margin-bottom:1rem">File Details</h3>
           <div class="detail-blk" style="margin:0 0 .9rem">
             ${statusPill(sub.status)}
           </div>
@@ -5727,9 +5729,9 @@ const USER = {
   phone:"+91 98765 43210", location:"Bengaluru, India"
 };
 const PREFS = [
-  {id:"email",  on:true,  t:"Email notifications", d:"Get notified when a resource you saved is updated or replaced."},
-  {id:"weekly", on:true,  t:"Weekly summary report", d:"Receive a weekly activity summary every Monday."},
-  {id:"updates",on:false, t:"Platform updates", d:"Occasional emails about new features on the repository."}
+  {id:"email",  on:true,  t:"Email Notifications", d:"Get notified when a resource you saved is updated or replaced."},
+  {id:"weekly", on:true,  t:"Weekly Summary Report", d:"Receive a weekly activity summary every Monday."},
+  {id:"updates",on:false, t:"Platform Updates", d:"Occasional emails about new features on the repository."}
 ];
 function togglePref(el, id){
   el.classList.toggle('on');
@@ -5797,9 +5799,9 @@ screens["my-learning"] = () => {
       <div class="stat kpi">${tile('download','blue','lg')}<div><b>5</b><span>Files downloaded</span></div></div>
       <div class="stat kpi">${tile('milestone','','lg')}<div><b>03</b><span>Current stage — Secure Tenure</span></div></div>
     </div>`, "tight") +
-    section(sechead(null,"Continue where you left off","Your active pathway and the next stage in it.") +
+    section(sechead(null,"Continue Where You Left Off","Your active pathway and the next stage in it.") +
       pathway("tenure",{}), "band") +
-    section(sechead(null,"Saved resources","Resources you bookmarked for later.",
+    section(sechead(null,"Saved Resources","Resources you bookmarked for later.",
       `<button class="btn btn-outline sm arrow" onclick="go('#/library')">Browse the library ${ic('arrow-right')}</button>`) +
       `<div class="docgrid">${saved.map(docCard).join("")}</div>`) +
     section(callout("Recommended next","Continue with the CFR claim process — it is the next step at your current stage.",
@@ -6004,7 +6006,7 @@ screens.admin = () => {
           </div>`:''}).join("")}
         ${FEATURED.ids.length?'':`<p class="muted" style="font-size:.87rem;margin-top:.8rem">No documents selected.</p>`}
       </div>`, "tight") +
-    section(sechead(null,"Content management",
+    section(sechead(null,"Content Management",
       "Add, edit, upload and publish resources. Every resource follows the required metadata structure.") +
       `<div class="scrollx"><table class="admin">
         <thead><tr><th>Title</th><th>System / theme</th><th>Type</th><th>Design</th><th>Language</th><th>Actions</th></tr></thead>
@@ -6015,7 +6017,7 @@ screens.admin = () => {
             <button class="linkbtn" onclick="openUploadDoc('${r.id}')">Edit</button>
           </div></td></tr>`).join("")}</tbody>
       </table></div>`) +
-    section(sechead(null,"Course management",
+    section(sechead(null,"Course Management",
       "Create courses, add topics, and upload files (image / PDF / video) to each topic.",
       `<button class="btn btn-primary sm" onclick="startCourseFlow()">${ic('plus')} Create course</button>`) +
       `<div class="scrollx"><table class="admin">
@@ -6030,7 +6032,7 @@ screens.admin = () => {
       </table></div>`, "band") +
     section(`<div class="grid g2">
       <div class="panel">
-        <h3 style="font-size:1.08rem;margin-bottom:.75rem">Required resource metadata</h3>
+        <h3 style="font-size:1.08rem;margin-bottom:.75rem">Required Resource Metadata</h3>
         <p class="muted" style="font-size:.9rem;margin-bottom:1rem">A consistent metadata structure keeps the repository easy to navigate and maintain.</p>
         <ul class="muted" style="padding-left:1.15rem;font-size:.88rem;line-height:1.9">
           ${["Resource title","One-line purpose","Resource system or theme","Commoning stage (systems only)","Intended stakeholder / user","Learning design (Modular / LDHF / Both)","Resource type","Language","Version / date","Attribution to contributor (non-FES)","File (view / download)"].map(f=>`<li>${f}</li>`).join("")}
@@ -6038,7 +6040,7 @@ screens.admin = () => {
         <button class="btn btn-primary sm arrow" style="margin-top:1rem" onclick="openUploadDoc()">Open the upload form ${ic('arrow-right')}</button>
       </div>
       <div class="panel">
-        <div class="between" style="margin-bottom:1rem"><h3 style="font-size:1.08rem">User management</h3>
+        <div class="between" style="margin-bottom:1rem"><h3 style="font-size:1.08rem">User Management</h3>
           <button class="btn btn-outline sm" onclick="toast('Invite user (placeholder)')">${ic('user-plus')} Invite</button></div>
         ${[["a.sharma@fes.org","Registered User"],["m.rao@partner.org","Registered User"],["admin@fes.org","Platform Super Admin"]].map(u=>`
           <div class="listrow"><div><div class="lt">${u[0]}</div><div class="muted" style="font-size:.8rem">${u[1]}</div></div>
@@ -6227,7 +6229,7 @@ function bulkStart(){
 }
 function openBulkHistory(){
   document.getElementById('pn-bulkhist').innerHTML =
-    modalHead("Bulk upload history","Batches sent for review from this account.","closeBulkHistory()") +
+    modalHead("Bulk Upload History","Batches sent for review from this account.","closeBulkHistory()") +
     (BULK_HISTORY.length
       ? `<div class="scrollx settable" style="border:1px solid var(--line)"><table class="admin">
           <thead><tr><th>Date</th><th>Kind</th><th>Files</th><th>By</th></tr></thead>
@@ -6252,7 +6254,7 @@ function renderBulk(){
   const m = bulkMode(), picked = BULK.picked;
   host.innerHTML =
     `<div class="between" style="align-items:flex-start;flex-wrap:nowrap;gap:1rem;margin-bottom:1.25rem">
-      <div><h3 style="font-size:1.15rem">Bulk upload</h3>
+      <div><h3 style="font-size:1.15rem">Bulk Upload</h3>
         <p class="muted" style="font-size:.87rem;margin-top:.25rem">Several files, a whole folder, or a zip archive at
         once - every file goes for review before it is published.</p></div>
       <div class="row" style="gap:.5rem;flex:none">
@@ -6564,7 +6566,7 @@ screens.stored = (params) => {
       <div class="layout-wide">
         ${docViewer(f.n, storeFormat(f.n))}
         <aside class="panel">
-          <h3 style="font-size:1.05rem;margin-bottom:1rem">File details</h3>
+          <h3 style="font-size:1.05rem;margin-bottom:1rem">File Details</h3>
           ${metaRow(col2, `<span class="deptpill">${f.dept}</span>`)}
           ${metaRow(when, f.on)}
           ${metaRow(metaLabel('format'), storeFormat(f.n))}
@@ -6769,7 +6771,7 @@ function openFeatPick(){
   FEAT_PICK = [];
   FEAT_SLOTS = Math.max(1, FEATURED_MAX - FEAT_DRAFT.ids.length);
   document.getElementById('pn-featpick').innerHTML =
-    modalHead("Select documents",
+    modalHead("Select Documents",
       FEAT_SLOTS===1 ? "Choose one document from the Resource Library."
                      : `Choose up to ${FEAT_SLOTS} documents from the Resource Library.`, "closeFeatPick()") +
     `<div class="pk-search">
@@ -7097,7 +7099,7 @@ function adminRemoveSubtopic(topicId, code){
 function openUploadFile(topicId, subCode, subName){
   if(!isAdmin()) return;
   document.getElementById('pn-file').innerHTML =
-    modalHead("Upload a file", `Add a file to ${subCode} · ${subName}`, "closeUploadFile()") +
+    modalHead("Upload a File", `Add a file to ${subCode} · ${subName}`, "closeUploadFile()") +
     `<div class="grid g2" style="gap:1rem">
       <div class="field"><label>File name <span class="req">*</span></label>
         <input id="uf-name" placeholder="e.g. Field guide"></div>
@@ -7495,7 +7497,7 @@ function reviewSubmission(id, status, note){
 /* ---- change password ---- */
 function openChangePassword(){
   document.getElementById('pn-pwd').innerHTML =
-    modalHead("Change password","Update your account password","closeChangePassword()") +
+    modalHead("Change Password","Update your account password","closeChangePassword()") +
     ["pw-old|Current password|••••••••","pw-new|New password|At least 8 characters","pw-conf|Confirm new password|Re-enter new password"]
       .map(s=>{const[a,b,c]=s.split("|");return `<div class="field"><label>${b}</label>
         <div class="pwfield"><input id="${a}" type="password" placeholder="${c}" style="padding-right:3.5rem">
@@ -7558,7 +7560,7 @@ function closeNavSearch(){
 function openSearch(){
   const suggestions=["Secure Tenure","Facilitator Guide","Forest rights","Restoration protocol","Water access","LDHF"];
   document.getElementById('pn-search').innerHTML =
-    modalHead("What are you looking for?","Search by topic, process, tool, resource, tag or keyword.","closeSearch()") +
+    modalHead("What Are You Looking For?","Search by topic, process, tool, resource, tag or keyword.","closeSearch()") +
     `<div class="tsearch" style="max-width:none">${ic('search','ico')}
       <input id="ov-input" placeholder="Type to search…" onkeydown="if(event.key==='Enter'){runSearch(this.value)}"></div>
     <p class="kicker" style="margin:1.35rem 0 .7rem">Recent &amp; popular</p>
@@ -7573,7 +7575,7 @@ function runSearch(v){ closeSearch(); go('#/search?q='+encodeURIComponent(v||"")
 
 function openContact(){
   document.getElementById('pn-contact').innerHTML =
-    modalHead("Contact &amp; support","Reach the Karyashala team or a mentor for guided support.","closeContact()") +
+    modalHead("Contact &amp; Support","Reach the Karyashala team or a mentor for guided support.","closeContact()") +
     `<div class="stack">
       ${[["users-round","Guided mentoring","Request a mentoring session for your current Commoning stage."],
          ["mail","Email","support@fes-karyashala.example"],
@@ -7594,7 +7596,7 @@ function stateSlug(st){ return st.toLowerCase().replace(/\s+/g,"-"); }
 function openProcessDocs(sysId){
   const s = SYSTEMS[sysId] || entityById(sysId); if(!s) return;
   document.getElementById('pn-docs').innerHTML =
-    modalHead("Process documents",
+    modalHead("Process Documents",
       `Choose a state to open the ${s.name} process document written for it.`, "closeProcessDocs()") +
     `<p class="kicker" style="margin:.25rem 0 .8rem">States covered</p>
      <div class="statelist">${STATES.map(st=>`

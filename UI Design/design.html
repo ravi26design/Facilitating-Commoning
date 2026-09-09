@@ -1239,6 +1239,8 @@ main{min-height:60vh;animation:fade .3s ease}
 /* the learning pathway, set as a solid panel */
 /* attribution under a figure */
 .credit{margin:.85rem 0 0;font-size:.82rem;color:var(--faint)}
+.creditrow{align-items:center;justify-content:center;gap:1.15rem;margin-top:1.15rem}
+.creditrow .credit{margin:0}
 .lapath{padding:2rem 2.25rem}
 .lapath h3{color:#fff;font-size:1.15rem;margin:0 0 .8rem}
 .lapath p{color:#fff;margin:0}
@@ -4248,8 +4250,8 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
         </ul>
         <div>${infographic('assets/img/ldhf-capacity-building.png',
           'Capacity building beyond training — a frequency and intensity matrix with the gains it unlocks')}</div>
-        <p class="credit">Credits: Developed by Socion</p>
-        <div class="row" style="margin-top:1.15rem">
+        <div class="row creditrow">
+          <p class="credit">Credits: Developed by Socion</p>
           <a class="btn btn-outline sm" href="assets/docs/ldhf-capacity-building.pdf" target="_blank" rel="noopener">${ic('file-text')} TO KNOW MORE ABOUT THE DESIGN ${ic('external-link')}</a>
         </div>
       </div>

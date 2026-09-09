@@ -412,12 +412,12 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 /* the card's two links share a row */
 .ic-cta{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin-top:auto;padding-top:1.1rem}
 /* a short definition under a card's links, with its own Learn More */
-.ic-note{margin:.95rem 0 0;padding:.15rem 0 .15rem .8rem;background:none;border-left:3px solid var(--green-line);
-  font-size:.85rem;line-height:1.65;color:var(--muted)}
-.ic-note button{display:inline-flex;align-items:center;gap:.3rem;border:0;background:none;padding:0;margin-left:.35rem;
-  font:inherit;font-size:.82rem;font-weight:700;color:var(--cta);cursor:pointer;transition:color .15s}
-.ic-note button:hover{color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
-.ic-note i,.ic-note svg.lucide{width:.8rem;height:.8rem}
+.ic-note{margin:.95rem 0 0;padding:0;background:none;font-size:.85rem;line-height:1.65;color:var(--muted)}
+.ic-note button{display:inline-flex;align-items:center;gap:.4rem;border:0;background:none;padding:0;margin-left:.35rem;
+  font:inherit;font-size:.87rem;font-weight:700;color:var(--cta);cursor:pointer;transition:color .15s}
+.ic-note button:hover{color:var(--green-d)}
+.ic-note i,.ic-note svg.lucide{width:.95rem;height:.95rem;transition:transform .15s}
+.imgcard:hover .ic-note i,.imgcard:hover .ic-note svg.lucide{transform:translateX(3px)}
 .ic-cta .f-cta{margin-top:0;padding-top:0}
 .f-cta.vid{border:0;background:none;padding:0;font:inherit;font-size:.87rem;font-weight:700;
   color:var(--green-d);cursor:pointer}
@@ -3957,7 +3957,7 @@ function introCard(c){
         ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`:''}
       </div>
       ${c.note?`<p class="ic-note">${c.note.text}
-        <button type="button" onclick="event.stopPropagation();go('${c.note.link.href}')">${c.note.link.label} ${ic('arrow-right')}</button></p>`:''}
+        <button type="button" onclick="event.stopPropagation();go('${c.note.link.href}')">${c.note.link.label} ${ic('chevron-right')}</button></p>`:''}
     </div>
   </article>`;
 }

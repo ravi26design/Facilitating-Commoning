@@ -2117,7 +2117,7 @@ main{min-height:60vh;animation:fade .3s ease}
    readable measure — squeezed into a column its captions cannot be read */
 .artrow.wide{grid-template-columns:1fr;gap:0;justify-items:stretch}
 .artrow.wide .cfig{width:100%}
-.artrow.wide .arttext{max-width:56rem;text-align:center}
+.artrow.wide .arttext{max-width:56rem;margin-left:auto;margin-right:auto;text-align:center}
 .artrow.wide .arttext p{margin-left:auto;margin-right:auto}
 /* text that introduces the artwork below it */
 .artrow.wide .arttext.lead-in{margin-bottom:.25rem}
@@ -4215,13 +4215,14 @@ screens.commoning = () => shell("#/commoning", null,
     </div>
   </div>`, "band wide topline") +
 
-  section(`<div class="artrow ${COMMONING_ART.agency.wide?'wide':'flip'}">
-    <div class="arttext lead-in">
-      <h2>Community Agency Is the Common Thread Across All Three</h2>
-      <p>Communities understand their rights and responsibilities, deliberate collectively, make informed decisions, act on them, reflect on what happened, and adapt. That cycle is what carries all three parts of the approach.</p>
-      <p>It is also why capacity building matters — the agency, knowledge and capacity it builds are what keep the cycle turning.</p>
+  section(`<div class="artrow wide">
+    <div class="arttext">
+      <p>Effective stewardship of Commons depends on the agency of communities to collectively govern, manage, and
+      restore shared natural resources. Rooted in the principles of secure tenure, collective action, and access to
+      resources, commoning is strengthened when communities possess the knowledge, skills, confidence, and institutional
+      capacities needed to act collectively. Capacity building therefore serves as a critical enabler of community agency
+      and long-term stewardship of the Commons.</p>
     </div>
-    ${commonsArt('agency')}
   </div>`, "wide") +
 
   section(gateway("layers","Continue","Choose the resource system or theme you are working with, and follow the pathway built for it.",

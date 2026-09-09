@@ -4422,12 +4422,12 @@ screens.system = (params) => {
     [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"},{label:s.name}],
     pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s), "centred") +
 
-    (isTheme ? "" : section(sechead(null,"Commoning Pathway / Process",
+    (isTheme ? "" : section(sechead(null,"Commoning Process Steps",
         s.processImg ? null
           : "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +
       (s.processImg ? infographic(s.processImg, s.processAlt)
                     : pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`})) +
-      "", "tight band headmid")) +
+      "", "tight band white headmid")) +
 
     section(sechead(null,"Choose How You Want to Learn",
       "The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.") +

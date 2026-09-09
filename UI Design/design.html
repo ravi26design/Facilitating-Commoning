@@ -301,9 +301,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .section.cream{background:#f2e9dc}
 .section.white{background:#fff}
 .section.topline{border-top:1px solid var(--line)}
-/* a quiet green band, distinct from the cream ones either side of it */
-.section.softgreen{background:var(--green-soft)}
-.section.softgreen .arttext p{color:var(--ink-2)}
+/* a dark band, so this closing statement is not another shade of cream */
+.section.deep{background:#3b3531}
+.section.deep .arttext p{color:rgba(255,255,255,.92)}
 /* a band that runs the full width of the page */
 .section.bleed{padding:0}
 .section.bleed > .mx{max-width:none;padding:0}
@@ -4226,7 +4226,7 @@ screens.commoning = () => shell("#/commoning", null,
       capacities needed to act collectively. Capacity building therefore serves as a critical enabler of community agency
       and long-term stewardship of the Commons.</p>
     </div>
-  </div>`, "wide softgreen") +
+  </div>`, "wide deep") +
 
   section(gateway("layers","Continue","Choose the resource system or theme you are working with, and follow the pathway built for it.",
     `<button class="btn btn-white arrow" onclick="go('#/resource-systems')">Resource Systems &amp; Themes ${ic('arrow-right')}</button>`), "bleed") +

@@ -2745,7 +2745,7 @@ const JOURNEY5 = [
    d:"How continuous learning enables Commoning and learning approaches.", href:"#/learning-approach", icon:"graduation-cap"},
   {n:"2", k:"UNDERSTAND",    q:"What are Commons",
    d:"The meaning of Commoning of Commons.", href:"#/commoning", icon:"lightbulb",
-   links:[{label:"Watch: what are Commons", icon:"play", act:"toast('Video on Commons — link to be added')"},
+   links:[{label:"Watch: what are Commons", icon:"play", href:"https://www.youtube.com/watch?v=IU1JaRlPniQ"},
           {label:"Discover on Promise of Commons", icon:"external-link", href:"https://promiseofcommons.in/discover/"}],
    note:{text:"Commoning is what people do together to care for, secure, govern, restore, and sustain those Commons.",
          link:{label:"Learn More", href:"#/commoning"}}},
@@ -3941,6 +3941,7 @@ const HOME_INTRO = [
   {t:"What Are Commons", d:"",
    img:"assets/img/home-what-is-commoning.jpg", href:"#/commoning", icon:"users", video:true,
    cta:"Discover More", ctaHref:"https://promiseofcommons.in/discover/",
+   videoHref:"https://www.youtube.com/watch?v=IU1JaRlPniQ",
    note:{text:"Commoning is what people do together to care for, secure, govern, restore, and sustain those Commons.",
          link:{label:"Learn More", href:"#/commoning"}}},
   {t:"How Learning Enables Commoning?", d:"Learning creates the foundation for informed participation, collective action, and sustained commoning processes.",
@@ -3960,7 +3961,10 @@ function introCard(c){
           ? `<a class="f-cta" href="${c.ctaHref}" target="_blank" rel="noopener"
               onclick="event.stopPropagation()">${c.cta||"Read more"} ${ic('chevron-right')}</a>`
           : `<span class="f-cta">${c.cta||"Read more"} ${ic('chevron-right')}</span>`}
-        ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`:''}
+        ${c.video?(c.videoHref
+          ? `<a class="f-cta vid" href="${c.videoHref}" target="_blank" rel="noopener noreferrer"
+              onclick="event.stopPropagation()">${ic('youtube')} Watch video</a>`
+          : `<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`):''}
       </div>
       ${c.note?`<p class="ic-note">${c.note.text}
         <button type="button" onclick="event.stopPropagation();go('${c.note.link.href}')">${c.note.link.label} ${ic('chevron-right')}</button></p>`:''}

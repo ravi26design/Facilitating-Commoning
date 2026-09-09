@@ -300,6 +300,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .chapter + .chapter{border-top:0}
 .section.cream{background:#f2e9dc}
 .section.white{background:#fff}
+.section.topline{border-top:1px solid var(--line)}
 /* a band that runs the full width of the page */
 .section.bleed{padding:0}
 .section.bleed > .mx{max-width:none;padding:0}
@@ -4193,7 +4194,7 @@ screens.commoning = () => shell("#/commoning", null,
       of different actors, helping chart a course to advance equitable access, use, and governance of natural
       resources.</p>
     </div>
-  </div>`, "band wide") +
+  </div>`, "band wide topline") +
 
   section(`<div class="artrow ${COMMONING_ART.agency.wide?'wide':'flip'}">
     <div class="arttext lead-in">

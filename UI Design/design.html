@@ -4429,8 +4429,7 @@ screens.system = (params) => {
                     : pathway(null,{system:s.id, static:true, accent:`--pc:var(--s-${accentOf(s)})`})) +
       "", "tight band white headmid")) +
 
-    section(sechead(null,"Choose How You Want to Learn",
-      "The training is delivered as modular learning and as low-dose, high-frequency (LDHF) atomised content. Select an option to explore the relevant training resources.") +
+    section(sechead(null,"Choose How You Want to Learn", null) +
       `<div class="ldgrid">${order.map(id=>ldCard(s.id, ldById(id))).join("")}</div>`, isTheme?"band":"")
   );
 };

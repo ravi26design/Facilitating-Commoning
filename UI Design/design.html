@@ -1033,10 +1033,9 @@ main{min-height:60vh;animation:fade .3s ease}
 /* a hero that reads down the middle rather than across two columns */
 .ehero.mid .in{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;gap:1.5rem}
 .ehero.mid h1{max-width:none}
-/* the headline is one line sized to the container — 22.26px of width per 1px of
-   type, taken to 97% so it never wraps */
+/* the headline stays on one line, sized from the container at 80% of its width */
 @media(min-width:900px){
-  .ehero.mid h1{font-size:calc(min(4.36vw, 62.8px) - 2.8px);white-space:nowrap}
+  .ehero.mid h1{font-size:calc(min(3.6vw, 51.8px) - 2.3px);white-space:nowrap}
 }
 .ehero.mid .stand{padding-top:0;max-width:none;width:100%}
 .ehero.mid .stand p{max-width:none;margin-left:auto;margin-right:auto}

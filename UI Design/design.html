@@ -3940,6 +3940,7 @@ const screens = {};
 const HOME_INTRO = [
   {t:"What Are Commons", d:"",
    img:"assets/img/home-what-is-commoning.jpg", href:"#/commoning", icon:"users", video:true,
+   cta:"Discover", ctaHref:"https://promiseofcommons.in/discover/",
    note:{text:"Commoning is what people do together to care for, secure, govern, restore, and sustain those Commons.",
          link:{label:"Learn More", href:"#/commoning"}}},
   {t:"How Learning Enables Commoning?", d:"Learning creates the foundation for informed participation, collective action, and sustained commoning processes.",
@@ -3955,7 +3956,10 @@ function introCard(c){
       <h3>${c.t}</h3>
       ${c.d?`<p>${c.d}</p>`:''}
       <div class="ic-cta">
-        <span class="f-cta">${c.cta||"Read more"} ${ic('chevron-right')}</span>
+        ${c.ctaHref
+          ? `<a class="f-cta" href="${c.ctaHref}" target="_blank" rel="noopener"
+              onclick="event.stopPropagation()">${c.cta||"Read more"} ${ic('chevron-right')}</a>`
+          : `<span class="f-cta">${c.cta||"Read more"} ${ic('chevron-right')}</span>`}
         ${c.video?`<button class="f-cta vid" onclick="event.stopPropagation();toast('Video (placeholder)')">${ic('youtube')} Watch video</button>`:''}
       </div>
       ${c.note?`<p class="ic-note">${c.note.text}

@@ -4125,7 +4125,7 @@ const COMMONING_ART = {
 };
 function commonsArt(key){
   const f = COMMONING_ART[key];
-  return `<figure class="cfig"${f.src?` onclick="openImage('${f.src}','${esc(f.caption)}')" title="Click to view full size"`:''}>${
+  return `<figure class="cfig"${f.src?` onclick="openImage('${f.src}','${esc(f.caption)}')"`:''}>${
     f.src
       ? `<img src="${f.src}" alt="${f.alt}" loading="lazy"${f.cap?` style="max-width:${f.cap}"`:''} onerror="phFallback(this,'${esc(f.caption)}')">`
       : `<div class="ph awaiting">${tile('image','blue','lg')}
@@ -4346,7 +4346,7 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
 /* ---- modular training design — the five-module wheel ---- */
 /* a framed infographic, sized to its content column */
 function infographic(src, alt, cap){
-  return `<figure class="infographic" onclick="openImage('${src}','${esc(alt)}')" title="Click to view full size">
+  return `<figure class="infographic" onclick="openImage('${src}','${esc(alt)}')">
     <img src="${src}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'">
     <span class="ig-zoom">${ic('maximize-2')} View full size</span>
     ${cap?`<figcaption>${cap}</figcaption>`:''}

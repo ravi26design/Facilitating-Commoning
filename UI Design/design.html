@@ -1941,8 +1941,9 @@ main{min-height:60vh;animation:fade .3s ease}
 .syscard:hover .sc-go i,.syscard:hover .sc-go svg.lucide{transform:translateX(3px)}
 
 /* ---- learning-design option card ---- */
-.ldgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.35rem}
-@media(max-width:980px){.ldgrid{grid-template-columns:1fr}}
+.ldgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:1.35rem}
+.ldgrid > *{flex:0 1 calc((100% - 2.7rem)/3)}
+@media(max-width:980px){.ldgrid > *{flex-basis:100%}}
 .ldcard{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);
   overflow:hidden;cursor:pointer;box-shadow:var(--shadow-card);transition:transform .18s,box-shadow .2s,border-color .15s}
 .ldcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--line-2)}
@@ -4452,7 +4453,8 @@ screens.system = (params) => {
       "", "tight band white headmid")) +
 
     section(sechead(null,"Choose How You Want to Learn", null) +
-      `<div class="ldgrid">${order.map(id=>ldCard(s.id, ldById(id))).join("")}</div>`, isTheme?"band":"")
+      `<div class="ldgrid">${order.map(id=>ldCard(s.id, ldById(id))).join("")}</div>`,
+      isTheme?"band headmid":"headmid")
   );
 };
 screens.theme = (params) => screens.system(params);

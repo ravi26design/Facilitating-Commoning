@@ -1833,11 +1833,6 @@ main{min-height:60vh;animation:fade .3s ease}
    viewport, so nothing needs scrolling to be seen */
 .infographic img{width:100%;height:auto;max-height:76vh;object-fit:contain;display:block;margin:0 auto}
 .infographic figcaption{font-size:.8rem;color:var(--muted-2);text-align:center;padding:.85rem .5rem 0}
-.ig-zoom{position:absolute;right:1.15rem;bottom:1.15rem;display:inline-flex;align-items:center;gap:.4rem;
-  background:rgba(74,66,62,.92);color:#fff;font-size:.76rem;font-weight:700;padding:.4rem .75rem;
-  border-radius:999px;opacity:0;transform:translateY(4px);transition:.18s;pointer-events:none}
-.ig-zoom i,.ig-zoom svg.lucide{width:.85rem;height:.85rem}
-.infographic:hover .ig-zoom{opacity:1;transform:translateY(0)}
 /* full-size viewer */
 #ov-img{align-items:center;padding:1.5rem}
 #ov-img .modal{width:min(94rem,100%);max-height:92vh;overflow:auto;padding:1rem}
@@ -2682,6 +2677,8 @@ function stageById(id){ return STAGES.find(s=>s.id===id); }
 
 const SYSTEMS = {
   forests:{id:"forests", kind:"system", name:"Forest Commons", icon:"trees", accent:"forests", img:"assets/img/forests.jpg",
+    processImg:"assets/img/process-forests.jpg",
+    processAlt:"Commoning of forests — four key process steps, from forming the Forest Right Committee through to creating the management plan, each with what it involves",
     blurb:"Forests are vital natural resources, providing various ecological, economic, and cultural benefits to communities worldwide. The concept of Forest Commons, refers to the collective use and management of forest resources by local communities",
     desc:"Forest commons are held and used collectively, so the work begins with rights — helping a community understand what the law recognises and prepare the claims that secure it. From there the focus turns to institutions: a Gram Sabha or forest rights committee that can hold decisions, keep records and speak for the village. With rights and governance in place, communities plan how the forest is used and restored — which patches to protect, which to harvest, and how to monitor what changes over the seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on forest commons.",
@@ -2696,6 +2693,8 @@ const SYSTEMS = {
     outcome:"Recognised tenure, functioning institutions, and restored, sustainably managed grazing commons.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
   water:{id:"water", kind:"system", name:"Water Commons", icon:"droplets", accent:"water", img:"assets/img/water.jpg",
+    processImg:"assets/img/process-water.jpg",
+    processAlt:"Commoning of water — five key process steps, from landscape and social assessment through to sustained water as commons, each with what it involves",
     blurb:"Water Commons refer to shared water resources such as rivers, ponds, tanks, wetlands, and groundwater aquifers, collectively accessed, managed, and governed by local communities.",
     desc:"Water is the commons where a decision upstream is felt downstream, so equitable access is the first question. The work begins by reading the watershed with the community — springs, tanks, recharge and draw — and forming the institution that can hold those decisions across hamlets. From there the group plans allocation and use, maintains the structures it depends on, and monitors the resource so stewardship carries on between seasons.",
     users:"Facilitators, field practitioners, learners and community institutions working on water commons.",
@@ -4352,7 +4351,6 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
 function infographic(src, alt, cap){
   return `<figure class="infographic" onclick="openImage('${src}','${esc(alt)}')">
     <img src="${src}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'">
-    <span class="ig-zoom">${ic('maximize-2')} View full size</span>
     ${cap?`<figcaption>${cap}</figcaption>`:''}
   </figure>`;
 }

@@ -1030,6 +1030,12 @@ main{min-height:60vh;animation:fade .3s ease}
 .ehero .stand{padding-top:.6rem}
 .ehero .stand p{font-size:1.05rem;line-height:1.7;color:var(--muted);max-width:34rem}
 .ehero .stand .row{margin-top:1.75rem}
+/* a hero that reads down the middle rather than across two columns */
+.ehero.mid .in{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;gap:1.5rem}
+.ehero.mid h1{max-width:22ch}
+.ehero.mid .stand{padding-top:0;max-width:60rem}
+.ehero.mid .stand p{max-width:none;margin-left:auto;margin-right:auto}
+.ehero.mid .stand .row{justify-content:center}
 /* the photograph never moves — it is fixed to the viewport, behind the page */
 .ehero-bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#efe9df}
 .ehero-art{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -4033,7 +4039,7 @@ function featuredRow(){
 screens.home = () => shell("#/home", null, `
   ${heroBackdrop('assets/img/hero-commoning.jpg','fill')}
 
-  <div class="ehero"><div class="in">
+  <div class="ehero mid"><div class="in">
     <h1>Commoning of Commons:<br>Learn. Facilitate. <em>Act.</em></h1>
     <div class="stand">
       <p>Facilitating Commoning is an open learning platform for anyone seeking to facilitate the Commoning of Commons. It brings together training content, tools, methods, and practical resources in a systematic and accessible manner. By organising content around key resource systems and themes, and learning pathways, the repository enables users (practitioners, trainers, community organizations, and other stakeholders) to understand the processes involved in collectively governing, securing, and restoring Commons; find relevant resources; design capacity-building initiatives; and apply the learning in their respective contexts. It also serves as a shared space for different actors to contribute, pool, and exchange knowledge and resources, allowing the repository to grow through collective experience and practice.</p>

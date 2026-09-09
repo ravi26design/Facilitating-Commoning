@@ -304,6 +304,9 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .section.bleed > .mx{max-width:none;padding:0}
 .sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .sechead h2{font-size:1.55rem}
+/* a section whose heading stands alone, centred over its content */
+.section.headmid .sechead{justify-content:center;text-align:center}
+.section.headmid .sechead .sub{margin-left:auto;margin-right:auto}
 .panel{background:#fff;border:1px solid var(--line);border-radius:0;padding:1.6rem;box-shadow:var(--shadow-card)}
 .grid{display:grid;gap:1.35rem}
 .g2{grid-template-columns:repeat(2,1fr)}
@@ -4192,11 +4195,11 @@ screens["learning-approach"] = () => shell("#/learning-approach", null,
           implementation challenges, and strengthen action and impact on the ground.</p>
         </div>
       </article>
-    </div>`) +
+    </div>`, "headmid") +
 
   /* ---- the learning pathway, in its own panel ---- */
   section(`<div class="rownote long lapath">
-    <h3>The Learning Pathway</h3>
+    <h3>Learning Pathway</h3>
     <p>The learning pathway comprises a structured process coupled with action elements that lead to cumulative outcomes
     on the ground. Rather than conducting one-off trainings, the learning is continuous and ongoing, designed to enable
     communities, functionaries, and civil society actors to collectively manage natural resources and local institutions.

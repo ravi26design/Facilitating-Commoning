@@ -4004,7 +4004,8 @@ screens.home = () => shell("#/home", null, `
   ${section(`<div class="grid g3">${HOME_INTRO.map(introCard).join("")}</div>`)}
 
   ${featuredRow()}
-  ${docRow("What People Are Reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4)}
+  ${docRow("What People Are Reading","Most-viewed resources across the community.",["cfr-claim","gram-sabha-atom","pasture-course","fra-handbook"], 4, null, null,
+    `<button class="btn btn-outline sm arrow" onclick="go('#/library')">More Resource ${ic('arrow-right')}</button>`)}
   ${docRow("Latest Resources","Recently added to the repository.",RES.slice(0,4).map(r=>r.id), 4)}
 
   ${section(gateway("compass","Ready to Begin?",

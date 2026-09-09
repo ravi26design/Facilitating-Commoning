@@ -642,6 +642,10 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .fgroup label{display:flex;align-items:center;gap:.55rem;padding:.28rem 0;font-size:.87rem;color:var(--muted);cursor:pointer}
 .fgroup label:hover{color:var(--ink)}
 .fgroup input[type=checkbox]{width:1rem;height:1rem;accent-color:var(--blue);cursor:pointer}
+/* learning designs a theme carries, ticked in the theme dialog */
+.ldpick{display:flex;flex-direction:column;gap:.15rem;border:1px solid var(--line-2);padding:.7rem .9rem}
+.ldpick label{display:flex;align-items:center;gap:.6rem;padding:.32rem 0;font-size:.9rem;color:var(--ink);cursor:pointer}
+.ldpick input[type=checkbox]{width:1.05rem;height:1.05rem;flex:none;accent-color:var(--green);cursor:pointer}
 @media(max-width:980px){.layout-side{grid-template-columns:1fr}.filterbox{position:static;max-height:none}}
 .f-toggle{display:none}
 @media(max-width:760px){
@@ -2785,6 +2789,16 @@ const LD = [
    desc:"Handbooks, facilitators' guides, SoPs, formats and tools.", img:"assets/img/commons-restoration.jpg"}
 ];
 function ldById(id){ return LD.find(x=>x.id===id); }
+/* not every system or theme carries all three learning designs */
+const LD_AVAILABLE = {
+  pastureland: ["atomized","modular","supporting"],
+  forests:     ["atomized","modular","supporting"],
+  water:       ["modular","supporting"],
+  map:         ["modular","supporting"],
+  leo:         ["modular","supporting"],
+  agri:        ["atomized"]
+};
+function ldFor(id){ return LD_AVAILABLE[id] || ["atomized","modular","supporting"]; }
 
 /* 5-step orientation — Get Started */
 const JOURNEY5 = [
@@ -4425,7 +4439,7 @@ screens.system = (params) => {
   const s = entityById(params.id);
   if(!s) return screens["resource-systems"]();
   const isTheme = s.kind==="theme";
-  const order = ["atomized","modular","supporting"];
+  const order = ldFor(s.id);
   return shell("#/resource-systems",
     [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"},{label:s.name}],
     pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s), "centred") +
@@ -6968,6 +6982,12 @@ function openAddTheme(editId){
       <input id="th-users" placeholder="Who is this theme for?" value="${t?esc(t.users||''):''}"></div>
     <div class="field"><label>Expected outcome</label>
       <input id="th-outcome" placeholder="What should this theme achieve?" value="${t?esc(t.outcome||''):''}"></div>
+    <div class="field"><label>Learning designs</label>
+      <div class="ldpick">${["atomized","modular","supporting"].map(ldById).map(l=>{
+        const on = t ? ldFor(t.id).indexOf(l.id)>=0 : true;
+        return `<label><input type="checkbox" id="th-ld-${l.id}" ${on?'checked':''}> ${l.name}</label>`;
+      }).join("")}</div>
+      <p class="hint">Only the ones you tick appear under &ldquo;Choose How You Want to Learn&rdquo;.</p></div>
     <div class="field"><label>Theme image</label>
       ${t&&t.img?`<div class="th-current"><img src="${t.img}" alt="" onerror="this.remove()">
         <span>Current image — upload a new one to replace it.</span></div>`:''}
@@ -6998,6 +7018,15 @@ function adminDeleteResource(id){
     }
   });
 }
+/* which learning designs the dialog has ticked, in the order the cards read */
+function readThemeLD(){
+  const picked = LD.map(l=>l.id).filter(id=>{
+    const box = document.getElementById('th-ld-'+id);
+    return box ? box.checked : false;
+  });
+  const order = ["atomized","modular","supporting"];
+  return order.filter(id=>picked.indexOf(id)>=0);
+}
 function adminAddTheme(){
   if(!isAdmin()) return;
   const v=id=>(document.getElementById(id)||{}).value||"";
@@ -7009,6 +7038,7 @@ function adminAddTheme(){
     TH_EDIT.desc = v('th-desc').trim() || TH_EDIT.desc;
     TH_EDIT.users = v('th-users').trim() || TH_EDIT.users;
     TH_EDIT.outcome = v('th-outcome').trim() || TH_EDIT.outcome;
+    LD_AVAILABLE[TH_EDIT.id] = readThemeLD();
     closeAddTheme(); render(); toast("Theme updated — "+name.trim());
     return;
   }
@@ -7019,6 +7049,7 @@ function adminAddTheme(){
     users:v('th-users').trim()||"Facilitators, partners and community institutions.",
     outcome:v('th-outcome').trim()||"Advances commoning across the resource systems."};
   THEME_LIST.push(THEMES[id]);
+  LD_AVAILABLE[id] = readThemeLD();
   closeAddTheme(); toast("Theme added — "+name.trim());
   if(onSettings) render(); else go('#/resource-systems');
 }

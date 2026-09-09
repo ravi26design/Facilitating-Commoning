@@ -2690,7 +2690,7 @@ const SYSTEMS = {
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
   pastureland:{id:"pastureland", kind:"system", name:"Pasture Commons", icon:"wheat", accent:"pastureland", img:"assets/img/pastureland.jpg",
     blurb:"Pasture Commons, or village grazing lands, are areas designated for communal use by local communities for grazing livestock.",
-    desc:"Pasturelands are shared grazing grounds, and they hold up only when a community agrees how to use them. The work starts by mapping who grazes where and what the land can carry, then builds the institution that can hold those decisions and secure recognition of tenure. Once rules on grazing, rotation and fodder are set collectively, the same group plans restoration, tracks how the ground recovers, and adapts the rules as the commons changes.",
+    desc:"Pasture Commons, or village grazing lands, are areas designated for communal use by local communities for grazing livestock. This traditional system of shared resource management has been practiced for centuries across various parts of the world, particularly among pastoral and agro-pastoral communities reliant on livestock for sustenance and income. Rooted in the principle that resources like grazing land are more effectively managed through collective action, Pasture Commons rely on shared rules of use to ensure equitable access, prevent overexploitation, and sustain long-term viability. They remain vital to pastoral livelihoods, providing essential fodder and water, especially during scarcity or seasonal migration.",
     users:"Facilitators, field practitioners, learners and community institutions working on pasturelands.",
     outcome:"Recognised tenure, functioning institutions, and restored, sustainably managed grazing commons.",
     process:["Understand","Institutions","Tenure","Plan","Restore","Monitor"]},
@@ -4419,7 +4419,7 @@ screens.system = (params) => {
   const order = ["atomized","modular","supporting"];
   return shell("#/resource-systems",
     [{label:"Home",href:"#/home"},{label:"Resource Systems & Themes",href:"#/resource-systems"},{label:s.name}],
-    pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s)) +
+    pagehead(isTheme?"Theme":"Resource System", `${s.name}`, s.desc, null, accentVar(s), "centred") +
 
     (isTheme ? "" : section(sechead(null,"Commoning Pathway / Process",
         "Six stages, in the order a community moves through them. Open any stage to see what needs to happen and which resources help.") +

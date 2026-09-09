@@ -4426,7 +4426,7 @@ screens["resource-systems"] = () => shell("#/resource-systems", null,
   pagehead("Choose your commons","Resource Systems &amp; <em>Themes</em>", null) +
   section(sechead(null,"Resource Systems", null) +
     `<div class="grid g3">${["pastureland","forests","water"].map(k=>systemCard(SYSTEMS[k])).join("")}</div>`) +
-  section(sechead(null,"Cross-Cutting Themes", null,
+  section(sechead(null,"Themes", null,
     isAdmin()?`<button class="btn btn-primary sm" onclick="openAddTheme()">${ic('plus')} Add theme</button>`:'') +
     `<div class="grid g3">${THEME_LIST.map(systemCard).join("")}</div>`, "band roomy") +
   section(gateway("map","Not Sure Where to Start?",

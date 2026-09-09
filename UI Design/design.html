@@ -637,9 +637,11 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   .filterbox.shut .fgroup,.filterbox.shut .row,.filterbox.shut .clearbtn{display:none}
 }
 /* the viewer and the details card end on the same line */
-.layout-wide{display:grid;grid-template-columns:1fr 21rem;gap:2rem;align-items:stretch}
-.layout-wide > .panel{align-self:stretch}
-@media(max-width:1080px){.layout-wide{grid-template-columns:1fr}}
+/* minmax(0,…) so a long unbreakable file name cannot push the page sideways */
+.layout-wide{display:grid;grid-template-columns:minmax(0,1fr) 21rem;gap:2rem;align-items:stretch}
+.layout-wide > .panel{align-self:stretch;min-width:0}
+.layout-wide .detail-f .v{overflow-wrap:anywhere}
+@media(max-width:1080px){.layout-wide{grid-template-columns:minmax(0,1fr)}}
 
 /* search + form fields */
 .searchwrap{position:relative;display:flex;align-items:center}
@@ -1262,6 +1264,8 @@ main{min-height:60vh;animation:fade .3s ease}
 .settable table.admin{min-width:46rem}
 .settable .ta-r{text-align:right}
 .settable .nowrap{white-space:nowrap;color:var(--muted-2)}
+.settable tr.rowlink{cursor:pointer}
+.settable tr.rowlink:hover{background:var(--bg-soft)}
 .set-by{display:inline-flex;align-items:center;gap:.55rem;white-space:nowrap}
 .set-by .pw-av{width:1.7rem;height:1.7rem;font-size:.62rem}
 .set-act{display:inline-flex;gap:.45rem;justify-content:flex-end}
@@ -6477,7 +6481,7 @@ function storeTable(kind){
   const col2 = isAdmin() ? 'Department' : 'Resource System';
   return `<div class="scrollx settable"><table class="admin">
     <thead><tr><th>File Name</th><th>${col2}</th><th>${when}</th><th class="ta-r">Actions</th></tr></thead>
-    <tbody>${rows.length?rows.map(f=>`<tr>
+    <tbody>${rows.length?rows.map(f=>`<tr class="rowlink" onclick="go('${storeHref(kind,f.n)}')">
       <td><div class="st-file">
         <span class="doc-fi fi-${storeExt(f.n)}">${ic(storeExt(f.n)==='sheet'?'table-2':'file-text')}</span>
         <span class="st-name">${f.n}</span>
@@ -6486,9 +6490,9 @@ function storeTable(kind){
       <td class="nowrap">${f.on}</td>
       <td class="ta-r"><div class="set-act">
         <button class="iconbtn" title="Restore ${esc(f.n)}" aria-label="Restore ${esc(f.n)}"
-          onclick="storeRestore('${kind}','${escj(f.n)}')">${ic('rotate-ccw')}</button>
+          onclick="event.stopPropagation();storeRestore('${kind}','${escj(f.n)}')">${ic('rotate-ccw')}</button>
         ${kind==='archive'?`<button class="iconbtn" title="Download ${esc(f.n)}" aria-label="Download ${esc(f.n)}"
-          onclick="download('${escj(f.n)}')">${ic('download')}</button>`:''}
+          onclick="event.stopPropagation();download('${escj(f.n)}')">${ic('download')}</button>`:''}
       </div></td>
     </tr>`).join(""):`<tr><td colspan="4" class="set-empty">${kind==='archive'
         ? 'Nothing is archived — inactive documents land here automatically.'
@@ -6502,9 +6506,76 @@ function storeRestore(kind, name){
   list.splice(i,1);
   const p = storePager(kind, list.length);
   STORE_PAGE[kind] = p.page;
-  render();
+  /* restoring the file you are looking at leaves nothing to look at */
+  if((location.hash||"").indexOf('#/stored/')===0) go(kind==='archive' ? '#/archive' : '#/trash');
+  else render();
   toast("Restored — "+name);
 }
+function storeHref(kind, name){ return `#/stored/${kind}?f=${encodeURIComponent(name)}`; }
+function storeFormat(name){
+  const e = (name||'').split('.').pop().toLowerCase();
+  return {pdf:"PDF", xlsx:"Spreadsheet", csv:"Spreadsheet", mp4:"Video", mp3:"Audio",
+          jpg:"Image", jpeg:"Image", png:"Image"}[e] || "Document";
+}
+/* a stable stand-in size, so the same file does not change weight between renders */
+function storeSize(name){
+  let h = 0;
+  for(let i=0;i<(name||'').length;i++) h = (h*31 + name.charCodeAt(i)) & 0x7fffffff;
+  return ((h % 4600)/1000 + 0.4).toFixed(1) + " MB";
+}
+screens.stored = (params) => {
+  const kind = params.kind === 'trash' ? 'trash' : 'archive';
+  const label = kind === 'archive' ? 'Archive' : 'Trash';
+  if(!isRegistered()) return gateScreen(label, `Sign in to see the documents in your ${label.toLowerCase()}.`);
+  const name = decodeURIComponent(params.f || "");
+  const f = storeFiles(kind).find(x => x.n === name);
+  const back = kind === 'archive' ? '#/archive' : '#/trash';
+
+  if(!f) return header(null)
+    + crumbs([{label, href:back}, {label:"File not found"}])
+    + `<main><div class="mx" style="padding-top:1.35rem;padding-bottom:4rem"><div class="panel">
+        <p class="muted" style="margin-bottom:1.15rem">That file is no longer in the ${label.toLowerCase()} — it may already have been restored.</p>
+        <button class="btn btn-primary sm arrow" onclick="go('${back}')">Back to ${label} ${ic('arrow-right')}</button>
+      </div></div></main>` + footer();
+
+  const when = kind === 'archive' ? 'Archived On' : 'Trashed On';
+  const col2 = isAdmin() ? 'Department' : 'Resource System';
+
+  return header(null)
+    + crumbs([{label, href:back}, {label:f.n}],
+        `${kind === 'archive' ? `<button class="btn btn-outline sm" onclick="download('${escj(f.n)}')">${ic('download')} Download</button>` : ''}
+         <button class="btn btn-primary sm" onclick="storeRestore('${kind}','${escj(f.n)}')">${ic('rotate-ccw')} Restore</button>`)
+    + `<main><div class="mx" style="padding-top:1.35rem;padding-bottom:4rem">
+      <div class="sd-fb ${kind === 'archive' ? 'changes' : 'rejected'}">
+        <span class="sd-fb-ic">${ic(kind === 'archive' ? 'archive' : 'trash-2')}</span>
+        <div><b>${kind === 'archive' ? 'This file is archived' : 'This file is in the trash'}</b>
+          <p>${kind === 'archive'
+              ? `It was moved out of circulation on ${f.on} after ${SETTINGS.archiveDays} days without a view, edit or download. Restore it to bring it back.`
+              : `It was deleted on ${f.on} and is kept here so it can still be restored.`}</p></div>
+        <button class="btn btn-primary sm" style="flex:none"
+          onclick="storeRestore('${kind}','${escj(f.n)}')">${ic('rotate-ccw')} Restore</button>
+      </div>
+
+      <div class="layout-wide">
+        ${docViewer(f.n, storeFormat(f.n))}
+        <aside class="panel">
+          <h3 style="font-size:1.05rem;margin-bottom:1rem">File details</h3>
+          ${metaRow(col2, `<span class="deptpill">${f.dept}</span>`)}
+          ${metaRow(when, f.on)}
+          ${metaRow(metaLabel('format'), storeFormat(f.n))}
+          ${metaRow("File size", storeSize(f.n))}
+          ${metaRow("Status", label)}
+          <div class="detail-blk" style="margin-top:.9rem">
+            <div class="k">Uploaded by</div>
+            <div class="row" style="gap:.65rem;align-items:center;margin-top:.35rem">
+              <span class="pw-av" style="background:${avatarTint(USER.name)}">${initials(USER.name)}</span>
+              <div><div style="font-weight:700;font-size:.9rem">${USER.name}</div>
+                <div class="muted" style="font-size:.78rem">${f.on}</div></div></div>
+          </div>
+        </aside>
+      </div>
+    </div></main>` + footer();
+};
 screens.archive = () => {
   if(!isRegistered()) return gateScreen("Archive","Sign in to see your archived documents.");
   return accountShell('archive', `
@@ -7690,6 +7761,7 @@ function render(){
   else if(name==="resource"){ params.id=parts[1]; html=screens.resource(params); }
   else if(name==="story"){ params.id=parts[1]; html=screens.story(params); }
   else if(name==="submission"){ params.id=parts[1]; html=screens.submission(params); }
+  else if(name==="stored"){ params.kind=parts[1]; html=screens.stored(params); }
   else if(name==="help" && parts[1]){ params.id=parts[1]; html=screens.helptopic(params); }
   else if(screens[name]){ html=screens[name](params); }
   else { html=screens.home(); }

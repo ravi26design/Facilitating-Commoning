@@ -299,6 +299,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .chapter{margin-bottom:0}
 .chapter + .chapter{border-top:0}
 .section.cream{background:#f2e9dc}
+.section.white{background:#fff}
 /* a band that runs the full width of the page */
 .section.bleed{padding:0}
 .section.bleed > .mx{max-width:none;padding:0}
@@ -1240,6 +1241,20 @@ main{min-height:60vh;animation:fade .3s ease}
 /* attribution under a figure */
 .credit{margin:.85rem 0 0;font-size:.82rem;color:var(--faint)}
 .creditrow{align-items:center;justify-content:center;gap:1.15rem;margin-top:1.15rem}
+/* a single closing link, sized to be read rather than hunted for */
+.ctastrip{display:flex;align-items:center;gap:1.15rem;max-width:44rem;margin:0 auto;
+  background:#fff;border:1px solid var(--line-2);padding:1.15rem 1.35rem;transition:border-color .15s,background .15s}
+.ctastrip:hover{border-color:var(--cta);background:var(--bg-soft)}
+.ctastrip .cs-ic{flex:none;display:grid;place-items:center;width:2.6rem;height:2.6rem;
+  background:var(--green-soft);color:var(--green-d)}
+.ctastrip .cs-ic i,.ctastrip .cs-ic svg.lucide{width:1.15rem;height:1.15rem}
+.ctastrip .cs-tx{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.ctastrip .cs-tx b{font-size:.98rem;color:var(--ink)}
+.ctastrip .cs-tx span{font-size:.82rem;color:var(--muted-2)}
+.ctastrip .cs-go{margin-left:auto;flex:none;color:var(--cta);transition:transform .15s}
+.ctastrip:hover .cs-go{transform:translateX(3px)}
+.ctastrip .cs-go i,.ctastrip .cs-go svg.lucide{width:1.05rem;height:1.05rem}
+@media(max-width:560px){.ctastrip{gap:.85rem;padding:1rem}.ctastrip .cs-ic{width:2.2rem;height:2.2rem}}
 .creditrow .credit{margin:0}
 .lapath{padding:2rem 2.25rem}
 .lapath h3{color:#fff;font-size:1.15rem;margin:0 0 .8rem}
@@ -4156,16 +4171,21 @@ screens.commoning = () => shell("#/commoning", null,
         well-being.</p>
       </div>
     </div>
-    <div class="row creditrow">
-      <a class="btn btn-outline sm" target="_blank" rel="noopener"
-        href="https://fes.org.in/resources/2024/our-commons-celebrating-commoning-and-community-stewardship-spreads.pdf">${ic('file-text')} Explore in Detail - From Commons to Commoning ${ic('external-link')}</a>
-    </div>
   </section>` +
+
+  /* ---- the page's closing link, on its own white strip ---- */
+  section(`<a class="ctastrip" target="_blank" rel="noopener"
+      href="https://fes.org.in/resources/2024/our-commons-celebrating-commoning-and-community-stewardship-spreads.pdf">
+      <span class="cs-ic">${ic('file-text')}</span>
+      <span class="cs-tx"><b>Explore in Detail - From Commons to Commoning</b>
+        <span>Our Commons &mdash; celebrating commoning and community stewardship &middot; PDF</span></span>
+      <span class="cs-go">${ic('external-link')}</span>
+    </a>`, "tight white") +
 
   section(`<div class="artrow ${COMMONING_ART.approach.wide?'wide':''}">
     ${commonsArt('approach')}
     <div class="arttext">
-      <h2>Approach of Commoning of Commons</h2>
+      <h2>How Commoning Works?</h2>
       <p>Three things done together produce two outcomes: communities secure their land rights, act collectively to manage and govern the resource, and reach the finance needed to restore it. What follows is ecological health and resilient livelihoods.</p>
       <p>The pathway for Commoning of all resource types is broadly the same. Variation in processes is based on the type of resource, and on the legal provisions and instruments in place for that resource type.</p>
     </div>

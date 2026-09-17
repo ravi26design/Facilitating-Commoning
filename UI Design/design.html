@@ -717,11 +717,14 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 
 /* the three counts under the hero buttons */
 .herostats{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:2rem}
-.hstat{display:flex;align-items:center;gap:.9rem;text-align:left;
-  background:#fff;border:1px solid var(--line);padding:1rem 1.35rem;min-width:13rem}
-.hstat > div b{display:block;font-family:var(--serif);font-weight:400;font-size:1.75rem;
-  color:var(--ink);line-height:1.05}
-.hstat > div span{display:block;margin-top:.15rem;font-size:.82rem;font-weight:600;color:var(--muted-2)}
+.hstat{display:flex;align-items:center;gap:1rem;text-align:left;
+  background:var(--card);border:1px solid var(--line-2);padding:1.1rem 1.45rem;min-width:13.5rem}
+/* the icon carries the accent so the row reads at a glance */
+.hstat .ic-tile{background:var(--green);color:#fff}
+.hstat > div b{display:block;font-family:var(--serif);font-weight:400;font-size:2.1rem;
+  color:var(--green-d);line-height:1}
+.hstat > div span{display:block;margin-top:.2rem;font-size:.82rem;font-weight:700;
+  letter-spacing:.02em;color:var(--ink-2)}
 @media(max-width:560px){.hstat{min-width:0;flex:1 1 100%;padding:.85rem 1.1rem}}
 
 /* info rows */

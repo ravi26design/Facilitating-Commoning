@@ -715,6 +715,15 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .stat span{display:block;font-size:.78rem;font-weight:600;color:var(--muted-2);margin-top:.35rem}
 .kpi{display:flex;align-items:center;gap:.9rem}
 
+/* the three counts under the hero buttons */
+.herostats{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:2rem}
+.hstat{display:flex;align-items:center;gap:.9rem;text-align:left;
+  background:#fff;border:1px solid var(--line);padding:1rem 1.35rem;min-width:13rem}
+.hstat > div b{display:block;font-family:var(--serif);font-weight:400;font-size:1.75rem;
+  color:var(--ink);line-height:1.05}
+.hstat > div span{display:block;margin-top:.15rem;font-size:.82rem;font-weight:600;color:var(--muted-2)}
+@media(max-width:560px){.hstat{min-width:0;flex:1 1 100%;padding:.85rem 1.1rem}}
+
 /* info rows */
 .inforow{background:var(--card);border:1px solid var(--line);border-radius:.75rem;padding:.85rem 1rem}
 .inforow h5{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 .3rem}
@@ -4052,6 +4061,12 @@ screens.home = () => shell("#/home", null, `
       <div class="row">
         <button class="btn btn-primary" onclick="openTour()">${ic('compass')} Get Started</button>
         <button class="btn btn-outline" onclick="go('#/contribute')">${ic('upload')} Contribute</button>
+      </div>
+      <div class="herostats">
+        ${[["file-text", RES.length,          "Resources"],
+           ["map-pin",   STATE_OPTS.length,   "States &amp; UTs"],
+           ["globe",     LANG_OPTS.length,    "Languages"]].map(([icon,n,label])=>`
+          <div class="hstat">${tile(icon)}<div><b>${n}</b><span>${label}</span></div></div>`).join("")}
       </div>
     </div>
   </div></div>

@@ -1843,6 +1843,12 @@ main{min-height:60vh;animation:fade .3s ease}
    viewport, so nothing needs scrolling to be seen */
 .infographic img{width:100%;height:auto;max-height:76vh;object-fit:contain;display:block;margin:0 auto}
 .infographic figcaption{font-size:.8rem;color:var(--muted-2);text-align:center;padding:.85rem .5rem 0}
+/* a phone cannot show a 1500px diagram and keep its text legible, so the frame
+   pans instead of shrinking the artwork to a quarter of its size */
+@media(max-width:760px){
+  .infographic{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;cursor:grab}
+  .infographic img{min-width:46rem;max-width:none;max-height:none}
+}
 /* full-size viewer */
 #ov-img{align-items:center;padding:1.5rem}
 #ov-img .modal{width:min(94rem,100%);max-height:92vh;overflow:auto;padding:1rem}
